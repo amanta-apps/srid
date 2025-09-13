@@ -1176,7 +1176,7 @@ $(document).ready( function () {
         ]
     });
 
-    // -----> SIDO
+    // -----> PENGUMUMAN
      $('#table_displaynotice').DataTable({
         processing: true,
         serverSide: true,
@@ -1200,9 +1200,10 @@ $(document).ready( function () {
         {
             data: "descriptions",
             render: function(data, type, row) {
-                if (!data) return ""; // kalau null/undefined
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         { 
             data: "createdon",

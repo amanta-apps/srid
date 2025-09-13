@@ -815,17 +815,11 @@ if ($typess == 'document_coc') {
     }
 
     if ($return) {
-        $query = mysqli_query($conn, "INSERT INTO table_datasido_e (taskid,
-                                                        eventname,
-                                                        tgleventfrom,
-                                                        tgleventto,
+        $query = mysqli_query($conn, "INSERT INTO table_datanotice_h (header,
                                                         descriptions,
                                                         createdon,
                                                         createdby)
-                        VALUES('$jeniskegiatan',
-                                '$namakegiatan',
-                                '$tglfrom',
-                                '$tglto',
+                        VALUES('$header',
                                 '$catatan',
                                 '$createdon',
                                 '$createdby')");
@@ -837,10 +831,10 @@ if ($typess == 'document_coc') {
     }
     $data = [
         "iconmsgs" => $iconmsgs,
-        "link" => 'md_sido_display',
+        "link" => 'adm_notice_display',
         "msgs" => $msgs,
         "time" => $time,
-        "id" => $sidoid,
+        "id" => $noticeid,
         "return" => $return
     ];
 }
