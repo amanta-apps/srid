@@ -782,7 +782,7 @@ if ($typess == 'document_coc') {
     }
 
     include_once 'getvalue.php';
-    $noticeid             = getai('table_datasido_h');
+    $noticeid       = getai('table_datasido_h');
     $header         = $_POST['header'] ?? '';
     $catatan        = $_POST['catatan'] ?? '';
 
