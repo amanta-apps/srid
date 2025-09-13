@@ -1,0 +1,17 @@
+# Aktifkan Rewrite Engine
+RewriteEngine On
+
+# Hilangkan index.php di URL
+RewriteCond %{THE_REQUEST} ^.*/index\.php [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+RewriteCond %{THE_REQUEST} ^.*/mainpage\.php [NC]
+RewriteRule ^index\.php$ / [R=301,L]
+
+# Hilangkan ekstensi .php
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# Opsional: redirect agar URL tanpa .php
+RewriteCond %{THE_REQUEST} ^GET\ (.*)\.php\ HTTP
+RewriteRule (.*)\.php$ /$1 [R=301,L]
