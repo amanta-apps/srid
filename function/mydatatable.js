@@ -32,9 +32,10 @@ $(document).ready( function () {
         {
             data: "text_descriptions",
             render: function(data, type, row) {
-                if (!data) return ""; // kalau null/undefined
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         {
             data: "statsactive",
@@ -1190,7 +1191,7 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
-                    <a href="#" onclick="redirectlink('adm_notice_create','${row.noticeid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="redirectlink('adm_notice_head_create','${row.noticeid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
                     <a href="#" onclick="delete_head_notice('${row.noticeid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }

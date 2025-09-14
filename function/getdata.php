@@ -363,7 +363,7 @@ if (isset($_POST['prosesdownloadlink'])) {
 // -----> PKB
 if (isset($_POST['prosessubmitmdpkb'])) {
     $norevisi = $_POST['prosessubmitmdpkb'][0];
-    $name = $_POST['prosessubmitmdpkb'][1];
+    $header = $_POST['prosessubmitmdpkb'][1];
     $link = $_POST['prosessubmitmdpkb'][2];
     $descriptions = $_POST['prosessubmitmdpkb'][3];
     $return = false;
@@ -371,7 +371,7 @@ if (isset($_POST['prosessubmitmdpkb'])) {
     $query = mysqli_query($conn, "SELECT norevisi FROM table_datapkb WHERE norevisi='$norevisi'");
     if (mysqli_num_rows($query) <> 0) {
         $query = mysqli_query($conn, "UPDATE table_datapkb 
-                                        SET descriptions='$name',
+                                        SET descriptions='$header',
                                             link='$link',
                                             text_descriptions='$descriptions',
                                             changedon='$changedon',
@@ -384,7 +384,7 @@ if (isset($_POST['prosessubmitmdpkb'])) {
                                                             statsactive,
                                                             createdon,
                                                             createdby)
-                                VALUES ('$name',
+                                VALUES ('$header',
                                         '$link',
                                         '$descriptions',
                                         '$stasx',

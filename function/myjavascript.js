@@ -166,9 +166,9 @@ function downloadlink(jenisdocumen,addr) {
 // ---------------- >> PKB
 function submitmdpkb() {
   var norevisi = $('#norevisimdpkb').val()
-  var name = $('#namemdpkb').val()
+  var header = $('#headermdpkb').val()
   var links = $('#linkmdpkb').val()
-  var descriptions = $('#descriptionsmdpkb').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -177,7 +177,7 @@ function submitmdpkb() {
     cache: false,
     data: {
       "prosessubmitmdpkb": [norevisi,
-        name,
+        header,
         links,
         descriptions]
     },

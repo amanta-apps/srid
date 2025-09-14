@@ -1,14 +1,15 @@
 <?php
 $noticeid = Getkode('noticeid', 'table_datanotice_h');
-$name = $link = $description = null;
+$header = $descriptions = $hidden = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
 if (isset($_GET['n'])) {
+    $hidden = 'hidden';
     $noticeid = base64_decode($_GET['n']);
-    $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datalks_h WHERE noticeid='$noticeid'"));
-    $noticedescriptions = $r['noticedescriptions'];
-    $noticeheader = $r['noticeheader'];
-    $createdon = $r['createdon'];
+    $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datanotice_h WHERE noticeid='$noticeid'"));
+    $header = $r['header'];
+    $descriptions = $r['descriptions'];
+    $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
 } ?>
 <div class="container">
@@ -27,26 +28,19 @@ if (isset($_GET['n'])) {
                     <div class="form-group row mb-1">
                         <label for="headmdnoticehead" class="col-sm-2">Title</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control form-control-sm" id="headmdnoticehead" value="<?= $noticeheader ?>">
+                            <input type="text" class="form-control form-control-sm" id="headmdnoticehead" value="<?= $header ?>">
                         </div>
                     </div>
                     <legend class="float-none w-auto px-2 fs-6">Title & Descriptions</legend>
-                    <div id="editornoticehead"></div>
+                    <div id="editornoticehead"><?= $descriptions ?></div>
                 </fieldset>
             </div>
-            <div class="form-group row mb-1">
+            <div class="form-group row mb-1" <?= $hidden ?>>
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
                     <input type="file" id="lampirannoticehead" name="lampirannoticehead[]" multiple class="form-control mb-2" accept=".pdf, image/*">
                     <ul id="filelistnoticehead" class="fileList mt-2"></ul>
                     <input type="text" class="form-control form-control-sm" id="descimgnoticehead" readonly hidden>
-                    <!-- <button type="submit" class="btn btn-success btn-sm">Submit</button> -->
-                    <div class=" form-group row mt-3">
-                        <!-- <label for="" class="col-sm-2"></label> -->
-                        <div class="col-sm-12 text-end">
-                            <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdnoticehead()"><img src="../assets/icon/save.png"> Submit</button>
-                        </div>
-                    </div>
                 </fieldset>
             </div>
         </div>
@@ -63,6 +57,15 @@ if (isset($_GET['n'])) {
                     <label for="createdbymdnoticehead" class="col-sm-6">Created By</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control form-control-sm" id="createdbymdnoticehead" value="<?= $createdby ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdnoticehead()"><img src="../assets/icon/save.png"> Simpan</button>
                     </div>
                 </div>
             </fieldset>
