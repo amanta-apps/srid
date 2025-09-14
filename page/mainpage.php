@@ -21,7 +21,7 @@ $project = 'S R I D';
     <link rel="stylesheet" href="../assets/datatable/bootstrap.min.css">
 
 
-    <link rel="icon" type="image/x-icon" href="../assets/img/amanta.ico" />
+    <link rel="icon" type="image/x-icon" href="../sido.ico" />
     <script data-search-pseudo-elements defer src="../assets/js/all.min.js" crossorigin="anonymous"></script>
     <script src="../assets/js/feather.min.js" crossorigin="anonymous"></script>
 
