@@ -139,12 +139,15 @@ function redirectlink(link,values,title,cc =  null) {
     },
   });
 }
-function redirectlink_pres(e) {
-  if (e.key === "Enter") {
-    $table = $('#namatabledatabase').val()
-    $hits = $('#datamaximumdatabase').val()
-        redirectlink('database',$table+'/'+$hits)
+function redirectlink_pres(table) {
+    // $table = $('#namatabledatabase').val()
+    if (table != "") {
+      var hits = $('#datamaximumdatabase').val()
+      redirectlink('database',table+'/'+hits)
+    }else{
+      redirectlink('database')
     }
+    
 }
 function downloadlink(jenisdocumen,addr) {
   $.ajax({ 
