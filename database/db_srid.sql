@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2025 at 11:31 AM
+-- Generation Time: Sep 14, 2025 at 05:47 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -356,6 +356,21 @@ CREATE TABLE `table_datanotice_d` (
   `createdby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `table_datanotice_d`
+--
+
+INSERT INTO `table_datanotice_d` (`documenid`, `noticeid`, `imgnotice`, `createdon`, `createdby`) VALUES
+(1, 3, '14092025010321^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:03:21', '90003560'),
+(2, 3, '14092025010321^^Elegance.png', '2025-09-14 01:03:21', '90003560'),
+(3, 3, '14092025010321^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:03:21', '90003560'),
+(4, 3, '14092025010321^^CPB Online.png', '2025-09-14 01:03:21', '90003560'),
+(5, 3, '14092025011202^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:12:02', '90003560'),
+(6, 3, '14092025011203^^Elegance.png', '2025-09-14 01:12:02', '90003560'),
+(7, 3, '14092025011203^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:12:02', '90003560'),
+(8, 3, '14092025011203^^CPB Online.png', '2025-09-14 01:12:02', '90003560'),
+(9, 3, '14092025011203^^sidomuncul.png', '2025-09-14 01:12:02', '90003560');
+
 -- --------------------------------------------------------
 
 --
@@ -371,6 +386,13 @@ CREATE TABLE `table_datanotice_h` (
   `changedon` datetime NOT NULL,
   `changedby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datanotice_h`
+--
+
+INSERT INTO `table_datanotice_h` (`noticeid`, `header`, `descriptions`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(1, 'LIBUR NASIONAL', '<p>Besok libur</p>', '2025-09-14 01:12:02', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -516,7 +538,7 @@ CREATE TABLE `table_datapkb` (
 --
 
 INSERT INTO `table_datapkb` (`norevisi`, `descriptions`, `link`, `text_descriptions`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'PKB', 'http://pkb-online.sidomuncul.co.id/', 'Perjanjian Kerja Bersama (PKB) merupakan dokumen hukum yang sangat penting dalam hubungan industrial antara pengusaha dan pekerja atau buruh dalam suatu perusahaan atau organisasi. Sebagai landasan dasar bagi keduanya, PKB memiliki peranan strategis dalam menciptakan suasana kerja yang harmonis, adil, dan transparan. PKB berfungsi sebagai pedoman yang mengatur hak dan kewajiban baik bagi pengusaha maupun pekerja, serta memberikan perlindungan hukum bagi kedua belah pihak dalam segala aspek pekerjaan. Pengenalan terhadap PKB menjadi sangat krusial, tidak hanya bagi manajemen perusahaan dan serikat pekerja, tetapi juga bagi setiap individu yang terlibat dalam dunia kerja. PKB juga membantu untuk mencegah terjadinya konflik yang dapat merugikan kedua belah pihak, dengan menyediakan mekanisme penyelesaian sengketa yang jelas dan efektif. Seiring dengan perkembangan dunia kerja yang semakin dinamis, PKB juga perlu disesuaikan dengan kebutuhan dan tantangan yang ada, baik yang berkaitan dengan aspek kesejahteraan, perlindungan sosial, maupun upaya peningkatan produktivitas dan kualitas kerja. Oleh karena itu, pemahaman yang mendalam mengenai perjanjian ini menjadi sangat penting agar dapat tercapai hubungan industrial yang saling menguntungkan, sesuai dengan ketentuan perundang-undangan yang berlaku. Dalam konteks ini, buku ini bertujuan untuk memberikan wawasan yang lebih mendalam mengenai pengertian, tujuan, serta proses penyusunan dan penerapan Perjanjian Kerja Bersama di lingkungan perusahaan, dengan harapan agar informasi ini dapat menjadi acuan dan pedoman bagi semua pihak yang terlibat dalam dunia industri dan ketenagakerjaan.', 1, '2025-03-24 03:30:30', '90003560', '2025-03-24 03:30:30', '90003560', '0000-00-00 00:00:00', '');
+(1, 'PKB', 'http://pkb-online.sidomuncul.co.id/', '<p>Perjanjian Kerja Bersama (PKB) merupakan dokumen hukum yang sangat penting dalam hubungan industrial antara pengusaha dan pekerja atau buruh dalam suatu perusahaan atau organisasi. Sebagai landasan dasar bagi keduanya, PKB memiliki peranan strategis dalam menciptakan suasana kerja yang harmonis, adil, dan transparan. PKB berfungsi sebagai pedoman yang mengatur hak dan kewajiban baik bagi pengusaha maupun pekerja, serta memberikan perlindungan hukum bagi kedua belah pihak dalam segala aspek pekerjaan. Pengenalan terhadap PKB menjadi sangat krusial, tidak hanya bagi manajemen perusahaan dan serikat pekerja, tetapi juga bagi setiap individu yang terlibat dalam dunia kerja. PKB juga membantu untuk mencegah terjadinya konflik yang dapat merugikan kedua belah pihak, dengan menyediakan mekanisme penyelesaian sengketa yang jelas dan efektif. Seiring dengan perkembangan dunia kerja yang semakin dinamis, PKB juga perlu disesuaikan dengan kebutuhan dan tantangan yang ada, baik yang berkaitan dengan aspek kesejahteraan, perlindungan sosial, maupun upaya peningkatan produktivitas dan kualitas kerja. Oleh karena itu, pemahaman yang mendalam mengenai perjanjian ini menjadi sangat penting agar dapat tercapai hubungan industrial yang saling menguntungkan, sesuai dengan ketentuan perundang-undangan yang berlaku. Dalam konteks ini, buku ini bertujuan untuk memberikan wawasan yang lebih mendalam mengenai pengertian, tujuan, serta proses penyusunan dan penerapan Perjanjian Kerja Bersama di lingkungan perusahaan, dengan harapan agar informasi ini dapat menjadi acuan dan pedoman bagi semua pihak yang terlibat dalam dunia industri dan ketenagakerjaan.</p>', 1, '2025-03-24 03:30:30', '90003560', '2025-09-14 22:15:00', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -1160,13 +1182,13 @@ ALTER TABLE `table_datalks_n`
 -- AUTO_INCREMENT for table `table_datanotice_d`
 --
 ALTER TABLE `table_datanotice_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `table_datanotice_h`
 --
 ALTER TABLE `table_datanotice_h`
-  MODIFY `noticeid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `noticeid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `table_datap2k3_d`
@@ -1220,7 +1242,7 @@ ALTER TABLE `table_datapkwt_h`
 -- AUTO_INCREMENT for table `table_datasido_e`
 --
 ALTER TABLE `table_datasido_e`
-  MODIFY `sidoid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `sidoid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_datasido_h`
