@@ -1,5 +1,5 @@
 <div class="container">
-    <h3 class="fw-bold">Display LKS</h3>
+    <h3 class="fw-bold">Display</h3>
     <hr class="mb-5">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item p-1" role="presentation">
@@ -38,6 +38,7 @@
                             <th>Nomor</th>
                             <th>Nama Dokumen</th>
                             <th>Link Dokumen</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                 </table>
@@ -67,6 +68,7 @@
                             <th>Image ID</th>
                             <th>Image Name</th>
                             <th>Link Address</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                 </table>

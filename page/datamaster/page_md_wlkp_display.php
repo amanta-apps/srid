@@ -18,7 +18,7 @@
                         <th>WLKP ID</th>
                         <th>Deskripsi</th>
                         <th>Header Text</th>
-                        <th>Status</th>
+                        <th>Created On</th>
                     </tr>
                 </thead>
             </table>
@@ -32,6 +32,7 @@
                             <th>Dokumen ID</th>
                             <th>Nama Dokumen</th>
                             <th>Link Dokumen</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                 </table>

@@ -1,19 +1,22 @@
 <?php
-$dir = Getdata('drtext', 'table_datadirections', 'directionsid', 8);
+
 $imgid = Getkode('imgid', 'table_datafarkes_g');
 $imgthemes = $imgaddress = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
+$imgsrc = '../assets/galery/noimg.png';
 if (isset($_GET['n'])) {
     $imgid = base64_decode($_GET['n']);
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datafarkes_g WHERE imgid='$imgid'"));
     $imgthemes = $r['imgthemes'];
     $imgaddress = $r['imgaddress'];
-    $createdon = $r['createdon'];
+    $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
+    $dir = Getdata('drtext', 'table_datadirections', 'directionsid', 8);
+    $imgsrc = $dir . $docaddr;
 } ?>
 <div class="container">
-    <h3 class="fw-bold">Farkes - Galery</h3>
+    <h3 class="fw-bold">Galery</h3>
     <hr class="mb-5">
     <div class="row mb-0">
         <div class="col-sm-8">
@@ -47,36 +50,35 @@ if (isset($_GET['n'])) {
             <div class="form-group row">
                 <label class="col-sm-3">Preview</label>
                 <div class="col-sm-9">
-                    <img src="<?= $dir . $imgaddress ?>" width="100" id="previewimgimgfarkes" class="img-thumbnail border-3">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3"></label>
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdimgfarkes()"><img src="../assets/icon/save.png"> Submit</button>
+                    <img src="<?= $imgsrc ?>" width="100" id="previewimgimgfarkes">
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-header">
-                    System
-                </div>
-                <div class="card-body">
-                    <div class="form-group row mb-1">
-                        <label for="createdonmdimgfarkes" class="col-sm-6">Created On</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdonmdimgfarkes" value="<?= $createdon ?>" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-1">
-                        <label for="createdbymdimgfarkes" class="col-sm-6">Created By</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdbymdimgfarkes" value="<?= $createdby ?>" readonly>
-                        </div>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Date</legend>
+                <div class="form-group row mb-1">
+                    <label for="createdonmdimgfarkes" class="col-sm-6">Created On</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdonmdimgfarkes" value="<?= $createdon ?>" readonly>
                     </div>
                 </div>
-            </div>
+                <div class="form-group row mb-1">
+                    <label for="createdbymdimgfarkes" class="col-sm-6">Created By</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdbymdimgfarkes" value="<?= $createdby ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdimgfarkes()"><img src="../assets/icon/save.png"> Simpan</button>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>

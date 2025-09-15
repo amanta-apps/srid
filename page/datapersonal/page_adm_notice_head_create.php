@@ -91,7 +91,7 @@ if (isset($_GET['n'])) {
         let files = this.files;
         let fileNames = [];
         let fileList = document.getElementById("filelistnoticehead");
-        fileList.innerHTML = ""; // reset list
+        fileList.innerHTML = ""; // reset list 
 
         for (let file of files) {
             fileNames.push(file.name);

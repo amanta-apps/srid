@@ -8,11 +8,11 @@ if (isset($_GET['n'])) {
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datasido_h WHERE sidoid='$sidoid'"));
     $sidodescriptions = $r['sidodescriptions'];
     $sidoheader = $r['sidoheader'];
-    $createdon = $r['createdon'];
+    $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
 } ?>
 <div class="container">
-    <h3 class="fw-bold">Sido Bungah - Header</h3>
+    <h3 class="fw-bold">Header</h3>
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
@@ -23,45 +23,56 @@ if (isset($_GET['n'])) {
                 </div>
             </div>
             <div class="form-group row mb-1">
-                <label for="headmdsido" class="col-sm-3">Header</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control form-control-sm" id="headmdsido" value="<?= $sidoheader ?>">
-                </div>
-            </div>
-            <div class="form-group row mb-1">
-                <label for="descriptionsmdsido" class="col-sm-3">Descriptions</label>
-                <div class="col-sm-8">
-                    <textarea id="descriptionsmdsido" class="form-control form-control-sm" rows="5"><?= $sidodescriptions ?></textarea>
-                </div>
-            </div>
-            <div class="form-group row mt-3">
-                <label for="" class="col-sm-3"></label>
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdsido()"><img src="../assets/icon/save.png"> Submit</button>
-                </div>
+                <fieldset class="border rounded p-2 mb-3">
+                    <div class="form-group row mb-1">
+                        <label for="headmdsido" class="col-sm-2">Header</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control form-control-sm" id="headmdsido" value="<?= $sidoheader ?>">
+                        </div>
+                    </div>
+                    <legend class="float-none w-auto px-2 fs-6">Title & Descriptions</legend>
+                    <div id="editorsidohead"><?= $sidodescriptions ?></div>
+                </fieldset>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-header">
-                    System
-                </div>
-                <div class="card-body">
-                    <div class="form-group row mb-1">
-                        <label for="createdonmdsido" class="col-sm-6">Created On</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdonmdsido" value="<?= $createdon ?>" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-1">
-                        <label for="createdbymdsido" class="col-sm-6">Created By</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdbymdsido" value="<?= $createdby ?>" readonly>
-                        </div>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Date</legend>
+                <div class="form-group row mb-1">
+                    <label for="createdonmdsido" class="col-sm-6">Created On</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdonmdsido" value="<?= $createdon ?>" readonly>
                     </div>
                 </div>
-            </div>
+                <div class="form-group row mb-1">
+                    <label for="createdbymdsido" class="col-sm-6">Created By</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdbymdsido" value="<?= $createdby ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdsido()"><img src="../assets/icon/save.png"> Simpan</button>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
-
 </div>
+<script>
+    let editorInstance;
+    ClassicEditor
+        .create(document.getElementById('editorsidohead'), {
+            placeholder: 'Tulis sesuatu di sini...' // <-- kasih placeholder
+        })
+        .then(editor => {
+            editorInstance = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>

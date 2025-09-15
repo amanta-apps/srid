@@ -24,7 +24,7 @@
                         <th>Farkes ID</th>
                         <th>Deskripsi</th>
                         <th>Header Text</th>
-                        <th>Status</th>
+                        <th>Created On</th>
                     </tr>
                 </thead>
             </table>
@@ -38,6 +38,7 @@
                             <th>Nomor</th>
                             <th>Nama Dokumen</th>
                             <th>Link Dokumen</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                 </table>
@@ -67,6 +68,7 @@
                             <th>Image ID</th>
                             <th>Image Name</th>
                             <th>Link Address</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                 </table>

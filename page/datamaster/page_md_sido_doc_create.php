@@ -19,7 +19,7 @@ if (isset($_GET['n'])) {
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
-            <div class="form-group row mb-1">
+            <div class="form-group row mb-1" hidden>
                 <label for="sidoidmdsido" class="col-sm-2">Sido Id</label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control form-control-sm" id="sidoidmdsido" value="<?= $documenid ?>" readonly>
@@ -57,7 +57,16 @@ if (isset($_GET['n'])) {
                     <input type="date" class="form-control form-control-sm" id="tgltomdsido" value="<?= $tglevent ?>">
                 </div>
             </div>
-
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Catatan/Keterangan</legend>
+                <div id="editor"></div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
+                <input type="file" id="lampiransido" name="lampiransido[]" multiple class="form-control mb-2" accept=".pdf, image/*">
+                <ol id="filelistsido" class="mt-2"></ol>
+                <input type="text" class="form-control form-control-sm" id="descimgsido" readonly hidden>
+            </fieldset>
         </div>
         <div class="col-sm-4">
             <fieldset class="border rounded p-2 mb-3">
@@ -75,24 +84,16 @@ if (isset($_GET['n'])) {
                     </div>
                 </div>
             </fieldset>
-        </div>
-        <fieldset class="border rounded p-2 mb-3">
-            <legend class="float-none w-auto px-2 fs-6">Catatan/Keterangan</legend>
-            <div id="editor"></div>
-        </fieldset>
-        <fieldset class="border rounded p-2 mb-3">
-            <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
-            <input type="file" id="lampiransido" name="lampiransido[]" multiple class="form-control mb-2" accept=".pdf, image/*">
-            <ol id="filelistsido" class="mt-2"></ol>
-            <input type="text" class="form-control form-control-sm" id="descimgsido" readonly hidden>
-            <!-- <button type="submit" class="btn btn-success btn-sm">Submit</button> -->
-            <div class=" form-group row mt-3">
-                <!-- <label for="" class="col-sm-2"></label> -->
-                <div class="col-sm-12 text-end">
-                    <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdsidodoc()"><img src="../assets/icon/save.png"> Submit</button>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdsidodoc()"><img src="../assets/icon/save.png"> Simpan</button>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
+        </div>
     </div>
 </div>
 

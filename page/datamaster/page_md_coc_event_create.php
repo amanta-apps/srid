@@ -23,11 +23,11 @@ if (isset($_GET['n'])) {
     $eventorganizer = $r['eventorganizer'];
     $eventtopics = $r['eventtopics'];
     $eventlocation = $r['eventlocation'];
-    $createdon = $r['createdon'];
+    $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
 } ?>
 <div class="container">
-    <h3 class="fw-bold">Create Code of Conduct (COC) - Event</h3>
+    <h3 class="fw-bold">Event</h3>
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
@@ -42,14 +42,14 @@ if (isset($_GET['n'])) {
                 <div class="col-sm-2">
                     <input type="date" class="form-control form-control-sm" id="mulaimdcocevent" value="<?= $eventstart ?>">
                 </div>
-                <!-- <label for="selesaimdcocevent" class="col-sm-2">Selesai</label> -->
+                <label for="selesaimdcocevent" class="col-sm-1">To</label>
                 <div class="col-sm-2">
                     <input type="date" class="form-control form-control-sm" id="selesaimdcocevent" value="<?= $eventfinish ?>">
                 </div>
             </div>
             <div class="form-group row mb-1">
                 <label for="eventorgmdcocevent" class="col-sm-3">Event Org</label>
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     <input type="text" class="form-control form-control-sm" id="eventorgmdcocevent" value="<?= $eventorganizer ?>">
                 </div>
             </div>
@@ -80,31 +80,30 @@ if (isset($_GET['n'])) {
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-header">
-                    System
-                </div>
-                <div class="card-body">
-                    <div class="form-group row mb-1">
-                        <label for="createdonmdcocevent" class="col-sm-6">Created On</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdonmdcocevent" value="<?= $createdon ?>" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-1">
-                        <label for="createdbymdcocevent" class="col-sm-6">Created By</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdbymdcocevent" value="<?= $createdby ?>" readonly>
-                        </div>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Date</legend>
+                <div class="form-group row mb-1">
+                    <label for="createdonmdcocevent" class="col-sm-6">Created On</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdonmdcocevent" value="<?= $createdon ?>" readonly>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-group row mt-3">
-        <label for="" class="col-sm-2"></label>
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdcocevent()"><img src="../assets/icon/save.png"> Submit</button>
+                <div class="form-group row mb-1">
+                    <label for="createdbymdcocevent" class="col-sm-6">Created By</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdbymdcocevent" value="<?= $createdby ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdcocevent()"><img src="../assets/icon/save.png"> Simpan</button>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>

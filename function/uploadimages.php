@@ -423,7 +423,7 @@ if ($typess == 'document_coc') {
     }
     $data = [
         "iconmsgs" => $iconmsgs,
-        "link" => 'mt_sp_display',
+        "link" => 'md_sp_display',
         "msgs" => $msgs,
         "time" => $time,
         "imagename" => $spid,
@@ -835,6 +835,80 @@ if ($typess == 'document_coc') {
         "msgs" => $msgs,
         "time" => $time,
         "id" => $noticeid,
+        "return" => $return
+    ];
+} elseif ($typess == 'document_seragam') {
+    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=13");
+    if (mysqli_num_rows($sql) <> 0) {
+        $r = mysqli_fetch_array($sql);
+        $dir = $r['drtext'];
+    }
+    $temp = $dir;
+    if (!file_exists($temp)) {
+        mkdir($temp, 0777, true);
+    }
+
+    include_once 'getvalue.php';
+    $srgmid       = getai('table_datasrgm_h');
+    $unitid       = $_POST['unitid'] ?? '';
+    $qty          = $_POST['qty'] ?? '';
+    $unitid = explode(",", $unitid);
+    foreach ($unitid as $unitid) {
+        echo $val . "<br>";
+    }
+    $total = 0;
+
+    // if (!empty($_FILES['lampiranseragamranc']['name'][0])) {
+    //     $uploadedFiles = [];
+    //     foreach ($_FILES['lampiranseragamranc']['name'] as $key => $name) {
+    //         $tmpName = $_FILES['lampiranseragamranc']['tmp_name'][$key];
+    //         $error   = $_FILES['lampiranseragamranc']['error'][$key];
+    //         $ImageName = $_FILES['lampiranseragamranc']['name'];
+    //         $ImageType  = $_FILES['lampiranseragamranc']['type'];
+
+    //         $NewImageName   = date('dmYHis')  . '^^' . $name;
+    //         $targetFile = $temp . $NewImageName;
+
+    //         if (move_uploaded_file($tmpName, $targetFile)) {
+    //             $query = mysqli_query($conn, "INSERT INTO table_datasrgm_d (srgmid,
+    //                                                                         imgseragam,
+    //                                                                         createdby,
+    //                                                                         createdon) 
+    //                                                 VALUES ('$srgmid',
+    //                                                         '$NewImageName',
+    //                                                         '$createdby',
+    //                                                         '$createdon')");
+    //             $return = true;
+    //             $uploaded[] = $NewImageName;
+    //         }
+    //     }
+    // }
+
+    if ($return) {
+        // $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (total,
+        //                                                 createdon,
+        //                                                 createdby)
+        //                 VALUES('$total',
+        //                         '$createdon',
+        //                         '$createdby')");
+        $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (total,
+                                                        createdon,
+                                                        createdby)
+                        VALUES('$total',
+                                '$createdon',
+                                '$createdby')");
+        if ($query) {
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+    }
+    $data = [
+        "iconmsgs" => $iconmsgs,
+        "link" => 'adm_notice_display',
+        "msgs" => $msgs,
+        "time" => $time,
+        "id" => $unitid,
         "return" => $return
     ];
 }

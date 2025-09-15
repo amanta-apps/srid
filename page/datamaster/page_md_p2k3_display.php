@@ -1,5 +1,5 @@
 <div class="container">
-    <h3 class="fw-bold">Display P2K3</h3>
+    <h3 class="fw-bold">Display</h3>
     <hr class="mb-5">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item p-1" role="presentation">
@@ -24,7 +24,7 @@
                         <th>P2K3 ID</th>
                         <th>Deskripsi</th>
                         <th>Header Text</th>
-                        <th>Status</th>
+                        <th>Created On</th>
                     </tr>
                 </thead>
             </table>
@@ -38,6 +38,7 @@
                             <th>Nomor</th>
                             <th>Nama Dokumen</th>
                             <th>Link Dokumen</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                 </table>

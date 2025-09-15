@@ -130,17 +130,17 @@ if (isset($_GET['p'])) {
             include "datamaster/page_md_lks_img_create.php";
             break;
         // ---> SP
-        case 'mt_sp_display':
+        case 'md_sp_display':
             $_SESSION['p'] = 'Master Data LKS';
-            include "datamutasi/page_mt_sp_display.php";
+            include "datamaster/page_md_sp_display.php";
             break;
-        case 'mt_sp_draft_create':
+        case 'md_sp_draft_create':
             $_SESSION['p'] = 'Data SP';
-            include "datamutasi/page_mt_sp_draft_create.php";
+            include "datamaster/page_md_sp_draft_create.php";
             break;
-        case 'mt_sp_bina':
+        case 'md_sp_bina':
             $_SESSION['p'] = 'Data SP';
-            include "datamutasi/page_mt_sp_bina.php";
+            include "datamaster/page_md_sp_bina.php";
             break;
         // ---> Farkes
         case 'md_farkes_display':
@@ -220,6 +220,11 @@ if (isset($_GET['p'])) {
             $_SESSION['p'] = 'Master Data Seragam';
             include "datapersonal/page_adm_seragam_display.php";
             break;
+        case 'adm_seragam_ranc_create':
+            $_SESSION['p'] = 'Rancangan Seragam';
+            include "datapersonal/page_adm_seragam_ranc_create.php";
+            break;
+
 
         // ---> Surat Menyurat
         case 'adm_surat_display':
@@ -410,12 +415,8 @@ if (isset($_POST['prosessubmitmdpkb'])) {
 if (isset($_POST['prosesdelete_head_pkb'])) {
     $norevisi = $_POST['prosesdelete_head_pkb'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datapkb 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE norevisi='$norevisi' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datapkb 
+                                    WHERE norevisi='$norevisi'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -478,12 +479,8 @@ if (isset($_POST['prosessubmitmdcoc'])) {
 if (isset($_POST['prosesdelete_head_coc'])) {
     $norevisi = $_POST['prosesdelete_head_coc'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datacoc_h 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE cocid='$norevisi' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datacoc_h 
+                                    WHERE cocid='$norevisi'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -668,12 +665,8 @@ if (isset($_POST['prosessubmitmdwlkp'])) {
 if (isset($_POST['prosesdelete_head_wlkp'])) {
     $wlkpid = $_POST['prosesdelete_head_wlkp'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datawlkp_h 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE wlkpid='$wlkpid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datawlkp_h 
+                                    WHERE wlkpid='$wlkpid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -776,12 +769,8 @@ if (isset($_POST['prosessubmitmdpkwt'])) {
 if (isset($_POST['prosesdelete_head_pkwt'])) {
     $pkwtid = $_POST['prosesdelete_head_pkwt'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datapkwt_h 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE pkwtid='$pkwtid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datapkwt_h
+                                    WHERE pkwtid='$pkwtid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -884,12 +873,8 @@ if (isset($_POST['prosessubmitmdlks'])) {
 if (isset($_POST['prosesdelete_head_lks'])) {
     $lksid = $_POST['prosesdelete_head_lks'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datalks_h 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE lksid='$lksid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datalks_h
+                                    WHERE lksid='$lksid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -924,14 +909,14 @@ if (isset($_POST['prosessubmitmdnewslks'])) {
                                         WHERE newsid='$newsid'");
     } else {
         $query = mysqli_query($conn, "INSERT INTO table_datalks_n (newseditor,
-                                                                    newscontent,
                                                                     newstitle,
+                                                                    newscontent,
                                                                     statsactive,
                                                                     createdon,
                                                                     createdby)
-                                VALUES ('$kontent',
-                                        '$editor',
+                                VALUES ('$editor',
                                         '$title',
+                                        '$kontent',
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
@@ -955,12 +940,8 @@ if (isset($_POST['prosessubmitmdnewslks'])) {
 if (isset($_POST['prosesdelete_news_lks'])) {
     $newsid = $_POST['prosesdelete_news_lks'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datalks_n 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE newsid='$newsid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datalks_n
+                                    WHERE newsid='$newsid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -1204,7 +1185,7 @@ if (isset($_POST['prosessimpandatabina'])) {
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "mt_sp_display",
+        "link" => "md_sp_display",
         "id" => $spid,
         "return" => $return,
     ];
@@ -1215,10 +1196,7 @@ if (isset($_POST['prosesdelete_head_sp'])) {
     $stasx = 0;
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT stats FROM table_datastats WHERE idstats=99"));
     $status = $r['stats'];
-    $query = mysqli_query($conn, "UPDATE table_datasp_doc
-                                    SET spstatus='$status',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
+    $query = mysqli_query($conn, "DELETE FROM table_datasp_doc
                                     WHERE spid='$spid'");
     if ($query) {
         $return = true;
@@ -1229,7 +1207,7 @@ if (isset($_POST['prosesdelete_head_sp'])) {
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "mt_sp_display",
+        "link" => "md_sp_display",
         "id" => $spid,
         "return" => $return,
     ];
@@ -1283,12 +1261,8 @@ if (isset($_POST['prosessubmitmdfarkes'])) {
 if (isset($_POST['prosesdelete_head_farkes'])) {
     $farkesid = $_POST['prosesdelete_head_farkes'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datafarkes_h 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE farkesid='$farkesid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datafarkes_h 
+                                    WHERE farkesid='$farkesid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -1328,8 +1302,8 @@ if (isset($_POST['prosessubmitmdnewsfarkes'])) {
                                                                     statsactive,
                                                                     createdon,
                                                                     createdby)
-                                VALUES ('$kontent',
-                                        '$editor',
+                                VALUES ('$editor',
+                                        '$kontent',
                                         '$title',
                                         '$stasx',
                                         '$createdon',
@@ -1354,12 +1328,8 @@ if (isset($_POST['prosessubmitmdnewsfarkes'])) {
 if (isset($_POST['prosesdelete_news_farkes'])) {
     $newsid = $_POST['prosesdelete_news_farkes'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datafarkes_n 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE newsid='$newsid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datafarkes_n
+                                    WHERE newsid='$newsid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -1501,12 +1471,8 @@ if (isset($_POST['prosessubmitmdp2k3'])) {
 if (isset($_POST['prosesdelete_head_p2k3'])) {
     $p2k3id = $_POST['prosesdelete_head_p2k3'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datap2k3_h 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE p2k3id='$p2k3id' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datap2k3_h
+                                    WHERE p2k3id='$p2k3id'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
@@ -1546,8 +1512,8 @@ if (isset($_POST['prosessubmitmdnewsp2k3'])) {
                                                                     statsactive,
                                                                     createdon,
                                                                     createdby)
-                                VALUES ('$kontent',
-                                        '$editor',
+                                VALUES ('$editor',
+                                        '$kontent',
                                         '$title',
                                         '$stasx',
                                         '$createdon',
@@ -1572,12 +1538,8 @@ if (isset($_POST['prosessubmitmdnewsp2k3'])) {
 if (isset($_POST['prosesdelete_news_p2k3'])) {
     $newsid = $_POST['prosesdelete_news_p2k3'];
     $stasx = 0;
-    $query = mysqli_query($conn, "UPDATE table_datap2k3_n 
-                                    SET statsactive='$stasx',
-                                        deletedon='$deletedon',
-                                        deletedby='$deletedby'
-                                    WHERE newsid='$newsid' 
-                                    AND statsactive=1");
+    $query = mysqli_query($conn, "DELETE FROM table_datap2k3_n
+                                    WHERE newsid='$newsid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";

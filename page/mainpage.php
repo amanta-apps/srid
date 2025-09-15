@@ -129,7 +129,7 @@ $project = 'S R I D';
                                             <div class="nav-link-icon"><i data-feather="minus"></i></div>
                                             LKS
                                         </a>
-                                        <a class="nav-link collapsed text-gray-600 menus-navlink zoom" href="#" onclick="location.href= 'mainpage?p=<?= base64_encode('mt_sp_display') ?>'" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAccount" aria-expanded="false" aria-controls="pagesCollapseAccount">
+                                        <a class="nav-link collapsed text-gray-600 menus-navlink zoom" href="#" onclick="location.href= 'mainpage?p=<?= base64_encode('md_sp_display') ?>'" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAccount" aria-expanded="false" aria-controls="pagesCollapseAccount">
                                             <div class="nav-link-icon"><i data-feather="minus"></i></div>
                                             SP
                                         </a>

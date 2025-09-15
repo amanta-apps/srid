@@ -12,11 +12,11 @@ if (isset($_GET['n'])) {
                                                         FROM table_datawlkp_h WHERE wlkpid='$wlkpid'"));
     $wlkpdescriptions = $r['wlkpdescriptions'];
     $wlkpheader = $r['wlkpheader'];
-    $createdon = $r['createdon'];
+    $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
 } ?>
 <div class="container">
-    <h3 class="fw-bold">Create WLKP - Header</h3>
+    <h3 class="fw-bold">Header</h3>
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
@@ -27,44 +27,57 @@ if (isset($_GET['n'])) {
                 </div>
             </div>
             <div class="form-group row mb-1">
-                <label for="headermdwlkp" class="col-sm-3">WLKP Header</label>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control form-control-sm" id="headermdwlkp" value="<?= $wlkpheader ?>">
-                </div>
-            </div>
-            <div class="form-group row mb-1">
-                <label for="descriptionsmdwlkp" class="col-sm-3">Long Descriptions</label>
-                <div class="col-sm-8">
-                    <textarea id="descriptionsmdwlkp" class="form-control form-control-sm" rows="5"><?= $wlkpdescriptions ?></textarea>
-                </div>
+                <fieldset class="border rounded p-2 mb-3">
+                    <div class="form-group row mb-1">
+                        <label for="headermdwlkp" class="col-sm-2">Header</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control form-control-sm" id="headermdwlkp" value="<?= $wlkpheader ?>">
+                        </div>
+                    </div>
+                    <legend class="float-none w-auto px-2 fs-6">Title & Descriptions</legend>
+                    <div id="editorwlkphead"><?= $wlkpdescriptions ?></div>
+                </fieldset>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-header">
-                    System
-                </div>
-                <div class="card-body">
-                    <div class="form-group row mb-1">
-                        <label for="createdonmdcocevent" class="col-sm-6">Created On</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdonmdcocevent" value="<?= $createdon ?>" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-1">
-                        <label for="createdbymdcocevent" class="col-sm-6">Created By</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdbymdcocevent" value="<?= $createdby ?>" readonly>
-                        </div>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Date</legend>
+                <div class="form-group row mb-1">
+                    <label for="createdonmdcocevent" class="col-sm-6">Created On</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdonmdcocevent" value="<?= $createdon ?>" readonly>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-group row mt-3">
-        <label for="" class="col-sm-2"></label>
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdwlkp()"><img src="../assets/icon/save.png"> Submit</button>
+                <div class="form-group row mb-1">
+                    <label for="createdbymdcocevent" class="col-sm-6">Created By</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdbymdcocevent" value="<?= $createdby ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdwlkp()"><img src="../assets/icon/save.png"> Simpan</button>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>
+
+<script>
+    let editorInstance;
+    ClassicEditor
+        .create(document.getElementById('editorwlkphead'), {
+            placeholder: 'Tulis sesuatu di sini...' // <-- kasih placeholder
+        })
+        .then(editor => {
+            editorInstance = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>

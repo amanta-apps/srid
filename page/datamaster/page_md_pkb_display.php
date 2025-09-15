@@ -9,7 +9,7 @@
                 <th>Deskripsi</th>
                 <th>Link</th>
                 <th>Long Deskripsi</th>
-                <th>Status</th>
+                <th>Created On</th>
                 <!-- <th>Dibuat Oleh</th>
                 <th>Dibuat Tgl</th> -->
             </tr>

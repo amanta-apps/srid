@@ -1,9 +1,9 @@
 <?php
-$dir = Getdata('drtext', 'table_datadirections', 'directionsid', 2);
 $documenid = Getkode('documenid', 'table_datawlkp_d');
 $wlkpdescription = $descriptions = $wlkphead = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
+$imgsrc = '../assets/galery/noimg.png';
 if (isset($_GET['n'])) {
     $documenid = base64_decode($_GET['n']);
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datawlkp_d WHERE documenid='$documenid'"));
@@ -11,9 +11,11 @@ if (isset($_GET['n'])) {
     $docaddr = $r['documenaddress'];
     $createdon = $r['createdon'];
     $createdby = $r['createdby'];
+    $dir = Getdata('drtext', 'table_datadirections', 'directionsid', 2);
+    $imgsrc = $dir . $docaddr;
 } ?>
 <div class="container">
-    <h3 class="fw-bold">WLKP - Dokumen</h3>
+    <h3 class="fw-bold">Dokumen</h3>
     <hr class="mb-5">
     <div class="row mb-0">
         <div class="col-sm-8">
@@ -47,36 +49,35 @@ if (isset($_GET['n'])) {
             <div class="form-group row">
                 <label class="col-sm-3">Preview</label>
                 <div class="col-sm-3">
-                    <img src="<?= $dir . $docaddr ?>" width="100px" id="previewimgwlkp">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3"></label>
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-sm btn-success zoom" onclick="submitdocmdwlkp()"><img src="../assets/icon/save.png"> Submit</button>
+                    <img src="<?= $imgsrc ?>" width="100px" id="previewimgwlkp">
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-header">
-                    System
-                </div>
-                <div class="card-body">
-                    <div class="form-group row mb-1">
-                        <label for="createdonmdwlkp" class="col-sm-6">Created On</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdonmdwlkp" value="<?= $createdon ?>" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row mb-1">
-                        <label for="createdbymdwlkp" class="col-sm-6">Created By</label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control form-control-sm" id="createdbymdwlkp" value="<?= $createdby ?>" readonly>
-                        </div>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Date</legend>
+                <div class="form-group row mb-1">
+                    <label for="createdonmdwlkp" class="col-sm-6">Created On</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdonmdwlkp" value="<?= $createdon ?>" readonly>
                     </div>
                 </div>
-            </div>
+                <div class="form-group row mb-1">
+                    <label for="createdbymdwlkp" class="col-sm-6">Created By</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-sm" id="createdbymdwlkp" value="<?= $createdby ?>" readonly>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Action</legend>
+                <div class=" form-group row mt-3">
+                    <div class="col-sm-12 text-end">
+                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitdocmdwlkp()"><img src="../assets/icon/save.png"> Simpan</button>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     </div>
 </div>

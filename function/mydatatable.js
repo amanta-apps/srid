@@ -37,12 +37,17 @@ $(document).ready( function () {
             return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
         },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-        },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         
         // { data: "createdby" },
@@ -153,6 +158,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -189,17 +206,23 @@ $(document).ready( function () {
         {
             data: "cocdescriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         { data: "cochead" },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-        },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         ],
         pageLength: 10,
@@ -239,17 +262,23 @@ $(document).ready( function () {
         {
             data: "wlkpdescriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         { data: "wlkpheader" },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-        },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         ],
         pageLength: 10,
@@ -299,6 +328,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -337,17 +378,23 @@ $(document).ready( function () {
         {
             data: "pkwtdescriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         { data: "pkwtheader" },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-            },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         ],
         pageLength: 10,
@@ -397,6 +444,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -435,17 +494,23 @@ $(document).ready( function () {
         {
             data: "lksdescriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         { data: "lksheader" },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-            },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         ],
         pageLength: 10,
@@ -495,6 +560,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -530,18 +607,19 @@ $(document).ready( function () {
         { data: "newsid" },
         { data: "newseditor" },
         {
-            data: "newscontent",
+            data: "newstitle",
             render: function(data, type, row) {
                 if (!data) return "";
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
         {
-            data: "newstitle",
+            data: "newscontent",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-            },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         ],
         pageLength: 10,
@@ -583,6 +661,18 @@ $(document).ready( function () {
                 return `
                     <a href="#" onclick="downloadlink(5,'${row.imgaddress}')" title="Download">${row.imgaddress}</a>
                 `;
+            }
+        },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
             }
         },
         ],
@@ -637,29 +727,6 @@ $(document).ready( function () {
         { data: "idviolation" },
         { data: "sancid" },
         { data: "spstatus" },
-        // { data: "createdon_renc" },
-        // { data: "createdby_renc" },
-        // { data: "postingdate_renc" },
-        // { data: "postingby_renc" },
-        // { data: "createdon_real" },
-        // { data: "createdby_real" },
-        // { data: "postingdate_real" },
-        // { data: "postingby_real" },
-        // {
-        //     data: "lksdescriptions",
-        //     render: function(data, type, row) {
-        //         if (!data) return "";
-        //         return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        // },
-        // },
-        // { data: "lksheader" },
-        // {
-        //     data: "statsactive",
-        //     render: function(data, type, row) {
-        //         if (data == 1) return "Aktif";
-        //         if (data == 0) return "Non Aktif";
-        //     },
-        // },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -668,21 +735,21 @@ $(document).ready( function () {
             text: 'Buat Draft SP',
             className: 'btn btn-sm btn-success',
             action: function () {
-             redirectlink('mt_sp_draft_create')
+             redirectlink('md_sp_draft_create')
             }
         },
         {
             text: 'Buat Rekonsiliasi SP',
             className: 'btn btn-sm btn-success',
             action: function () {
-             redirectlink('mt_sp_bina')
+             redirectlink('md_sp_bina')
             }
         },
         {
             text: 'Laporan',
             className: 'btn btn-sm btn-success',
             action: function () {
-             redirectlink('mt_sp_report')
+             redirectlink('md_sp_report')
             }
         },
         // 'pdf'
@@ -709,20 +776,26 @@ $(document).ready( function () {
             }
         },
         { data: "farkesid" },
+        { data: "farkesheader" },
         {
             data: "farkesdescriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
-        },
-        { data: "farkesheader" },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-            },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         ],
         pageLength: 10,
@@ -772,6 +845,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -807,19 +892,21 @@ $(document).ready( function () {
         { data: "newsid" },
         { data: "newseditor" },
         {
-            data: "newscontent",
-            render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-            },
-        },
-        {
             data: "newstitle",
             render: function(data, type, row) {
                 if (!data) return "";
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
+        },  
+        {
+            data: "newscontent",
+            render: function(data, type, row) {
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
+        
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -862,6 +949,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -900,17 +999,23 @@ $(document).ready( function () {
         {
             data: "p2k3descriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
         },
         { data: "p2k3header" },
-        {
-            data: "statsactive",
+        { 
+            data: "createdon",
             render: function(data, type, row) {
-                if (data == 1) return "Aktif";
-                if (data == 0) return "Non Aktif";
-            },
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
         },
         ],
         pageLength: 10,
@@ -960,6 +1065,18 @@ $(document).ready( function () {
                 `;
             }
         },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -995,19 +1112,20 @@ $(document).ready( function () {
         { data: "newsid" },
         { data: "newseditor" },
         {
-            data: "newscontent",
-            render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-            },
-        },
-        {
             data: "newstitle",
             render: function(data, type, row) {
                 if (!data) return "";
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
+        {
+            data: "newscontent",
+            render: function(data, type, row) {
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
+        },      
         ],
         pageLength: 10,
         dom: 'Bfrtip',
@@ -1043,7 +1161,14 @@ $(document).ready( function () {
         { data: "tglsidak" },
         { data: "pernr" },
         { data: "unitid" },
-        { data: "catatan" },
+        {
+            data: "catatan",
+            render: function(data, type, row) {
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
+        }, 
         // { 
         //     data: "imgaddress",
         //     render: function(data, type, row) {
@@ -1090,10 +1215,11 @@ $(document).ready( function () {
         {
             data: "sidodescriptions",
             render: function(data, type, row) {
-                if (!data) return "";
-                return data.length > 10 ? data.substring(0, 20) + "..." : data;
-        },
-        },
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
+        }, 
         { data: "sidoheader" },
         { 
             data: "createdon",
@@ -1233,8 +1359,69 @@ $(document).ready( function () {
         ]
     });
 
-    
+      // -----> SERAGAM
+     $('#table_displayseragam').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+        url: "../function/serverside.php",
+        type: "POST",
+        data: { "table": "table_datasrgm_h" }
+        },
+        columns: [
+        { 
+            data: null,
+            render: function(data, type, row) {
+                return `
+                    <a href="#" onclick="redirectlink('adm_srgm_head_create','${row.srgmid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_head_srgm('${row.srgmid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                `;
+            }
+        },
+        { data: "srgmid" },
+        { data: "imgsrgm" },
+        { data: "total" },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
 
+                return `${day}.${month}.${year}`;
+            }
+        },
+        ],
+        pageLength: 10, // default tampil 10 baris
+        dom: 'Bfrtip',
+        buttons: [
+        {
+            text: 'Rancangan',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+             redirectlink('adm_seragam_ranc_create')
+            }
+        },
+        {
+            text: 'Realisasi',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+             redirectlink('adm_seragam_real_create')
+            }
+        },
+        {
+            text: 'Laporan',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+             redirectlink('adm_seragam_report')
+            }
+        },
+        'excel'
+        ]
+    });
+    
 
 
     // -----> Database

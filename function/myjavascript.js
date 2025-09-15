@@ -233,7 +233,7 @@ function delete_head_pkb(norevisi) {
 function submitmdcoc() {
   var norevisi = $('#norevisimdcoc').val()
   var header = $('#headermdcoc').val()
-  var descriptions = $('#descriptionsmdcoc').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -422,7 +422,7 @@ function delete_event_coc(calenderid) {
 function submitmdwlkp() {
   var wlkpid = $('#wlkpidmdwlkp').val()
   var header = $('#headermdwlkp').val()
-  var descriptions = $('#descriptionsmdwlkp').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -542,7 +542,7 @@ function delete_doc_wlkp(wlkpid) {
 function submitmdpkwt() {
   var pkwtid = $('#pkwtidmdpkwt').val()
   var header = $('#headermdpkwt').val()
-  var descriptions = $('#descriptionsmdpkwt').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -662,7 +662,7 @@ function delete_doc_pkwt(docid) {
 function submitmdlks() {
   var lksid = $('#lksidmdlks').val()
   var header = $('#headmdlks').val()
-  var descriptions = $('#descriptionsmdlks').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -748,7 +748,7 @@ function submitdocmdlks() {
 function submitmdnewslks() {
   var newsid = $('#newsidmdnewslks').val()
   var editor = $('#editormdnewslks').val()
-  var konten = $('#kontenmdnewslks').val()
+  var konten = editorInstance.getData()
   var title = $('#titlemdnewslks').val()
 
   $.ajax({ 
@@ -1058,7 +1058,7 @@ function delete_head_sp(spid) {
 function submitmdfarkes() {
   var farkesid = $('#farkesidmdfarkes').val()
   var header = $('#headmdfarkes').val()
-  var descriptions = $('#descriptionsmdfarkes').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -1144,7 +1144,7 @@ function submitdocmdfarkes() {
 function submitmdnewsfarkes() {
   var newsid = $('#newsidmdnewsfarkes').val()
   var editor = $('#editormdnewsfarkes').val()
-  var konten = $('#kontenmdnewsfarkes').val()
+  var konten = editorInstance.getData()
   var title = $('#titlemdnewsfarkes').val()
 
   $.ajax({ 
@@ -1169,6 +1169,38 @@ function submitmdnewsfarkes() {
       }
     },
   });
+}
+function delete_news_farkes(newsid) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus data ini?",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdelete_news_farkes": newsid
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            msgs()
+            setTimeout(() => {
+            redirectlink(data.link)
+            }, data.time);
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
 }
 function submitmdimgfarkes() {
   const fileupload = $("#docaddrmdimgfarkes").prop("files")[0];
@@ -1267,7 +1299,7 @@ function delete_img_farkes(imgid) {
 function submitmdp2k3() {
   var p2k3id = $('#p2k3idmdp2k3').val()
   var header = $('#headmdp2k3').val()
-  var descriptions = $('#descriptionsmdp2k3').val()
+  var descriptions = editorInstance.getData()
 
   $.ajax({ 
     url: "../function/getdata.php",
@@ -1385,7 +1417,7 @@ function delete_doc_p2k3(docid) {
 function submitmdnewsp2k3() {
   var newsid = $('#newsidmdnewsp2k3').val()
   var editor = $('#editormdnewsp2k3').val()
-  var konten = $('#kontenmdnewsp2k3').val()
+  var konten = editorInstance.getData()
   var title = $('#titlemdnewsp2k3').val()
 
   $.ajax({ 
@@ -1528,7 +1560,7 @@ function delete_sidak_p2k3(p2k3id) {
 function submitmdsido() {
   var sidoid = $('#sidomdsido').val()
   var header = $('#headmdsido').val()
-  var descriptions = $('#descriptionsmdsido').val()
+  var descriptions = editorInstance.getData()
   $.ajax({ 
     url: "../function/getdata.php",
     dataType: "JSON",
@@ -1597,7 +1629,6 @@ function submitmdsidodoc() {
       return;
     }
 
-    // Cek tipe
     if (!allowedTypes.includes(file.type)) {
       msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
       return;
@@ -1714,5 +1745,60 @@ function submitmdnoticehead() {
     },
   });
 }
+function submitmdseragamranc() {
+  let unitid = [];
+  let qty = [];
+  var length = $('#lenghtmdseragamranc').val()
+  for (let i = 1; i < length; i++) {
+    unitid.push($('#unitidseragamranc'+i).val())
+    qty.push($('#qtymdseragamranc'+i).val())
+  }
+
+  let formData = new FormData();
+  const files = $("#lampiranseragamranc").prop("files");
+
+  const maxSize = 10 * 1024 * 1024;
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      msgs('info',"File " + file.name + " File bukan image.",3000)
+      return;
+    }
+    formData.append("lampiranseragamranc[]", files[i]);
+  }
+
+  formData.append("srgmid", $("#srgmidmdseragamranc").val());
+  formData.append("unitid", unitid);
+  formData.append("qty", qty);
+  formData.append("typess", "document_seragam");
+
+  $.ajax({
+    url: "../function/uploadimages.php",
+    dataType: "JSON",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      alert(data.id)
+      if (data.return == 1) {
+          msgs()
+          setTimeout(() => {
+          redirectlink(data.link)
+          }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,data.time)
+      }
+    },
+  });
+}
+
 
 
