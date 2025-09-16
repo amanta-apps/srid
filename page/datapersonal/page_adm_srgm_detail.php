@@ -1,18 +1,24 @@
 <?php
-$srgmid  = Getkode('srgmid ', 'table_datasrgm_h');
-$imgsrgm = $total = null;
-$createdon = date('d.m.Y');
-$createdby = $_SESSION['pernr'];
 if (isset($_GET['n'])) {
+    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=13");
+    if (mysqli_num_rows($sql) <> 0) {
+        $r = mysqli_fetch_array($sql);
+        $dir = $r['drtext'];
+    }
+    $temp = $dir ?? '';
     $srgmid  = base64_decode($_GET['n']);
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datasrgm_h WHERE srgmid ='$srgmid '"));
     $imgsrgm = $r['imgsrgm'];
     $total = $r['total'];
+    $catatan = $r['catatanranc'];
+    $tglfrom = beautydate1($r['tglfrom']);
+    $tglto = beautydate1($r['tglto']);
     $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
+    $query = mysqli_query($conn, "SELECT imgseragam FROM table_datasrgm_d WHERE srgmid='$srgmid'");
 } ?>
 <div class="container mb-3">
-    <h3 class="fw-bold">Rancangan Pembagian Seragam</h3>
+    <h3 class="fw-bold">Detail Rancangan Seragam #<?= $srgmid ?></h3>
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
@@ -22,27 +28,29 @@ if (isset($_GET['n'])) {
                     <input type="text" class="form-control form-control-sm" id="srgmidmdseragamranc" value="<?= $srgmid ?>" readonly>
                 </div>
             </div>
+            <div class="row mb-3">
+                <?php
+                while ($r = mysqli_fetch_array($query)) { ?>
+                    <div class="col-sm-3">
+                        <img src="<?= $temp . $r['imgseragam'] ?>" style="width: 200px; height: 200px;" class="img-thumbnail">
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Information</legend>
                     <div class="form-group row mb-1">
                         <label for="tglfrommdseragamranc" class="col-sm-2">Tgl Pembagian</label>
                         <div class="col-sm-2">
-                            <input type="date" class="form-control form-control-sm" id="tglfrommdseragamranc" value="<?= date('Y-m-d') ?>">
+                            <input type="text" class="form-control form-control-sm" id="tglfrommdseragamranc" value="<?= $tglfrom ?>" readonly>
                         </div>
                         <label for="tgltomdseragamranc" class="col-sm-2 text-center">sampai</label>
                         <div class="col-sm-2">
-                            <input type="date" class="form-control form-control-sm" id="tgltomdseragamranc" value="<?= date('Y-m-d') ?>">
+                            <input type="text" class="form-control form-control-sm" id="tgltomdseragamranc" value="<?= $tglto ?>" readonly>
                         </div>
                     </div>
-                </fieldset>
-            </div>
-            <div class="form-group row mb-1">
-                <fieldset class="border rounded p-2 mb-3">
-                    <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
-                    <input type="file" id="lampiranseragamranc" name="lampiranseragamranc[]" multiple class="form-control mb-2" accept="image/*">
-                    <ul id="filelistseragamranc" class="fileList mt-2"></ul>
-                    <input type="text" class="form-control form-control-sm" id="descimgseragamranc" readonly hidden>
                 </fieldset>
             </div>
             <div class="form-group row mb-1">
@@ -59,23 +67,23 @@ if (isset($_GET['n'])) {
                         <tbody>
                             <?php
                             $i = 1;
-                            $query = mysqli_query($conn, "SELECT unitid,descriptions FROM table_dataunit ORDER BY unitid ASC");
+                            $query = mysqli_query($conn, "SELECT unitid,qty FROM table_datasrgm_dt WHERE srgmid='$srgmid' ORDER BY unitid ASC");
                             while ($r = mysqli_fetch_array($query)) { ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><input type="text" class="form-control form-control-sm bg-transparent" id="unitidseragamranc<?= $i ?>" value="<?= $r['unitid'] ?>" hidden>
-                                        <input type="text" class="form-control form-control-sm bg-transparent" value="<?= $r['descriptions'] ?>" readonly>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm bg-transparent" value="<?= Getdata('descriptions', 'table_dataunit', 'unitid', $r['unitid']) ?>" readonly>
                                     </td>
-                                    <td><input type="number" class="form-control form-control-sm total-input" id="qtymdseragamranc<?= $i ?>" min="0" value="0" onchange="gettotalseragamranc()"></td>
+                                    <td><input type="number" class="form-control form-control-sm total-input" min="0" value="<?= $r['qty'] ?>" readonly></td>
                                 </tr>
                             <?php
                                 $i += 1;
                             }
                             ?>
                             <tr>
-                                <td><input type="text" class="form-control form-control-sm" id="lenghtmdseragamranc" value="<?= $i ?>" hidden></td>
+                                <td></td>
                                 <td class="fw-bold">Total</td>
-                                <td><input type="text" class="form-control form-control-sm" id="totalqtymdseragamranc" value="0" readonly></td>
+                                <td><input type="text" class="form-control form-control-sm fw-bold fs-5" id="totalqtymdseragamranc" value="<?= $total ?>" readonly></td>
                             </tr>
                         </tbody>
                     </table>
@@ -84,7 +92,7 @@ if (isset($_GET['n'])) {
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Catatan tambahan</legend>
-                    <div id="editorseragamranc"></div>
+                    <div id="editorseragamranc"><?= $catatan ?></div>
                 </fieldset>
             </div>
         </div>
@@ -108,8 +116,7 @@ if (isset($_GET['n'])) {
                 <legend class="float-none w-auto px-2 fs-6">Action</legend>
                 <div class=" form-group row mt-3">
                     <div class="col-sm-12 text-end">
-                        <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
-                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdseragamranc()"><img src="../assets/icon/save.png"> Simpan</button>
+                        <button type="button" class="btn btn-sm btn-primary zoom" onclick="redirectlink('adm_seragam_display')"><img src="../assets/icon/back.png"> kembali</button>
                     </div>
                 </div>
             </fieldset>
@@ -125,10 +132,12 @@ if (isset($_GET['n'])) {
         })
         .then(editor => {
             editorInstance = editor;
+            editor.enableReadOnlyMode('myLock');
         })
         .catch(error => {
             console.error(error);
         });
+
     document.getElementById("lampiranseragamranc").addEventListener("change", function() {
         let files = this.files;
         let fileNames = [];

@@ -849,52 +849,72 @@ if ($typess == 'document_coc') {
     }
 
     include_once 'getvalue.php';
-    $srgmid       = getai('table_datasrgm_h');
-    $unitid       = $_POST['unitid'] ?? '';
-    $qty          = $_POST['qty'] ?? '';
-    $unitid = explode(",", $unitid);
-    foreach ($unitid as $unitid) {
-        echo $val . "<br>";
+    $srgmid         = getai('table_datasrgm_h');
+    $s_unitid       = $_POST['unitid'] ?? '';
+    $s_qty          = $_POST['qty'] ?? '';
+    $tglfrom          = $_POST['tglfrom'] ?? '';
+    $tglto          = $_POST['tglto'] ?? '';
+    $total          = $_POST['total'] ?? '';
+    $catatan        = $_POST['catatan'] ?? '';
+    $unitid         = explode(",", $s_unitid);
+    $qty            = explode(",", $s_qty);
+    $lenght         = count($unitid);
+
+    if (!empty($_FILES['lampiranseragamranc']['name'][0])) {
+        $uploadedFiles = [];
+        foreach ($_FILES['lampiranseragamranc']['name'] as $key => $name) {
+            $tmpName = $_FILES['lampiranseragamranc']['tmp_name'][$key];
+            $error   = $_FILES['lampiranseragamranc']['error'][$key];
+            $ImageName = $_FILES['lampiranseragamranc']['name'];
+            $ImageType  = $_FILES['lampiranseragamranc']['type'];
+
+            $NewImageName   = date('dmYHis')  . '^^' . $name;
+            $targetFile = $temp . $NewImageName;
+
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                $query = mysqli_query($conn, "INSERT INTO table_datasrgm_d (srgmid,
+                                                                            imgseragam,
+                                                                            createdby,
+                                                                            createdon) 
+                                                    VALUES ('$srgmid',
+                                                            '$NewImageName',
+                                                            '$createdby',
+                                                            '$createdon')");
+                $return = true;
+                $uploaded[] = $NewImageName;
+            }
+        }
     }
-    $total = 0;
-
-    // if (!empty($_FILES['lampiranseragamranc']['name'][0])) {
-    //     $uploadedFiles = [];
-    //     foreach ($_FILES['lampiranseragamranc']['name'] as $key => $name) {
-    //         $tmpName = $_FILES['lampiranseragamranc']['tmp_name'][$key];
-    //         $error   = $_FILES['lampiranseragamranc']['error'][$key];
-    //         $ImageName = $_FILES['lampiranseragamranc']['name'];
-    //         $ImageType  = $_FILES['lampiranseragamranc']['type'];
-
-    //         $NewImageName   = date('dmYHis')  . '^^' . $name;
-    //         $targetFile = $temp . $NewImageName;
-
-    //         if (move_uploaded_file($tmpName, $targetFile)) {
-    //             $query = mysqli_query($conn, "INSERT INTO table_datasrgm_d (srgmid,
-    //                                                                         imgseragam,
-    //                                                                         createdby,
-    //                                                                         createdon) 
-    //                                                 VALUES ('$srgmid',
-    //                                                         '$NewImageName',
-    //                                                         '$createdby',
-    //                                                         '$createdon')");
-    //             $return = true;
-    //             $uploaded[] = $NewImageName;
-    //         }
-    //     }
-    // }
 
     if ($return) {
-        // $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (total,
-        //                                                 createdon,
-        //                                                 createdby)
-        //                 VALUES('$total',
-        //                         '$createdon',
-        //                         '$createdby')");
-        $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (total,
+        $z = 0;
+        for ($i = 0; $i < $lenght; $i++) {
+            $query = mysqli_query($conn, "INSERT INTO table_datasrgm_dt (   srgmid,
+                                                                            unitid,
+                                                                            rancqty,
+                                                                            realqty,
+                                                                            createdon,
+                                                                            createdby)
+                        VALUES( '$srgmid',
+                                '$unitid[$i]',
+                                '$qty[$i]',
+                                '$qty[$i]',
+                                '$createdon',
+                                '$createdby')");
+        }
+
+        $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (tglfrom,
+                                                        tglto,
+                                                        total,
+                                                        catatanranc,
+                                                        rancangan,
                                                         createdon,
                                                         createdby)
-                        VALUES('$total',
+                        VALUES( '$tglfrom',
+                                '$tglto',
+                                '$total',
+                                '$catatan',
+                                'X',
                                 '$createdon',
                                 '$createdby')");
         if ($query) {
@@ -905,10 +925,10 @@ if ($typess == 'document_coc') {
     }
     $data = [
         "iconmsgs" => $iconmsgs,
-        "link" => 'adm_notice_display',
+        "link" => 'adm_seragam_display',
         "msgs" => $msgs,
         "time" => $time,
-        "id" => $unitid,
+        "id" => $total,
         "return" => $return
     ];
 }

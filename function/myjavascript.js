@@ -1745,6 +1745,24 @@ function submitmdnoticehead() {
     },
   });
 }
+
+// ---------------- >> SERAGAM
+function gettotalseragamranc() {
+  let total = 0;
+  $('.total-input').each(function() {
+    let val = parseInt($(this).val()) || 0; 
+    total += val;
+  });
+  $('#totalqtymdseragamranc').val(total);
+}
+function gettotalseragamreal() {
+  let total = 0;
+  $('.total-output').each(function() {
+    let val = parseInt($(this).val()) || 0; 
+    total += val;
+  });
+  $('#totalqtymdseragamreal').val(total);
+}
 function submitmdseragamranc() {
   let unitid = [];
   let qty = [];
@@ -1775,6 +1793,10 @@ function submitmdseragamranc() {
   }
 
   formData.append("srgmid", $("#srgmidmdseragamranc").val());
+  formData.append("tglfrom", $("#tglfrommdseragamranc").val());
+  formData.append("tglto", $("#tgltomdseragamranc").val());
+  formData.append("total", $("#totalqtymdseragamranc").val());
+  formData.append("catatan", editorInstance.getData());
   formData.append("unitid", unitid);
   formData.append("qty", qty);
   formData.append("typess", "document_seragam");
@@ -1787,7 +1809,83 @@ function submitmdseragamranc() {
     processData: false,
     contentType: false,
     success: function(data) {
-      alert(data.id)
+      if (data.return == 1) {
+          msgs()
+          setTimeout(() => {
+          redirectlink(data.link)
+          }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,data.time)
+      }
+    },
+  });
+}
+function delete_head_srgm(srgmid) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus data seragam tersebut?",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdelete_head_srgm": srgmid
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            msgs()
+            setTimeout(() => {
+            redirectlink(data.link)
+            }, data.time);
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
+}
+function submitmdseragamreal() {
+  let checked = document.querySelector(".check-seragam:checked");
+
+  if (!checked) {
+    alert("Silakan pilih 1 data sebelum realisasi!");
+    return;
+  }
+}
+function submitmdseragamreal() {
+  let unitid = [];
+  let qty = [];
+  var length = $('#lenghtmdseragamreal').val()
+  for (let i = 1; i < length; i++) {
+    unitid.push($('#unitidseragamranc'+i).val())
+    qty.push($('#qtymdseragamreal'+i).val())
+  }
+
+  formData.append("srgmid", $("#srgmidmdseragamranc").val());
+  formData.append("tglfrom", $("#tglfrommdseragamranc").val());
+  formData.append("tglto", $("#tgltomdseragamranc").val());
+  formData.append("total", $("#totalqtymdseragamranc").val());
+  formData.append("catatan", editorInstance.getData());
+  formData.append("unitid", unitid);
+  formData.append("qty", qty);
+  formData.append("typess", "document_seragam");
+
+  $.ajax({
+    url: "../function/uploadimages.php",
+    dataType: "JSON",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
       if (data.return == 1) {
           msgs()
           setTimeout(() => {

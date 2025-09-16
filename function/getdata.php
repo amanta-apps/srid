@@ -224,6 +224,16 @@ if (isset($_GET['p'])) {
             $_SESSION['p'] = 'Rancangan Seragam';
             include "datapersonal/page_adm_seragam_ranc_create.php";
             break;
+        case 'adm_srgm_detail':
+            $_SESSION['p'] = 'Detail Rancangan Seragam';
+            include "datapersonal/page_adm_srgm_detail.php";
+            break;
+        case 'adm_seragam_real_create':
+            $_SESSION['p'] = 'Realisasi Seragam';
+            include "datapersonal/page_adm_seragam_real_create.php";
+            break;
+
+
 
 
         // ---> Surat Menyurat
@@ -1722,6 +1732,55 @@ if (isset($_POST['prosesdelete_doc_sido'])) {
         "iconmsgs" => $icon_msgs,
         "link" => "md_sido_display",
         "id" => $file,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+
+// -----> SIDO BUNGAH
+if (isset($_POST['prosesdelete_head_srgm'])) {
+    $srgmid = $_POST['prosesdelete_head_srgm'];
+    $imgaddress = array();
+    $query = mysqli_query($conn, "SELECT imgseragam FROM table_datasrgm_d WHERE srgmid='$srgmid'");
+    while ($r = mysqli_fetch_array($query)) {
+        $imgaddress[] = $r['imgseragam'];
+    }
+    // $query = mysqli_query($conn, "DELETE FROM table_datasrgm_d 
+    //                                 WHERE srgmid='$srgmid'");
+    // $query = mysqli_query($conn, "DELETE FROM table_datasrgm_dt 
+    //                                 WHERE srgmid='$srgmid'");
+    // $query = mysqli_query($conn, "DELETE FROM table_datasrgm_h 
+    //                                 WHERE srgmid='$srgmid'");
+
+    $query = mysqli_query($conn, "DELETE t1, t2, t3
+                                    FROM table_datasrgm_h AS t1
+                                    LEFT JOIN table_datasrgm_dt AS t2 ON t1.srgmid = t2.srgmid
+                                    LEFT JOIN table_datasrgm_d AS t3 ON t1.srgmid = t3.srgmid
+                                    WHERE t1.srgmid = '$srgmid'");
+    if ($query) {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=13");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "md_seragam_display",
+        "id" => $srgmid,
         "return" => $return,
     ];
     echo json_encode($data);
