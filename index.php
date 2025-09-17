@@ -121,7 +121,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Pengumuman</a></li>
                             <li><a class="dropdown-item" href="#">PKL</a></li>
-                            <li><a class="dropdown-item" href="#">Seragam</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="location.href='?p=<?= base64_encode('information_seragam') ?>'">Seragam</a></li>
                             <li><a class="dropdown-item" href="#">Surat Menyurat</a></li>
                             <li><a class="dropdown-item" href="#">Parsel</a></li>
                         </ul>

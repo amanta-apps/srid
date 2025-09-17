@@ -1,38 +1,37 @@
 <?php
-$srgmid  = Getkode('srgmid ', 'table_datasrgm_h');
-$imgsrgm = $total = null;
+$parcelid  = Getkode('parcelid', 'table_dataparcel_h');
+$imgsrgm = $totalranc = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
 if (isset($_GET['n'])) {
-    $srgmid  = base64_decode($_GET['n']);
-    $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datasrgm_h WHERE srgmid ='$srgmid '"));
-    $imgsrgm = $r['imgsrgm'];
-    $total = $r['total'];
+    $parcelid  = base64_decode($_GET['n']);
+    $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_dataparcel_h WHERE parcelid ='$parcelid '"));
+    $totalranc = $r['totalranc'];
     $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
 } ?>
 <div class="container mb-3">
-    <h3 class="fw-bold">Rancangan Pembagian Seragam</h3>
+    <h3 class="fw-bold">Rancangan Pembagian Parcel</h3>
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group row mb-1" hidden>
-                <label for="srgmidmdseragamranc" class="col-sm-2">Srgm Id</label>
+                <label for="parcelidmdparcelranc" class="col-sm-2">Parcel Id</label>
                 <div class="col-sm-1">
-                    <input type="text" class="form-control form-control-sm" id="srgmidmdseragamranc" value="<?= $srgmid ?>" readonly>
+                    <input type="text" class="form-control form-control-sm" id="parcelidmdparcelranc" value="<?= $parcelid ?>" readonly>
                 </div>
             </div>
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Information</legend>
                     <div class="form-group row mb-1">
-                        <label for="tglfrommdseragamranc" class="col-sm-2">Tgl Pembagian</label>
+                        <label for="tglfrommdparcelranc" class="col-sm-2">Tgl Pembagian</label>
                         <div class="col-sm-2">
-                            <input type="date" class="form-control form-control-sm" id="tglfrommdseragamranc" value="<?= date('Y-m-d') ?>">
+                            <input type="date" class="form-control form-control-sm" id="tglfrommdparcelranc" value="<?= date('Y-m-d') ?>">
                         </div>
-                        <label for="tgltomdseragamranc" class="col-sm-2 text-center">sampai</label>
+                        <label for="tgltomdparcelranc" class="col-sm-2 text-center">sampai</label>
                         <div class="col-sm-2">
-                            <input type="date" class="form-control form-control-sm" id="tgltomdseragamranc" value="<?= date('Y-m-d') ?>">
+                            <input type="date" class="form-control form-control-sm" id="tgltomdparcelranc" value="<?= date('Y-m-d') ?>">
                         </div>
                     </div>
                 </fieldset>
@@ -40,9 +39,9 @@ if (isset($_GET['n'])) {
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
-                    <input type="file" id="lampiranseragamranc" name="lampiranseragamranc[]" multiple class="form-control mb-2" accept="image/*">
-                    <ul id="filelistseragamranc" class="fileList mt-2"></ul>
-                    <input type="text" class="form-control form-control-sm" id="descimgseragamranc" readonly hidden>
+                    <input type="file" id="lampiranparcelranc" name="lampiranparcelranc[]" multiple class="form-control mb-2" accept="image/*">
+                    <ul id="filelistparcelranc" class="fileList mt-2"></ul>
+                    <input type="text" class="form-control form-control-sm" id="descimgparcelranc" readonly hidden>
                 </fieldset>
             </div>
             <div class="form-group row mb-1">
@@ -63,19 +62,19 @@ if (isset($_GET['n'])) {
                             while ($r = mysqli_fetch_array($query)) { ?>
                                 <tr>
                                     <td><?= $i ?></td>
-                                    <td><input type="text" class="form-control form-control-sm bg-transparent" id="unitidseragamranc<?= $i ?>" value="<?= $r['unitid'] ?>" hidden>
+                                    <td><input type="text" class="form-control form-control-sm bg-transparent" id="unitidparcelranc<?= $i ?>" value="<?= $r['unitid'] ?>" hidden>
                                         <input type="text" class="form-control form-control-sm bg-transparent" value="<?= $r['descriptions'] ?>" readonly>
                                     </td>
-                                    <td><input type="number" class="form-control form-control-sm total-input" id="qtymdseragamranc<?= $i ?>" min="0" value="0" onchange="gettotalseragamranc()"></td>
+                                    <td><input type="number" class="form-control form-control-sm total-input-parcel" id="qtymdparcelranc<?= $i ?>" min="0" value="0" onchange="gettotalparcelranc()"></td>
                                 </tr>
                             <?php
                                 $i += 1;
                             }
                             ?>
                             <tr>
-                                <td><input type="text" class="form-control form-control-sm" id="lenghtmdseragamranc" value="<?= $i ?>" hidden></td>
+                                <td><input type="text" class="form-control form-control-sm" id="lenghtmdparcelranc" value="<?= $i ?>" hidden></td>
                                 <td class="fw-bold">Total</td>
-                                <td><input type="text" class="form-control form-control-sm" id="totalqtymdseragamranc" value="0" readonly></td>
+                                <td><input type="text" class="form-control form-control-sm" id="totalqtymdparcelranc" value="0" readonly></td>
                             </tr>
                         </tbody>
                     </table>
@@ -84,7 +83,7 @@ if (isset($_GET['n'])) {
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Catatan tambahan</legend>
-                    <div id="editorseragamranc"></div>
+                    <div id="editorparcelranc"></div>
                 </fieldset>
             </div>
         </div>
@@ -92,21 +91,21 @@ if (isset($_GET['n'])) {
             <fieldset class="border rounded p-2 mb-3">
                 <legend class="float-none w-auto px-2 fs-6">Date</legend>
                 <div class="form-group row mb-1">
-                    <label for="createdonmdseragamranc" class="col-sm-6">Created On</label>
+                    <label for="createdonmdparcelranc" class="col-sm-6">Created On</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control form-control-sm" id="createdonmdseragamranc" value="<?= $createdon ?>" readonly>
+                        <input type="text" class="form-control form-control-sm" id="createdonmdparcelranc" value="<?= $createdon ?>" readonly>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label for="createdbymdseragamranc" class="col-sm-6">Created By</label>
+                    <label for="createdbymdparcelranc" class="col-sm-6">Created By</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control form-control-sm" id="createdbymdseragamranc" value="<?= $createdby ?>" readonly>
+                        <input type="text" class="form-control form-control-sm" id="createdbymdparcelranc" value="<?= $createdby ?>" readonly>
                     </div>
                 </div>
                 <div class="form-group row mb-1">
-                    <label for="statusmdseragamranc" class="col-sm-6">Status</label>
+                    <label for="statusmdparcelranc" class="col-sm-6">Status</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control form-control-sm" id="statusmdseragamranc" value="<?= Getdata('stats', 'table_datastats', 'idstats', 0) ?>" readonly>
+                        <input type="text" class="form-control form-control-sm" id="statusmdparcelranc" value="<?= Getdata('stats', 'table_datastats', 'idstats', 0) ?>" readonly>
                     </div>
                 </div>
             </fieldset>
@@ -115,7 +114,7 @@ if (isset($_GET['n'])) {
                 <div class=" form-group row mt-3">
                     <div class="col-sm-12 text-end">
                         <button type="button" class="btn btn-sm btn-danger zoom" onclick="location.reload()"><img src="../assets/icon/cancel16.png"> Batal</button>
-                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdseragamranc()"><img src="../assets/icon/save.png"> Simpan</button>
+                        <button type="button" class="btn btn-sm btn-success zoom" onclick="submitmdparcelranc()"><img src="../assets/icon/save.png"> Simpan</button>
                     </div>
                 </div>
             </fieldset>
@@ -126,7 +125,7 @@ if (isset($_GET['n'])) {
 <script>
     let editorInstance;
     ClassicEditor
-        .create(document.getElementById('editorseragamranc'), {
+        .create(document.getElementById('editorparcelranc'), {
             placeholder: 'Tulis sesuatu di sini...' // <-- kasih placeholder
         })
         .then(editor => {
@@ -135,10 +134,10 @@ if (isset($_GET['n'])) {
         .catch(error => {
             console.error(error);
         });
-    document.getElementById("lampiranseragamranc").addEventListener("change", function() {
+    document.getElementById("lampiranparcelranc").addEventListener("change", function() {
         let files = this.files;
         let fileNames = [];
-        let fileList = document.getElementById("filelistseragamranc");
+        let fileList = document.getElementById("filelistparcelranc");
         fileList.innerHTML = ""; // reset list 
 
         for (let file of files) {
@@ -156,6 +155,6 @@ if (isset($_GET['n'])) {
         }
 
         // gabungkan semua nama file ke input text
-        document.getElementById("descimgseragamranc").value = fileNames.join(", ");
+        document.getElementById("descimgparcelranc").value = fileNames.join(", ");
     });
 </script>

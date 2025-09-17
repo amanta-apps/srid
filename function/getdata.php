@@ -49,6 +49,11 @@ if (isset($_GET['p'])) {
             $_SESSION['p'] = 'Information LKS';
             include "internalpage/datainformation/page_lks.php";
             break;
+        case 'information_seragam':
+            $_SESSION['p'] = 'Information Seragam';
+            include "internalpage/datainformation/page_seragam.php";
+            break;
+
         // ------> END Dashboard Karyawan
 
         // -----> MD Administrator
@@ -232,24 +237,36 @@ if (isset($_GET['p'])) {
             $_SESSION['p'] = 'Realisasi Seragam';
             include "datapersonal/page_adm_seragam_real_create.php";
             break;
-
-
-
-
+        // ---> Parcel
+        case 'adm_parcel_display':
+            $_SESSION['p'] = 'Master Data Parcel';
+            include "datapersonal/page_adm_parcel_display.php";
+            break;
+        case 'adm_parcel_ranc_create':
+            $_SESSION['p'] = 'Rancangan parcel';
+            include "datapersonal/page_adm_parcel_ranc_create.php";
+            break;
+        case 'adm_parcel_detail':
+            $_SESSION['p'] = 'Detail Rancangan Parcel';
+            include "datapersonal/page_adm_parcel_detail.php";
+            break;
+        case 'adm_parcel_real_create':
+            $_SESSION['p'] = 'Realisasi parcel';
+            include "datapersonal/page_adm_parcel_real_create.php";
+            break;
         // ---> Surat Menyurat
         case 'adm_surat_display':
             $_SESSION['p'] = 'Master Data Surat';
             include "datapersonal/page_adm_surat_display.php";
             break;
-
-        // ---> Parsel
-        case 'adm_parsel_display':
-            $_SESSION['p'] = 'Master Data Parsel';
-            include "datapersonal/page_adm_parsel_display.php";
+        case 'adm_surat_create':
+            $_SESSION['p'] = 'Master Data Surat';
+            include "datapersonal/page_adm_surat_create.php";
             break;
-
-
-
+        case 'adm_surat_detail':
+            $_SESSION['p'] = 'Master Data Surat';
+            include "datapersonal/page_adm_surat_detail.php";
+            break;
 
 
         // -----> END MD Administrator
@@ -374,6 +391,43 @@ if (isset($_POST['prosesdownloadlink'])) {
     ];
     echo json_encode($data);
 }
+
+// ---------------->> Delete Img Lampiran
+
+if (isset($_POST['prosesdeleteimg'])) {
+    $imgaddress = $_POST['prosesdeleteimg'][0];
+    $dir = $_POST['prosesdeleteimg'][1];
+    $table = $_POST['prosesdeleteimg'][2];
+    $keys = $_POST['prosesdeleteimg'][3];
+
+    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=$dir");
+    if (mysqli_num_rows($sql) <> 0) {
+        $r = mysqli_fetch_array($sql);
+        $dir = $r['drtext'];
+    }
+    $file = $dir . $imgaddress;
+    if (file_exists($file)) {
+        unlink($file);
+    }
+    $query = mysqli_query($conn, "DELETE FROM $table
+                                    WHERE documenid = '$keys'");
+
+    if ($query) {
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => null,
+        "norevisi" => $id,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+
 // ---------------->> Master Data
 // -----> PKB
 if (isset($_POST['prosessubmitmdpkb'])) {
@@ -1737,7 +1791,7 @@ if (isset($_POST['prosesdelete_doc_sido'])) {
     echo json_encode($data);
 }
 
-// -----> SIDO BUNGAH
+// -----> SERAGAM
 if (isset($_POST['prosesdelete_head_srgm'])) {
     $srgmid = $_POST['prosesdelete_head_srgm'];
     $imgaddress = array();
@@ -1745,13 +1799,6 @@ if (isset($_POST['prosesdelete_head_srgm'])) {
     while ($r = mysqli_fetch_array($query)) {
         $imgaddress[] = $r['imgseragam'];
     }
-    // $query = mysqli_query($conn, "DELETE FROM table_datasrgm_d 
-    //                                 WHERE srgmid='$srgmid'");
-    // $query = mysqli_query($conn, "DELETE FROM table_datasrgm_dt 
-    //                                 WHERE srgmid='$srgmid'");
-    // $query = mysqli_query($conn, "DELETE FROM table_datasrgm_h 
-    //                                 WHERE srgmid='$srgmid'");
-
     $query = mysqli_query($conn, "DELETE t1, t2, t3
                                     FROM table_datasrgm_h AS t1
                                     LEFT JOIN table_datasrgm_dt AS t2 ON t1.srgmid = t2.srgmid
@@ -1781,6 +1828,183 @@ if (isset($_POST['prosesdelete_head_srgm'])) {
         "iconmsgs" => $icon_msgs,
         "link" => "md_seragam_display",
         "id" => $srgmid,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+if (isset($_POST['prosessubmitmdseragamreal'])) {
+    $srgmid = $_POST['prosessubmitmdseragamreal'][0];
+    $tgl = $_POST['prosessubmitmdseragamreal'][1];
+    $total = $_POST['prosessubmitmdseragamreal'][2];
+    $catatan = $_POST['prosessubmitmdseragamreal'][3];
+    $unitid = $_POST['prosessubmitmdseragamreal'][4];
+    $qty = $_POST['prosessubmitmdseragamreal'][5];
+    $status = $_POST['prosessubmitmdseragamreal'][6];
+    $return = false;
+    $lenght = count($qty);
+
+    $query = mysqli_query($conn, "SELECT srgmid FROM table_datasrgm_h WHERE srgmid='$srgmid'");
+    if (mysqli_num_rows($query) <> 0) {
+        for ($i = 0; $i < $lenght; $i++) {
+            mysqli_query($conn, "UPDATE table_datasrgm_dt 
+                                        SET realqty='$qty[$i]',
+                                            changedon='$changedon',
+                                            changedby='$changedby'
+                                        WHERE srgmid='$srgmid' AND
+                                            unitid='$unitid[$i]'");
+        }
+        $query = mysqli_query($conn, "UPDATE table_datasrgm_h 
+                                        SET catatanreal='$catatan',
+                                            realisasi='X',
+                                            tglreal='$tgl',
+                                            statsx='$status',
+                                            totalreal='$total',
+                                            changedon='$changedon',
+                                            changedby='$changedby'
+                                        WHERE srgmid='$srgmid'");
+    }
+
+    if ($query) {
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "adm_seragam_display",
+        "id" => $srgmid,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+
+// -----> PARSEL
+if (isset($_POST['prosesdelete_head_parcel'])) {
+    $parcelid = $_POST['prosesdelete_head_parcel'];
+    $imgaddress = array();
+    $query = mysqli_query($conn, "SELECT imgparcel FROM table_dataparcel_d WHERE parcelid='$parcelid'");
+    while ($r = mysqli_fetch_array($query)) {
+        $imgaddress[] = $r['imgparcel'];
+    }
+    $query = mysqli_query($conn, "DELETE t1, t2, t3
+                                    FROM table_dataparcel_h AS t1
+                                    LEFT JOIN table_dataparcel_dt AS t2 ON t1.parcelid = t2.parcelid
+                                    LEFT JOIN table_dataparcel_d AS t3 ON t1.parcelid = t3.parcelid
+                                    WHERE t1.parcelid = '$parcelid'");
+    if ($query) {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=15");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "md_parcel_display",
+        "id" => $srgmid,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+if (isset($_POST['prosessubmitmdparcelreal'])) {
+    $parcelid = $_POST['prosessubmitmdparcelreal'][0];
+    $tgl = $_POST['prosessubmitmdparcelreal'][1];
+    $total = $_POST['prosessubmitmdparcelreal'][2];
+    $catatan = $_POST['prosessubmitmdparcelreal'][3];
+    $unitid = $_POST['prosessubmitmdparcelreal'][4];
+    $qty = $_POST['prosessubmitmdparcelreal'][5];
+    $status = $_POST['prosessubmitmdparcelreal'][6];
+    $return = false;
+    $lenght = count($qty);
+
+    $query = mysqli_query($conn, "SELECT parcelid FROM table_dataparcel_h WHERE parcelid='$parcelid'");
+    if (mysqli_num_rows($query) <> 0) {
+        for ($i = 0; $i < $lenght; $i++) {
+            mysqli_query($conn, "UPDATE table_dataparcel_dt 
+                                        SET realqty='$qty[$i]',
+                                            changedon='$changedon',
+                                            changedby='$changedby'
+                                        WHERE parcelid='$parcelid' AND
+                                            unitid='$unitid[$i]'");
+        }
+        $query = mysqli_query($conn, "UPDATE table_dataparcel_h 
+                                        SET catatanreal='$catatan',
+                                            realisasi='X',
+                                            tglreal='$tgl',
+                                            statsx='$status',
+                                            totalreal='$total',
+                                            changedon='$changedon',
+                                            changedby='$changedby'
+                                        WHERE parcelid='$parcelid'");
+    }
+
+    if ($query) {
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "adm_parcel_display",
+        "id" => $parcelid,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+
+// -----> SURAT
+if (isset($_POST['prosesdelete_head_surat'])) {
+    $suratid = $_POST['prosesdelete_head_surat'];
+    $imgaddress = array();
+    $query = mysqli_query($conn, "SELECT imgsurat FROM table_datasurat_d WHERE suratid='$suratid'");
+    while ($r = mysqli_fetch_array($query)) {
+        $imgaddress[] = $r['imgsurat'];
+    }
+    $query = mysqli_query($conn, "DELETE t1, t2
+                                    FROM table_datasurat_h AS t1
+                                    LEFT JOIN table_datasurat_d AS t2 ON t1.suratid = t2.suratid
+                                    WHERE t1.suratid = '$suratid'");
+    if ($query) {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=16");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "adm_surat_display",
+        "id" => $suratid,
         "return" => $return,
     ];
     echo json_encode($data);

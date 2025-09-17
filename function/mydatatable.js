@@ -1427,7 +1427,8 @@ $(document).ready( function () {
                 return `${day}.${month}.${year}`;
             }
         },
-        { data: "total" },
+        { data: "totalranc" },
+        { data: "totalreal" },
         {
             data: "catatan",
             render: function(data, type, row) {
@@ -1436,26 +1437,27 @@ $(document).ready( function () {
             return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
         },
-        { 
-            data: "rancangan",
-            render: function(data, type, row) {
-                if (data === "X") {
-                    return '<span class="badge bg-success">Yes</span>';
-                } else {
-                    return '<span class="badge bg-danger">No</span>';
-                }
-            }
-        },
-        { 
-            data: "realisasi",
-            render: function(data, type, row) {
-                if (data === "X") {
-                    return '<span class="badge bg-success">Yes</span>';
-                } else {
-                    return '<span class="badge bg-danger">No</span>';
-                }
-            }
-        },
+        // { 
+        //     data: "rancangan",
+        //     render: function(data, type, row) {
+        //         if (data === "X") {
+        //             return '<span class="badge bg-success">Yes</span>';
+        //         } else {
+        //             return '<span class="badge bg-danger">No</span>';
+        //         }
+        //     }
+        // },
+        // { 
+        //     data: "realisasi",
+        //     render: function(data, type, row) {
+        //         if (data === "X") {
+        //             return '<span class="badge bg-success">Yes</span>';
+        //         } else {
+        //             return '<span class="badge bg-danger">No</span>';
+        //         }
+        //     }
+        // },
+        { data: "statsx" },
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -1507,6 +1509,219 @@ $(document).ready( function () {
         // 'excel'
         ]
     });
+
+       // -----> PARCEL
+     $('#table_displayparcel').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+        url: "../function/serverside.php",
+        type: "POST",
+        data: { "table": "table_dataparcel_h" }
+        },
+        columns: [
+        { 
+            data: null,
+            render: function(data, type, row) {
+                if (row.realisasi === "X") {
+                    return `
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="form-check form-switch m-0">
+                        <input class="form-check-input get-checked" type="radio" 
+                            name="parcelSwitch" 
+                            id="switch_${row.parcelid}" 
+                            value="${row.parcelid}" disabled>
+                        <label class="form-check-label" for="switch_${row.parcelid}"></label>
+                    </div> |
+                        <a href="#" onclick="delete_head_parcel('${row.parcelid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a> |
+                        <a href="#" onclick="redirectlink('adm_parcel_detail','${row.parcelid}')" title="Show Detail"><img src="../assets/icon/kacamata.png"></a>
+                    </div>
+                `;
+                }else{
+                    return `
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="form-check form-switch m-0">
+                        <input class="form-check-input get-checked" type="radio" 
+                            name="parcelSwitch" 
+                            id="switch_${row.parcelid}" 
+                            value="${row.parcelid}">
+                        <label class="form-check-label" for="switch_${row.parcelid}"></label>
+                    </div> |
+                        <a href="#" onclick="delete_head_parcel('${row.parcelid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a> |
+                        <a href="#" onclick="redirectlink('adm_parcel_detail','${row.parcelid}')" title="Show Detail"><img src="../assets/icon/kacamata.png"></a>
+                    </div>
+                `;
+                }
+                
+            }
+        },
+        { 
+            data: "tglfrom",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+                return `${day}.${month}.${year}`;
+            }
+        },
+        { 
+            data: "tglto",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+                return `${day}.${month}.${year}`;
+            }
+        },
+        { data: "totalranc" },
+        { data: "totalreal" },
+        {
+            data: "catatan",
+            render: function(data, type, row) {
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
+        },
+        // { 
+        //     data: "rancangan",
+        //     render: function(data, type, row) {
+        //         if (data === "X") {
+        //             return '<span class="badge bg-success">Yes</span>';
+        //         } else {
+        //             return '<span class="badge bg-danger">No</span>';
+        //         }
+        //     }
+        // },
+        // { 
+        //     data: "realisasi",
+        //     render: function(data, type, row) {
+        //         if (data === "X") {
+        //             return '<span class="badge bg-success">Yes</span>';
+        //         } else {
+        //             return '<span class="badge bg-danger">No</span>';
+        //         }
+        //     }
+        // },
+        { data: "statsx" },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
+        ],
+        pageLength: 10, 
+        dom: 'Bfrtip',
+        buttons: [
+        {
+            text: 'Rancangan',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+             redirectlink('adm_parcel_ranc_create')
+            }
+        },
+        {
+            text: 'Realisasi',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+            let checked = $(".get-checked:checked");
+            if (checked.length === 0) {
+                Swal.fire({
+                icon: 'warning',
+                text: 'Pilih dulu salah satu data!',
+                showConfirmButton: false,
+                timer: time
+                });
+                return;
+            }
+            let srgmid = checked.val();
+            redirectlink('adm_parcel_real_create', srgmid);
+            }
+        },
+        // {
+        //     text: 'Laporan',
+        //     className: 'btn btn-sm btn-success',
+        //     action: function () {
+        //      redirectlink('adm_seragam_report')
+        //     }
+        // },
+        // 'excel'
+        ]
+    });
+
+        // -----> SURAT
+     $('#table_displaysurat').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+        url: "../function/serverside.php",
+        type: "POST",
+        data: { "table": "table_datasurat_h" }
+        },
+        columns: [
+        { 
+            data: null,
+            render: function(data, type, row) {
+                    return `
+                        <a href="#" onclick="redirectlink('adm_surat_create','${row.suratid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                        <a href="#" onclick="delete_head_surat('${row.suratid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a> |
+                        <a href="#" onclick="redirectlink('adm_surat_detail','${row.suratid}')" title="Show Detail"><img src="../assets/icon/kacamata.png"></a>
+                `;   
+            }
+        },
+        { data: "srtid" },
+        { data: "kopheader" },
+        { 
+            data: "terbit",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+                return `${day}.${month}.${year}`;
+            }
+        },
+        { data: "pernr" },
+        { data: "unitid" },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
+        ],
+        pageLength: 10, 
+        dom: 'Bfrtip',
+        buttons: [
+        {
+            text: 'Buat Surat',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+             redirectlink('adm_surat_create')
+            }
+        },
+        'pdf'
+        ]
+    });
+    
     
 
 

@@ -1,7 +1,7 @@
 <div class="container table-responsive">
-    <h3 class="fw-bold">Seragam</h3>
+    <h3 class="fw-bold">Parcel</h3>
     <hr class="mb-5">
-    <table id="table_displayseragam" class="table w-100">
+    <table id="table_displayparcel" class="table w-100">
         <thead>
             <tr>
                 <th style="width: 10%;">#</th>

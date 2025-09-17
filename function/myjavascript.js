@@ -149,7 +149,7 @@ function redirectlink_pres(table) {
     }
     
 }
-function downloadlink(jenisdocumen,addr) {
+function downloadlink(jenisdocumen,addr,exec=1) {
   $.ajax({ 
     url: "../function/getdata.php",
     dataType: "JSON",
@@ -160,10 +160,48 @@ function downloadlink(jenisdocumen,addr) {
     },
     success: function (data) {
       if (data.return == 1) {
-        download(data.link)
+        if (exec == 1) {
+          download(data.link)
+        }else if (exec == 2) {
+          window.open(data.link, '_blank')
+        } 
       }
     },
   });
+}
+function deleteimg(imgaddress,dir,table,keys) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus lampiran tersebut",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdeleteimg": [
+            imgaddress,
+            dir,
+            table,
+            keys
+          ]
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            location.reload()
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
 }
 
 // ---------------- >> PKB
@@ -1796,6 +1834,7 @@ function submitmdseragamranc() {
   formData.append("tglfrom", $("#tglfrommdseragamranc").val());
   formData.append("tglto", $("#tgltomdseragamranc").val());
   formData.append("total", $("#totalqtymdseragamranc").val());
+  formData.append("status", $("#statusmdseragamranc").val());
   formData.append("catatan", editorInstance.getData());
   formData.append("unitid", unitid);
   formData.append("qty", qty);
@@ -1853,30 +1892,101 @@ function delete_head_srgm(srgmid) {
   })
 }
 function submitmdseragamreal() {
-  let checked = document.querySelector(".check-seragam:checked");
-
-  if (!checked) {
-    alert("Silakan pilih 1 data sebelum realisasi!");
-    return;
-  }
-}
-function submitmdseragamreal() {
   let unitid = [];
   let qty = [];
   var length = $('#lenghtmdseragamreal').val()
   for (let i = 1; i < length; i++) {
-    unitid.push($('#unitidseragamranc'+i).val())
+    unitid.push($('#unitidseragamreal'+i).val())
     qty.push($('#qtymdseragamreal'+i).val())
   }
+  var srgmid = $("#srgmidmdseragamreal").val()
+  var tgl   = $("#tglrealisaimdseragamreal").val()
+  var total = $("#totalqtymdseragamreal").val()
+  var catatan = editorInstance.getData()
+  var status = $('#statusmdseragamreal').val()
+ 
+  $.ajax({ 
+    url: "../function/getdata.php",
+    dataType: "JSON",
+    type: "POST",
+    cache: false,
+    data: {
+      "prosessubmitmdseragamreal": [srgmid,
+        tgl,
+        total,
+      catatan,
+    unitid,
+  qty,
+status]
+    },
+    success: function (data) {
+      if (data.return == 1) {
+        msgs()
+        setTimeout(() => {
+         redirectlink(data.link)
+        }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,3000)
+      }
+    },
+  });
+}
 
-  formData.append("srgmid", $("#srgmidmdseragamranc").val());
-  formData.append("tglfrom", $("#tglfrommdseragamranc").val());
-  formData.append("tglto", $("#tgltomdseragamranc").val());
-  formData.append("total", $("#totalqtymdseragamranc").val());
+// ---------------- >> PARCEL
+function gettotalparcelranc() {
+  let total = 0;
+  $('.total-input-parcel').each(function() {
+    let val = parseInt($(this).val()) || 0; 
+    total += val;
+  });
+  $('#totalqtymdparcelranc').val(total);
+}
+function gettotalparcelreal() {
+  let total = 0;
+  $('.total-output-parcel').each(function() {
+    let val = parseInt($(this).val()) || 0; 
+    total += val;
+  });
+  $('#totalqtymdparcelreal').val(total);
+}
+function submitmdparcelranc() {
+  let unitid = [];
+  let qty = [];
+  var length = $('#lenghtmdparcelranc').val()
+  for (let i = 1; i < length; i++) {
+    unitid.push($('#unitidparcelranc'+i).val())
+    qty.push($('#qtymdparcelranc'+i).val())
+  }
+
+  let formData = new FormData();
+  const files = $("#lampiranparcelranc").prop("files");
+
+  const maxSize = 10 * 1024 * 1024;
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      msgs('info',"File " + file.name + " File bukan image.",3000)
+      return;
+    }
+    formData.append("lampiranparcelranc[]", files[i]);
+  }
+
+  formData.append("parcelid", $("#parcelidmdparcelranc").val());
+  formData.append("tglfrom", $("#tglfrommdparcelranc").val());
+  formData.append("tglto", $("#tgltomdparcelranc").val());
+  formData.append("total", $("#totalqtymdparcelranc").val());
+  formData.append("status", $("#statusmdparcelranc").val());
   formData.append("catatan", editorInstance.getData());
   formData.append("unitid", unitid);
   formData.append("qty", qty);
-  formData.append("typess", "document_seragam");
+  formData.append("typess", "document_parcel");
 
   $.ajax({
     url: "../function/uploadimages.php",
@@ -1896,6 +2006,160 @@ function submitmdseragamreal() {
       }
     },
   });
+}
+function delete_head_parcel(parcelid) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus data parcel tersebut?",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdelete_head_parcel": parcelid
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            msgs()
+            setTimeout(() => {
+            redirectlink(data.link)
+            }, data.time);
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
+}
+function submitmdparcelreal() {
+  let unitid = [];
+  let qty = [];
+  var length = $('#lenghtmdparcelreal').val()
+  for (let i = 1; i < length; i++) {
+    unitid.push($('#unitidparcelreal'+i).val())
+    qty.push($('#qtymdparcelreal'+i).val())
+  }
+  var parcel = $("#parcelidmdparcelreal").val()
+  var tgl   = $("#tglrealisaimdparcelreal").val()
+  var total = $("#totalqtymdparcelreal").val()
+  var catatan = editorInstance.getData()
+  var status = $('#statusmdparcelreal').val()
+ 
+  $.ajax({ 
+    url: "../function/getdata.php",
+    dataType: "JSON",
+    type: "POST",
+    cache: false,
+    data: {
+      "prosessubmitmdparcelreal": [parcel,
+        tgl,
+        total,
+      catatan,
+    unitid,
+  qty,
+status]
+    },
+    success: function (data) {
+      if (data.return == 1) {
+        msgs()
+        setTimeout(() => {
+         redirectlink(data.link)
+        }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,3000)
+      }
+    },
+  });
+}
+
+// ---------------- >> SURAT
+function submitmdsuratcreate() {
+  let formData = new FormData();
+  const files = $("#lampiransuratcreate").prop("files");
+
+  const maxSize = 10 * 1024 * 1024;
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp","application/pdf"];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      msgs('info',"File " + file.name + " File bukan image atau pdf",3000)
+      return;
+    }
+    formData.append("lampiransuratcreate[]", files[i]);
+  }
+
+  formData.append("suratid", $("#suratidmdsuratcreate").val());
+  formData.append("jenis", $("#jenissuratmdsuratcreate").val());
+  formData.append("kop", $("#kopheadermdsuratcreate").val());
+  formData.append("terbit", $("#tglterbitmdsuratcreate").val());
+  formData.append("pernr", $("#pernrmdsuratcreate").val());
+  formData.append("unitid", $("#unitidmdsuratcreate").val());
+  formData.append("typess", "document_surat");
+
+  $.ajax({
+    url: "../function/uploadimages.php",
+    dataType: "JSON",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      if (data.return == 1) {
+          msgs()
+          setTimeout(() => {
+          redirectlink(data.link)
+          }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,data.time)
+      }
+    },
+  });
+}
+function delete_head_surat(suratid) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus data surat tersebut?",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdelete_head_surat": suratid
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            msgs()
+            setTimeout(() => {
+            redirectlink(data.link)
+            }, data.time);
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
 }
 
 

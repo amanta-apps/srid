@@ -855,6 +855,7 @@ if ($typess == 'document_coc') {
     $tglfrom          = $_POST['tglfrom'] ?? '';
     $tglto          = $_POST['tglto'] ?? '';
     $total          = $_POST['total'] ?? '';
+    $stats          = $_POST['status'] ?? '';
     $catatan        = $_POST['catatan'] ?? '';
     $unitid         = explode(",", $s_unitid);
     $qty            = explode(",", $s_qty);
@@ -905,9 +906,10 @@ if ($typess == 'document_coc') {
 
         $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (tglfrom,
                                                         tglto,
-                                                        total,
+                                                        totalranc,
                                                         catatanranc,
                                                         rancangan,
+                                                        statsx,
                                                         createdon,
                                                         createdby)
                         VALUES( '$tglfrom',
@@ -915,6 +917,7 @@ if ($typess == 'document_coc') {
                                 '$total',
                                 '$catatan',
                                 'X',
+                                '$stats',
                                 '$createdon',
                                 '$createdby')");
         if ($query) {
@@ -929,6 +932,177 @@ if ($typess == 'document_coc') {
         "msgs" => $msgs,
         "time" => $time,
         "id" => $total,
+        "return" => $return
+    ];
+} elseif ($typess == 'document_parcel') {
+    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=15");
+    if (mysqli_num_rows($sql) <> 0) {
+        $r = mysqli_fetch_array($sql);
+        $dir = $r['drtext'];
+    }
+    $temp = $dir;
+    if (!file_exists($temp)) {
+        mkdir($temp, 0777, true);
+    }
+
+    include_once 'getvalue.php';
+    $parcelid         = getai('table_dataparcel_h');
+    $s_unitid       = $_POST['unitid'] ?? '';
+    $s_qty          = $_POST['qty'] ?? '';
+    $tglfrom          = $_POST['tglfrom'] ?? '';
+    $tglto          = $_POST['tglto'] ?? '';
+    $total          = $_POST['total'] ?? '';
+    $stats          = $_POST['status'] ?? '';
+    $catatan        = $_POST['catatan'] ?? '';
+    $unitid         = explode(",", $s_unitid);
+    $qty            = explode(",", $s_qty);
+    $lenght         = count($unitid);
+
+    if (!empty($_FILES['lampiranparcelranc']['name'][0])) {
+        $uploadedFiles = [];
+        foreach ($_FILES['lampiranparcelranc']['name'] as $key => $name) {
+            $tmpName = $_FILES['lampiranparcelranc']['tmp_name'][$key];
+            $error   = $_FILES['lampiranparcelranc']['error'][$key];
+            $ImageName = $_FILES['lampiranparcelranc']['name'];
+            $ImageType  = $_FILES['lampiranparcelranc']['type'];
+
+            $NewImageName   = date('dmYHis')  . '^^' . $name;
+            $targetFile = $temp . $NewImageName;
+
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                $query = mysqli_query($conn, "INSERT INTO table_dataparcel_d (parcelid,
+                                                                            imgparcel,
+                                                                            createdby,
+                                                                            createdon) 
+                                                    VALUES ('$parcelid',
+                                                            '$NewImageName',
+                                                            '$createdby',
+                                                            '$createdon')");
+                $return = true;
+                $uploaded[] = $NewImageName;
+            }
+        }
+    }
+
+    if ($return) {
+        $z = 0;
+        for ($i = 0; $i < $lenght; $i++) {
+            $query = mysqli_query($conn, "INSERT INTO table_dataparcel_dt ( parcelid,
+                                                                            unitid,
+                                                                            rancqty,
+                                                                            realqty,
+                                                                            createdon,
+                                                                            createdby)
+                        VALUES( '$parcelid',
+                                '$unitid[$i]',
+                                '$qty[$i]',
+                                '$qty[$i]',
+                                '$createdon',
+                                '$createdby')");
+        }
+
+        $query = mysqli_query($conn, "INSERT INTO table_dataparcel_h (tglfrom,
+                                                        tglto,
+                                                        totalranc,
+                                                        catatanranc,
+                                                        rancangan,
+                                                        statsx,
+                                                        createdon,
+                                                        createdby)
+                        VALUES( '$tglfrom',
+                                '$tglto',
+                                '$total',
+                                '$catatan',
+                                'X',
+                                '$stats',
+                                '$createdon',
+                                '$createdby')");
+        if ($query) {
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+    }
+    $data = [
+        "iconmsgs" => $iconmsgs,
+        "link" => 'adm_parcel_display',
+        "msgs" => $msgs,
+        "time" => $time,
+        "id" => $parcelid,
+        "return" => $return
+    ];
+} elseif ($typess == 'document_surat') {
+    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=16");
+    if (mysqli_num_rows($sql) <> 0) {
+        $r = mysqli_fetch_array($sql);
+        $dir = $r['drtext'];
+    }
+    $temp = $dir;
+    if (!file_exists($temp)) {
+        mkdir($temp, 0777, true);
+    }
+
+    include_once 'getvalue.php';
+    $suratid      = getai('table_datasurat_h');
+    $jenis        = $_POST['jenis'] ?? '';
+    $kop          = $_POST['kop'] ?? '';
+    $terbit       = $_POST['terbit'] ?? '';
+    $pernr        = $_POST['pernr'] ?? '';
+    $unitid       = $_POST['unitid'] ?? '';
+
+    if (!empty($_FILES['lampiransuratcreate']['name'][0])) {
+        $uploadedFiles = [];
+        foreach ($_FILES['lampiransuratcreate']['name'] as $key => $name) {
+            $tmpName = $_FILES['lampiransuratcreate']['tmp_name'][$key];
+            $error   = $_FILES['lampiransuratcreate']['error'][$key];
+            $ImageName = $_FILES['lampiransuratcreate']['name'];
+            $ImageType  = $_FILES['lampiransuratcreate']['type'];
+
+            $NewImageName   = date('dmYHis')  . '^^' . $name;
+            $targetFile = $temp . $NewImageName;
+
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                $query = mysqli_query($conn, "INSERT INTO table_datasurat_d (suratid,
+                                                                            imgsurat,
+                                                                            createdby,
+                                                                            createdon) 
+                                                    VALUES ('$suratid',
+                                                            '$NewImageName',
+                                                            '$createdby',
+                                                            '$createdon')");
+                $return = true;
+                $uploaded[] = $NewImageName;
+            }
+        }
+    }
+
+    if ($return) {
+        $query = mysqli_query($conn, "INSERT INTO table_datasurat_h (srtid,
+                                                        kopheader,
+                                                        terbit,
+                                                        pernr,
+                                                        unitid,
+                                                        createdon,
+                                                        createdby)
+                        VALUES( '$jenis',
+                                '$kop',
+                                '$terbit',
+                                '$pernr',
+                                '$unitid',
+                                '$createdon',
+                                '$createdby')");
+        if ($query) {
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+    }
+    $data = [
+        "iconmsgs" => $iconmsgs,
+        "link" => 'adm_surat_display',
+        "msgs" => $msgs,
+        "time" => $time,
+        "id" => $suratid,
         "return" => $return
     ];
 }
