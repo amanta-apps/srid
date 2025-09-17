@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 14, 2025 at 05:47 PM
+-- Generation Time: Sep 17, 2025 at 07:21 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.28
 
@@ -120,7 +120,7 @@ CREATE TABLE `table_datacoc_h` (
 --
 
 INSERT INTO `table_datacoc_h` (`cocid`, `cocdescriptions`, `cochead`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'Code of Conduct atau Kode Etik Perusahaan adalah pedoman penting yang dirancang untuk memastikan bahwa setiap individu yang terlibat dalam operasional perusahaan bertindak dengan integritas, profesionalisme, dan tanggung jawab. Kode etik ini mencerminkan nilai-nilai dasar perusahaan yang harus dijunjung tinggi oleh seluruh karyawan dan pihak terkait lainnya dalam berinteraksi satu sama lain, dengan pelanggan, serta dengan mitra bisnis. Dengan adanya kode etik, diharapkan tercipta lingkungan kerja yang harmonis, saling menghargai, dan penuh kepercayaan, yang pada gilirannya akan mendukung pencapaian tujuan perusahaan secara berkelanjutan.\n\nPenerapan Code of Conduct tidak hanya penting untuk menjaga reputasi dan kredibilitas perusahaan, tetapi juga untuk menciptakan budaya perusahaan yang etis dan transparan. Kode etik ini berfungsi sebagai acuan dalam pengambilan keputusan sehari-hari, serta sebagai upaya untuk mencegah terjadinya pelanggaran hukum atau peraturan yang dapat merugikan perusahaan dan individu di dalamnya. Dengan mematuhi prinsip-prinsip yang tercantum dalam kode etik, setiap pihak dapat berkontribusi dalam membangun citra positif perusahaan serta memastikan bahwa semua kegiatan dilakukan sesuai dengan standar moral dan etika yang tinggi.', 'Clash Of Clans', 1, '2025-09-01 11:37:46', '90003560', '2025-09-01 13:01:54', '90003560', '0000-00-00 00:00:00', '');
+(1, '<p>Code of Conduct atau Kode Etik Perusahaan adalah pedoman penting yang dirancang untuk memastikan bahwa setiap individu yang terlibat dalam operasional perusahaan bertindak dengan integritas, profesionalisme, dan tanggung jawab. Kode etik ini mencerminkan nilai-nilai dasar perusahaan yang harus dijunjung tinggi oleh seluruh karyawan dan pihak terkait lainnya dalam berinteraksi satu sama lain, dengan pelanggan, serta dengan mitra bisnis. Dengan adanya kode etik, diharapkan tercipta lingkungan kerja yang harmonis, saling menghargai, dan penuh kepercayaan, yang pada gilirannya akan mendukung pencapaian tujuan perusahaan secara berkelanjutan. Penerapan Code of Conduct tidak hanya penting untuk menjaga reputasi dan kredibilitas perusahaan, tetapi juga untuk menciptakan budaya perusahaan yang etis dan transparan. Kode etik ini berfungsi sebagai acuan dalam pengambilan keputusan sehari-hari, serta sebagai upaya untuk mencegah terjadinya pelanggaran hukum atau peraturan yang dapat merugikan perusahaan dan individu di dalamnya. Dengan mematuhi prinsip-prinsip yang tercantum dalam kode etik, setiap pihak dapat berkontribusi dalam membangun citra positif perusahaan serta memastikan bahwa semua kegiatan dilakukan sesuai dengan standar moral dan etika yang tinggi.</p>', 'Code of Conduct', 1, '2025-09-01 11:37:46', '90003560', '2025-09-15 09:15:26', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -150,7 +150,11 @@ INSERT INTO `table_datadirections` (`directionsid`, `drtext`, `destinations`) VA
 (9, '../assets/galery/dokumen_p2k3/', 'P2k3'),
 (10, '../assets/galery/dokumen_sidak_p2k3/', 'Sidak'),
 (11, '../assets/galery/dokumen_sido/', 'Sido Bungah'),
-(12, '../assets/galery/dokumen_notice/', 'Notice');
+(12, '../assets/galery/dokumen_notice/', 'Notice'),
+(13, '../assets/galery/dokumen_seragam/', 'Seragam'),
+(14, 'assets/galery/dokumen_seragam/', 'Seragam'),
+(15, '../assets/galery/dokumen_parcel/', 'Parcel'),
+(16, '../assets/galery/dokumen_surat/', 'Surat');
 
 -- --------------------------------------------------------
 
@@ -176,7 +180,8 @@ INSERT INTO `table_datafarkes_d` (`documenid`, `documenname`, `documenaddress`, 
 (1, 'LKS1', '03092025131745^^Elegance.png', '2025-08-29 05:17:23', '90003560', '2025-09-03 13:17:45', '90003560'),
 (2, 'Tes', '10092025083639^^Elegance in Earthy Tones.png', '2025-09-10 08:36:33', '90003560', '2025-09-10 08:36:39', '90003560'),
 (3, 'OKe', '10092025084017^^Elegance in Earthy Tones.png', '2025-09-10 08:40:17', '90003560', '0000-00-00 00:00:00', ''),
-(4, 'Tes', '10092025084040^^Elegance in Earthy Tones.png', '2025-09-10 08:40:37', '90003560', '2025-09-10 08:40:40', '90003560');
+(4, 'Tes', '10092025084040^^Elegance in Earthy Tones.png', '2025-09-10 08:40:37', '90003560', '2025-09-10 08:40:40', '90003560'),
+(6, 'Test', '15092025115743^^Elegance.png', '2025-09-15 11:57:43', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -199,7 +204,8 @@ CREATE TABLE `table_datafarkes_g` (
 --
 
 INSERT INTO `table_datafarkes_g` (`imgid`, `imgthemes`, `imgaddress`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
-(1, 'CPB Online', 'CPB Online.png', '2025-08-29 05:23:46', '90003560', '2025-08-29 05:23:46', '90003560');
+(1, 'CPB Online', 'CPB Online.png', '2025-08-29 05:23:46', '90003560', '2025-08-29 05:23:46', '90003560'),
+(4, 'OK', '15092025124905^^Elegance.png', '2025-09-15 12:49:05', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -225,7 +231,7 @@ CREATE TABLE `table_datafarkes_h` (
 --
 
 INSERT INTO `table_datafarkes_h` (`farkesid`, `farkesdescriptions`, `farkesheader`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'Istilah ini umum dipakai di lingkungan BPJS Kesehatan atau instansi terkait ketika ada teguran resmi kepada fasilitas kesehatan (FKTP/RS) karena melanggar perjanjian kerja sama, standar pelayanan, atau ketentuan regulasi.', 'Surat Peringatan Fasilitas Kesehatan.', 1, '2025-09-10 08:24:56', '90003560', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '');
+(2, '<p>Seorang penjelajah muda berangkat meninggalkan <strong>kampung halamannya</strong> untuk mencari pengalaman baru di dunia luas yang penuh dengan tantangan, keajaiban, dan rahasia yang belum pernah ia temui sebelumnya. Dalam setiap langkah, ia menyadari bahwa perjalanan bukan hanya soal tempat tujuan, melainkan juga tentang proses panjang untuk memahami diri sendiri, orang lain, dan alam semesta yang membentang tanpa batas. Ia belajar bahwa keberanian tidak selalu berarti melawan bahaya besar, melainkan juga berani mengambil keputusan kecil setiap hari yang menentukan arah masa depan. Ia melihat matahari terbit di balik pegunungan, menyaksikan ombak besar yang menghantam karang, mendengar suara angin di padang luas, dan merasakan ketenangan saat malam tiba dengan bintang-bintang gemerlapan di langit. Semua pengalaman itu menumbuhkan rasa syukur mendalam dan membuatnya sadar bahwa hidup selalu menawarkan kesempatan baru. Dengan hati penuh semangat, ia berjanji pada dirinya sendiri untuk terus melangkah, menuliskan cerita, dan membagikan setiap kisah agar menjadi inspirasi bagi siapa saja yang juga sedang menapaki jalan panjang bernama kehidupan.</p>', 'Surat Peringatan Fasilitas Kesehatan.', 1, '2025-09-15 11:54:02', '90003560', '2025-09-15 11:54:13', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -236,8 +242,8 @@ INSERT INTO `table_datafarkes_h` (`farkesid`, `farkesdescriptions`, `farkesheade
 CREATE TABLE `table_datafarkes_n` (
   `newsid` int(11) NOT NULL,
   `newseditor` varchar(40) NOT NULL,
-  `newscontent` text NOT NULL,
   `newstitle` text NOT NULL,
+  `newscontent` text NOT NULL,
   `statsactive` int(11) NOT NULL,
   `createdon` datetime NOT NULL,
   `createdby` varchar(8) NOT NULL,
@@ -251,10 +257,9 @@ CREATE TABLE `table_datafarkes_n` (
 -- Dumping data for table `table_datafarkes_n`
 --
 
-INSERT INTO `table_datafarkes_n` (`newsid`, `newseditor`, `newscontent`, `newstitle`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'ChatGPT', 'Dalam rangka memperkuat hubungan industrial yang harmonis, dinamis, dan berkeadilan, perusahaan menyelenggarakan pertemuan rutin Lembaga Kerja Sama (LKS) Bipartit pada hari [tanggal], bertempat di [lokasi/kantor perusahaan]. Pertemuan ini dihadiri oleh perwakilan manajemen dan serikat pekerja/karyawan yang tergabung dalam struktur LKS Bipartit.\n\nPertemuan tersebut membahas sejumlah isu strategis terkait ketenagakerjaan, seperti peningkatan kesejahteraan karyawan, evaluasi program kesehatan dan keselamatan kerja (K3), serta tindak lanjut atas masukan-masukan dari unit kerja. Selain itu, disampaikan juga pencapaian perusahaan dalam beberapa bulan terakhir dan rencana kerja jangka pendek yang akan melibatkan partisipasi aktif dari karyawan.\n\nKetua LKS Bipartit, [Nama], menegaskan pentingnya forum ini sebagai sarana dialog terbuka dan solutif antara pihak manajemen dan pekerja. “LKS Bipartit bukan hanya forum formal, tetapi juga ruang untuk menyampaikan aspirasi dan mencari solusi bersama secara musyawarah. Tujuan akhirnya adalah menciptakan hubungan kerja yang kondusif dan produktif,” ujarnya.\n\nManajemen perusahaan juga menyampaikan apresiasi atas kerja sama dan komunikasi yang selama ini telah terjalin baik. Diharapkan ke depan, keberadaan LKS Bipartit semakin memberikan kontribusi positif terhadap iklim kerja di lingkungan perusahaan.\n\nPertemuan ditutup dengan penandatanganan notulen serta kesepakatan bersama untuk menindaklanjuti berbagai poin diskusi melalui program kerja yang lebih terukur dan tepat sasaran.', 'Penguatan LKS Bipartit: Membangun Komunikasi yang ', 1, '2025-08-29 05:20:22', '90003560', '2025-08-29 05:20:22', '90003560', '0000-00-00 00:00:00', ''),
-(5, 'Sehubungan dengan adanya acara pertanian', 'HR', 'Senin Seragam Bebas', 1, '2025-09-03 14:20:39', '90003560', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', ''),
-(6, 'a', 'a', 'a', 1, '2025-09-10 08:55:38', '90003560', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '');
+INSERT INTO `table_datafarkes_n` (`newsid`, `newseditor`, `newstitle`, `newscontent`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
+(1, 'ChatGPT', 'Penguatan LKS Bipartit: Membangun Komunikasi yang ', 'Dalam rangka memperkuat hubungan industrial yang harmonis, dinamis, dan berkeadilan, perusahaan menyelenggarakan pertemuan rutin Lembaga Kerja Sama (LKS) Bipartit pada hari [tanggal], bertempat di [lokasi/kantor perusahaan]. Pertemuan ini dihadiri oleh perwakilan manajemen dan serikat pekerja/karyawan yang tergabung dalam struktur LKS Bipartit.\n\nPertemuan tersebut membahas sejumlah isu strategis terkait ketenagakerjaan, seperti peningkatan kesejahteraan karyawan, evaluasi program kesehatan dan keselamatan kerja (K3), serta tindak lanjut atas masukan-masukan dari unit kerja. Selain itu, disampaikan juga pencapaian perusahaan dalam beberapa bulan terakhir dan rencana kerja jangka pendek yang akan melibatkan partisipasi aktif dari karyawan.\n\nKetua LKS Bipartit, [Nama], menegaskan pentingnya forum ini sebagai sarana dialog terbuka dan solutif antara pihak manajemen dan pekerja. “LKS Bipartit bukan hanya forum formal, tetapi juga ruang untuk menyampaikan aspirasi dan mencari solusi bersama secara musyawarah. Tujuan akhirnya adalah menciptakan hubungan kerja yang kondusif dan produktif,” ujarnya.\n\nManajemen perusahaan juga menyampaikan apresiasi atas kerja sama dan komunikasi yang selama ini telah terjalin baik. Diharapkan ke depan, keberadaan LKS Bipartit semakin memberikan kontribusi positif terhadap iklim kerja di lingkungan perusahaan.\n\nPertemuan ditutup dengan penandatanganan notulen serta kesepakatan bersama untuk menindaklanjuti berbagai poin diskusi melalui program kerja yang lebih terukur dan tepat sasaran.', 1, '2025-08-29 05:20:22', '90003560', '2025-08-29 05:20:22', '90003560', '0000-00-00 00:00:00', ''),
+(7, 'HR', 'Pemberitahuan', '<p>Besok lomba Guys</p>', 1, '2025-09-15 12:44:48', '90003560', '2025-09-15 12:46:27', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -272,6 +277,13 @@ CREATE TABLE `table_datalks_d` (
   `changedby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `table_datalks_d`
+--
+
+INSERT INTO `table_datalks_d` (`documenid`, `documenname`, `documenaddress`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(2, 'tes', '15092025102033^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-15 10:20:33', '90003560', '0000-00-00 00:00:00', '');
+
 -- --------------------------------------------------------
 
 --
@@ -287,6 +299,13 @@ CREATE TABLE `table_datalks_g` (
   `changedon` datetime NOT NULL,
   `changedby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datalks_g`
+--
+
+INSERT INTO `table_datalks_g` (`imgid`, `imgthemes`, `imgaddress`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(4, 'OK', '15092025113601^^Elegance.png', '2025-09-15 11:36:01', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -312,7 +331,7 @@ CREATE TABLE `table_datalks_h` (
 --
 
 INSERT INTO `table_datalks_h` (`lksid`, `lksdescriptions`, `lksheader`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'LKS Bipartit (Lembaga Kerja Sama Bipartit) adalah forum komunikasi dan konsultasi yang dibentuk secara bersama antara pengusaha dan perwakilan pekerja di tingkat perusahaan. Lembaga ini bertujuan untuk menciptakan hubungan industrial yang harmonis, dinamis, dan berkeadilan melalui dialog sosial antara kedua belah pihak. LKS Bipartit berfungsi sebagai sarana penyelesaian masalah ketenagakerjaan secara musyawarah, serta tempat bertukar informasi mengenai kebijakan atau hal-hal yang menyangkut kepentingan pekerja dan perusahaan.\n\nPembentukan LKS Bipartit diwajibkan bagi perusahaan yang mempekerjakan paling sedikit 50 orang pekerja, sesuai dengan ketentuan dalam Peraturan Menteri Ketenagakerjaan Nomor 32 Tahun 2008. Lembaga ini terdiri dari wakil pengusaha dan wakil pekerja/buruh dengan jumlah yang sama banyak, dan masa kerja minimal dua tahun. Keberadaan LKS Bipartit diharapkan dapat menjadi wadah dialog internal yang efektif, sehingga potensi konflik dapat diminimalkan dan produktivitas kerja dapat meningkat.', 'Lembaga Kerja Sama', 1, '2025-08-29 05:15:51', '90003560', '2025-09-03 11:22:37', '90003560', '0000-00-00 00:00:00', '');
+(2, '<p>Lembaga Kerja Sama</p>', 'Lembaga Kerja Sama', 1, '2025-09-15 11:32:37', '90003560', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -323,8 +342,8 @@ INSERT INTO `table_datalks_h` (`lksid`, `lksdescriptions`, `lksheader`, `statsac
 CREATE TABLE `table_datalks_n` (
   `newsid` int(11) NOT NULL,
   `newseditor` varchar(40) NOT NULL,
-  `newscontent` text NOT NULL,
   `newstitle` text NOT NULL,
+  `newscontent` text NOT NULL,
   `statsactive` int(11) NOT NULL,
   `createdon` datetime NOT NULL,
   `createdby` varchar(8) NOT NULL,
@@ -338,9 +357,9 @@ CREATE TABLE `table_datalks_n` (
 -- Dumping data for table `table_datalks_n`
 --
 
-INSERT INTO `table_datalks_n` (`newsid`, `newseditor`, `newscontent`, `newstitle`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'ChatGPT', 'Dalam rangka memperkuat hubungan industrial yang harmonis, dinamis, dan berkeadilan, perusahaan menyelenggarakan pertemuan rutin Lembaga Kerja Sama (LKS) Bipartit pada hari [tanggal], bertempat di [lokasi/kantor perusahaan]. Pertemuan ini dihadiri oleh perwakilan manajemen dan serikat pekerja/karyawan yang tergabung dalam struktur LKS Bipartit.\n\nPertemuan tersebut membahas sejumlah isu strategis terkait ketenagakerjaan, seperti peningkatan kesejahteraan karyawan, evaluasi program kesehatan dan keselamatan kerja (K3), serta tindak lanjut atas masukan-masukan dari unit kerja. Selain itu, disampaikan juga pencapaian perusahaan dalam beberapa bulan terakhir dan rencana kerja jangka pendek yang akan melibatkan partisipasi aktif dari karyawan.\n\nKetua LKS Bipartit, [Nama], menegaskan pentingnya forum ini sebagai sarana dialog terbuka dan solutif antara pihak manajemen dan pekerja. “LKS Bipartit bukan hanya forum formal, tetapi juga ruang untuk menyampaikan aspirasi dan mencari solusi bersama secara musyawarah. Tujuan akhirnya adalah menciptakan hubungan kerja yang kondusif dan produktif,” ujarnya.\n\nManajemen perusahaan juga menyampaikan apresiasi atas kerja sama dan komunikasi yang selama ini telah terjalin baik. Diharapkan ke depan, keberadaan LKS Bipartit semakin memberikan kontribusi positif terhadap iklim kerja di lingkungan perusahaan.\n\nPertemuan ditutup dengan penandatanganan notulen serta kesepakatan bersama untuk menindaklanjuti berbagai poin diskusi melalui program kerja yang lebih terukur dan tepat sasaran.', 'Penguatan LKS Bipartit: Membangun Komunikasi yang ', 1, '2025-08-29 05:20:22', '90003560', '2025-08-29 05:20:22', '90003560', '0000-00-00 00:00:00', ''),
-(5, 'Sehubungan dengan adanya acara pertanian', 'HR', 'Senin Seragam Bebas', 1, '2025-09-03 14:20:39', '90003560', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '');
+INSERT INTO `table_datalks_n` (`newsid`, `newseditor`, `newstitle`, `newscontent`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
+(1, 'ChatGPT', 'Penguatan LKS Bipartit: Membangun Komunikasi yang ', 'Dalam rangka memperkuat hubungan industrial yang harmonis, dinamis, dan berkeadilan, perusahaan menyelenggarakan pertemuan rutin Lembaga Kerja Sama (LKS) Bipartit pada hari [tanggal], bertempat di [lokasi/kantor perusahaan]. Pertemuan ini dihadiri oleh perwakilan manajemen dan serikat pekerja/karyawan yang tergabung dalam struktur LKS Bipartit.\n\nPertemuan tersebut membahas sejumlah isu strategis terkait ketenagakerjaan, seperti peningkatan kesejahteraan karyawan, evaluasi program kesehatan dan keselamatan kerja (K3), serta tindak lanjut atas masukan-masukan dari unit kerja. Selain itu, disampaikan juga pencapaian perusahaan dalam beberapa bulan terakhir dan rencana kerja jangka pendek yang akan melibatkan partisipasi aktif dari karyawan.\n\nKetua LKS Bipartit, [Nama], menegaskan pentingnya forum ini sebagai sarana dialog terbuka dan solutif antara pihak manajemen dan pekerja. “LKS Bipartit bukan hanya forum formal, tetapi juga ruang untuk menyampaikan aspirasi dan mencari solusi bersama secara musyawarah. Tujuan akhirnya adalah menciptakan hubungan kerja yang kondusif dan produktif,” ujarnya.\n\nManajemen perusahaan juga menyampaikan apresiasi atas kerja sama dan komunikasi yang selama ini telah terjalin baik. Diharapkan ke depan, keberadaan LKS Bipartit semakin memberikan kontribusi positif terhadap iklim kerja di lingkungan perusahaan.\n\nPertemuan ditutup dengan penandatanganan notulen serta kesepakatan bersama untuk menindaklanjuti berbagai poin diskusi melalui program kerja yang lebih terukur dan tepat sasaran.', 1, '2025-08-29 05:20:22', '90003560', '2025-08-29 05:20:22', '90003560', '0000-00-00 00:00:00', ''),
+(5, 'HR', 'Senin Seragam Bebas', '<p>Yes</p>', 1, '2025-09-03 14:20:39', '90003560', '2025-09-15 11:33:19', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -361,15 +380,8 @@ CREATE TABLE `table_datanotice_d` (
 --
 
 INSERT INTO `table_datanotice_d` (`documenid`, `noticeid`, `imgnotice`, `createdon`, `createdby`) VALUES
-(1, 3, '14092025010321^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:03:21', '90003560'),
-(2, 3, '14092025010321^^Elegance.png', '2025-09-14 01:03:21', '90003560'),
-(3, 3, '14092025010321^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:03:21', '90003560'),
-(4, 3, '14092025010321^^CPB Online.png', '2025-09-14 01:03:21', '90003560'),
-(5, 3, '14092025011202^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:12:02', '90003560'),
-(6, 3, '14092025011203^^Elegance.png', '2025-09-14 01:12:02', '90003560'),
-(7, 3, '14092025011203^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-14 01:12:02', '90003560'),
-(8, 3, '14092025011203^^CPB Online.png', '2025-09-14 01:12:02', '90003560'),
-(9, 3, '14092025011203^^sidomuncul.png', '2025-09-14 01:12:02', '90003560');
+(3, 1, '18092025000357^^surat-2.png', '2025-09-18 00:03:57', '90003560'),
+(4, 1, '18092025000357^^surat-1.jpg', '2025-09-18 00:03:57', '90003560');
 
 -- --------------------------------------------------------
 
@@ -392,7 +404,7 @@ CREATE TABLE `table_datanotice_h` (
 --
 
 INSERT INTO `table_datanotice_h` (`noticeid`, `header`, `descriptions`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
-(1, 'LIBUR NASIONAL', '<p>Besok libur</p>', '2025-09-14 01:12:02', '90003560', '0000-00-00 00:00:00', '');
+(1, 'LIBUR NASIONAL', '<p>Besok libur</p>', '2025-09-18 00:03:57', '90003560', '2025-09-18 00:11:37', '90003560');
 
 -- --------------------------------------------------------
 
@@ -409,6 +421,13 @@ CREATE TABLE `table_datap2k3_d` (
   `changedon` datetime NOT NULL,
   `changedby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datap2k3_d`
+--
+
+INSERT INTO `table_datap2k3_d` (`documenid`, `documenname`, `documenaddress`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(2, 'Test', '15092025125634^^Elegance.png', '2025-09-15 12:56:34', '90003560', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -434,7 +453,7 @@ CREATE TABLE `table_datap2k3_h` (
 --
 
 INSERT INTO `table_datap2k3_h` (`p2k3id`, `p2k3descriptions`, `p2k3header`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, '📌 Definisi\nP2K3 adalah badan/organisasi di perusahaan yang dibentuk oleh pengusaha dan pekerja untuk membantu menerapkan serta mengawasi pelaksanaan Keselamatan dan Kesehatan Kerja (K3) sesuai peraturan perundangan.\n\n📌 Dasar Hukum\n\nUU No. 1 Tahun 1970 tentang Keselamatan Kerja\n\nPermenaker RI No. 04/MEN/1987 tentang P2K3 serta tata cara penunjukan Ahli K3\n\n📌 Tugas utama P2K3\n\nMemberi saran dan pertimbangan kepada pengusaha tentang K3\n\nMembantu merencanakan, melaksanakan, dan mengevaluasi program K3\n\nMengkaji dan menindaklanjuti kecelakaan kerja/penyakit akibat kerja\n\nMembantu pelaksanaan pelatihan, kampanye, dan sosialisasi K3\n\n📌 Anggota\n\nPerwakilan pengusaha (manajemen)\n\nPerwakilan pekerja/buruh\n\nAhli K3 (sebagai sekretaris P2K3)', 'Panitia Pembina Keselamatan & Kesehatan', 1, '2025-09-10 15:41:48', '90003560', '2025-09-10 15:43:45', '90003560', '2025-09-10 15:43:59', '');
+(1, '<p>📌 Definisi P2K3 adalah badan/organisasi di perusahaan yang dibentuk oleh pengusaha dan pekerja untuk membantu menerapkan serta mengawasi pelaksanaan Keselamatan dan Kesehatan Kerja (K3) sesuai peraturan perundangan. 📌 Dasar Hukum UU No. 1 Tahun 1970 tentang Keselamatan Kerja Permenaker RI No. 04/MEN/1987 tentang P2K3 serta tata cara penunjukan Ahli K3 📌 Tugas utama P2K3 Memberi saran dan pertimbangan kepada pengusaha tentang K3 Membantu merencanakan, melaksanakan, dan mengevaluasi program K3 Mengkaji dan menindaklanjuti kecelakaan kerja/penyakit akibat kerja Membantu pelaksanaan pelatihan, kampanye, dan sosialisasi K3 📌 Anggota Perwakilan pengusaha (manajemen) Perwakilan pekerja/buruh Ahli K3 (sebagai sekretaris P2K3).</p>', 'Panitia Pembina Keselamatan & Kesehatan', 1, '2025-09-10 15:41:48', '90003560', '2025-09-15 12:53:47', '90003560', '2025-09-10 15:43:59', '');
 
 -- --------------------------------------------------------
 
@@ -461,7 +480,7 @@ CREATE TABLE `table_datap2k3_n` (
 --
 
 INSERT INTO `table_datap2k3_n` (`newsid`, `newseditor`, `newscontent`, `newstitle`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'e', 'e', 'e', 0, '2025-09-10 15:51:58', '90003560', '2025-09-10 15:52:08', '90003560', '2025-09-10 15:53:50', '90003560');
+(5, 'HR', '<p>Perayaan Ulang tahun SM</p>', 'Sepak Bola', 1, '2025-09-15 14:01:04', '90003560', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', '');
 
 -- --------------------------------------------------------
 
@@ -484,7 +503,8 @@ CREATE TABLE `table_datap2k3_s` (
 --
 
 INSERT INTO `table_datap2k3_s` (`p2k3id`, `tglsidak`, `pernr`, `unitid`, `catatan`, `createdon`, `createdby`) VALUES
-(5, '2025-09-17', '90003252', 11121112, '<p>a</p>', '2025-09-11 13:27:10', '90003560');
+(5, '2025-09-17', '90003252', 11121112, '<p>a</p>', '2025-09-11 13:27:10', '90003560'),
+(6, '2025-09-15', '90003252', 11121112, '<p>Text</p>', '2025-09-15 14:10:38', '90003560');
 
 -- --------------------------------------------------------
 
@@ -511,7 +531,94 @@ INSERT INTO `table_datap2k3_sd` (`documenid`, `p2k3id`, `imgsidak`, `createdon`,
 (52, 5, '11092025132710^^CPB Online.png', '2025-09-11 13:27:10', '90003560'),
 (53, 5, '11092025132710^^sidomuncul.png', '2025-09-11 13:27:10', '90003560'),
 (54, 5, '11092025132710^^sidomuncul (2).png', '2025-09-11 13:27:10', '90003560'),
-(55, 5, '11092025132710^^document.pdf', '2025-09-11 13:27:10', '90003560');
+(55, 5, '11092025132710^^document.pdf', '2025-09-11 13:27:10', '90003560'),
+(56, 6, '15092025141038^^CPB Online.png', '2025-09-15 14:10:38', '90003560'),
+(57, 6, '15092025141039^^sidomuncul.png', '2025-09-15 14:10:38', '90003560'),
+(58, 6, '15092025141039^^sidomuncul (2).png', '2025-09-15 14:10:38', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_dataparcel_d`
+--
+
+CREATE TABLE `table_dataparcel_d` (
+  `documenid` int(11) NOT NULL,
+  `parcelid` int(11) NOT NULL,
+  `imgparcel` text NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_dataparcel_d`
+--
+
+INSERT INTO `table_dataparcel_d` (`documenid`, `parcelid`, `imgparcel`, `createdon`, `createdby`) VALUES
+(1, 1, '17092025091223^^parcel-5.jpeg', '2025-09-17 09:12:23', '90003560'),
+(2, 1, '17092025091223^^parcel-4.jpeg', '2025-09-17 09:12:23', '90003560'),
+(3, 1, '17092025091223^^parcel-3.jpeg', '2025-09-17 09:12:23', '90003560'),
+(4, 1, '17092025091223^^parcel-2.jpeg', '2025-09-17 09:12:23', '90003560'),
+(5, 1, '17092025091223^^parcel-1.jpeg', '2025-09-17 09:12:23', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_dataparcel_dt`
+--
+
+CREATE TABLE `table_dataparcel_dt` (
+  `parcelid` int(11) NOT NULL,
+  `unitid` int(11) NOT NULL,
+  `rancqty` int(11) NOT NULL,
+  `realqty` int(11) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL,
+  `changedon` datetime NOT NULL,
+  `changedby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_dataparcel_dt`
+--
+
+INSERT INTO `table_dataparcel_dt` (`parcelid`, `unitid`, `rancqty`, `realqty`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(1, 11121112, 4, 5, '2025-09-17 09:12:23', '90003560', '2025-09-17 09:35:06', '90003560'),
+(1, 11121113, 5, 6, '2025-09-17 09:12:23', '90003560', '2025-09-17 09:35:06', '90003560'),
+(1, 11121114, 6, 7, '2025-09-17 09:12:23', '90003560', '2025-09-17 09:35:06', '90003560'),
+(1, 11121115, 7, 8, '2025-09-17 09:12:23', '90003560', '2025-09-17 09:35:06', '90003560'),
+(1, 11121116, 4, 9, '2025-09-17 09:12:23', '90003560', '2025-09-17 09:35:06', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_dataparcel_h`
+--
+
+CREATE TABLE `table_dataparcel_h` (
+  `parcelid` int(11) NOT NULL,
+  `tglfrom` date NOT NULL,
+  `tglto` date NOT NULL,
+  `totalranc` int(11) NOT NULL,
+  `totalreal` int(11) NOT NULL,
+  `catatanranc` text NOT NULL,
+  `catatanreal` text NOT NULL,
+  `rancangan` varchar(1) NOT NULL,
+  `realisasi` varchar(1) NOT NULL,
+  `tglreal` date NOT NULL,
+  `statsx` varchar(4) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL,
+  `changedon` datetime NOT NULL,
+  `changedby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_dataparcel_h`
+--
+
+INSERT INTO `table_dataparcel_h` (`parcelid`, `tglfrom`, `tglto`, `totalranc`, `totalreal`, `catatanranc`, `catatanreal`, `rancangan`, `realisasi`, `tglreal`, `statsx`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(1, '2025-09-17', '2025-09-17', 26, 35, '<p>Oke</p>', '<p>Oke</p>', 'X', 'X', '2025-09-18', 'CLSD', '2025-09-17 09:12:23', '90003560', '2025-09-17 09:35:06', '90003560');
 
 -- --------------------------------------------------------
 
@@ -556,6 +663,13 @@ CREATE TABLE `table_datapkwt_d` (
   `changedby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `table_datapkwt_d`
+--
+
+INSERT INTO `table_datapkwt_d` (`documenid`, `documenname`, `documenaddress`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(2, 'Tes', '15092025095728^^Elegance.png', '2025-09-15 09:57:28', '90003560', '0000-00-00 00:00:00', '');
+
 -- --------------------------------------------------------
 
 --
@@ -581,7 +695,7 @@ CREATE TABLE `table_datapkwt_h` (
 
 INSERT INTO `table_datapkwt_h` (`pkwtid`, `pkwtdescriptions`, `pkwtheader`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
 (1, 'Perjanjian Kerja Waktu Tertentu (PKWT) adalah perjanjian kerja antara pekerja dan pemberi kerja untuk hubungan kerja dalam jangka waktu tertentu atau untuk pekerjaan tertentu, yang diatur oleh Undang-Undang Ketenagakerjaan dan pengawasannya dilakukan oleh Dinas Ketenagakerjaan (Disnaker). PKWT biasanya digunakan untuk pekerjaan yang bersifat sementara, musiman, atau proyek yang memiliki batas waktu penyelesaian. Disnaker memiliki peran penting dalam memastikan pelaksanaan PKWT sesuai dengan ketentuan hukum yang berlaku, termasuk kewajiban pencatatan PKWT oleh perusahaan agar tercatat secara resmi dan dapat diawasi, guna melindungi hak-hak pekerja dan mencegah penyalahgunaan kontrak kerja sementara.', 'Perjanjian Kerja Waktu Tertentu', 1, '2025-08-29 05:07:22', '90003560', '2025-09-02 10:29:48', '90003560', '0000-00-00 00:00:00', ''),
-(2, 'tes', 'tes', 0, '2025-09-02 10:30:02', '90003560', '0000-00-00 00:00:00', '', '2025-09-02 10:30:08', '90003560');
+(2, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>&nbsp;</p>', 'tes', 0, '2025-09-02 10:30:02', '90003560', '2025-09-15 09:56:57', '90003560', '2025-09-02 10:30:08', '90003560');
 
 -- --------------------------------------------------------
 
@@ -623,7 +737,7 @@ CREATE TABLE `table_datasido_h` (
 --
 
 INSERT INTO `table_datasido_h` (`sidoid`, `sidodescriptions`, `sidoheader`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
-(2, 'Acara ini digelar dengan mengusung tema “Sido Bungah” yang berarti menjadi bahagia. Tema ini dipilih sebagai wujud semangat untuk menghadirkan suasana penuh keceriaan, kebersamaan, dan rasa syukur dalam setiap langkah. Melalui rangkaian kegiatan yang inspiratif, edukatif, dan menghibur, acara ini diharapkan mampu mempererat persaudaraan serta menumbuhkan energi positif di tengah masyarakat.', 'Sido Bungah', '2025-09-11 14:51:52', '90003560', '2025-09-11 14:52:41', '90003560');
+(2, '<p>Seorang penjelajah muda berangkat meninggalkan kampung halamannya untuk mencari pengalaman baru di dunia luas yang penuh dengan tantangan, keajaiban, dan rahasia yang belum pernah ia temui sebelumnya. Dalam setiap langkah, ia menyadari bahwa perjalanan bukan hanya soal tempat tujuan, melainkan juga tentang proses panjang untuk memahami diri sendiri, orang lain, dan alam semesta yang membentang tanpa batas. Ia belajar bahwa keberanian tidak selalu berarti melawan bahaya besar, melainkan juga berani mengambil keputusan kecil setiap hari yang <strong>menentukan arah masa depan. Ia melihat matahari terbit di balik pegunungan, menyaksikan ombak besar yang menghantam karang, mendengar suara angin di padang luas, dan merasakan ketenangan saat malam tiba dengan bintang-bintang gemerlapan di langit. Semua pengalaman itu menumbuhkan rasa syukur mendalam dan membuatnya sadar bahwa hidup selalu menawarkan kesempatan baru. Dengan hati penuh semangat, ia berjanji pada dirinya sendiri untuk terus melangkah, menuliskan cerita, dan membagikan setiap kisah agar menjadi inspirasi bagi siapa saja yang juga sedang menapaki jalan panjang bernama kehidupan.</strong></p>', 'Sido Bungah', '2025-09-11 14:51:52', '90003560', '2025-09-15 14:16:14', '90003560');
 
 -- --------------------------------------------------------
 
@@ -753,6 +867,119 @@ INSERT INTO `table_datasp_v` (`idviolation`, `descriptions`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `table_datasrgm_d`
+--
+
+CREATE TABLE `table_datasrgm_d` (
+  `documenid` int(11) NOT NULL,
+  `srgmid` int(11) NOT NULL,
+  `imgseragam` text NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datasrgm_d`
+--
+
+INSERT INTO `table_datasrgm_d` (`documenid`, `srgmid`, `imgseragam`, `createdon`, `createdby`) VALUES
+(3, 2, '16092025134949^^merah.jpeg', '2025-09-16 13:49:49', '90003560'),
+(4, 2, '16092025134949^^kuning.jpeg', '2025-09-16 13:49:49', '90003560'),
+(5, 3, '16092025142641^^merah.jpeg', '2025-09-16 14:26:41', '90003560'),
+(6, 3, '16092025142641^^kuning.jpeg', '2025-09-16 14:26:41', '90003560'),
+(7, 4, '16092025213413^^merah.jpeg', '2025-09-16 21:34:13', '90003560'),
+(8, 4, '16092025213413^^kuning.jpeg', '2025-09-16 21:34:13', '90003560'),
+(9, 5, '16092025222719^^merah.jpeg', '2025-09-16 22:27:19', '90003560'),
+(10, 5, '16092025222719^^kuning.jpeg', '2025-09-16 22:27:19', '90003560'),
+(11, 5, '16092025222719^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-16 22:27:19', '90003560'),
+(12, 5, '16092025222719^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-16 22:27:19', '90003560'),
+(13, 5, '16092025222719^^CPB Online.png', '2025-09-16 22:27:19', '90003560'),
+(14, 5, '16092025222719^^sidomuncul.png', '2025-09-16 22:27:19', '90003560'),
+(15, 5, '16092025222719^^sidomuncul (2).png', '2025-09-16 22:27:19', '90003560'),
+(16, 5, '16092025222719^^25072025095327^^materi-6877723f0cda1-FC-2.jpeg', '2025-09-16 22:27:19', '90003560'),
+(17, 5, '16092025222719^^25072025092058^^jotun_jotun_waterguard_base_aa_15l_-_18kg_cat_tembok_pelapis_anti_bocor_cat_jotun_waterproofing_cat_jotun_anti_bocor_seperti_no_drop_18kg_waterguard_1_pail_full03_t2jmmnb3.png', '2025-09-16 22:27:19', '90003560'),
+(18, 5, '16092025222719^^materi-6877723f0cda1-FC-2.jpeg', '2025-09-16 22:27:19', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_datasrgm_dt`
+--
+
+CREATE TABLE `table_datasrgm_dt` (
+  `srgmid` int(11) NOT NULL,
+  `unitid` int(11) NOT NULL,
+  `rancqty` int(11) NOT NULL,
+  `realqty` int(11) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL,
+  `changedon` datetime NOT NULL,
+  `changedby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datasrgm_dt`
+--
+
+INSERT INTO `table_datasrgm_dt` (`srgmid`, `unitid`, `rancqty`, `realqty`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(2, 11121112, 34, 30, '2025-09-16 13:49:49', '90003560', '2025-09-16 21:18:20', '90003560'),
+(2, 11121113, 2, 4, '2025-09-16 13:49:49', '90003560', '2025-09-16 21:18:20', '90003560'),
+(2, 11121114, 26, 34, '2025-09-16 13:49:49', '90003560', '2025-09-16 21:18:20', '90003560'),
+(2, 11121115, 27, 30, '2025-09-16 13:49:49', '90003560', '2025-09-16 21:18:20', '90003560'),
+(2, 11121116, 29, 40, '2025-09-16 13:49:49', '90003560', '2025-09-16 21:18:20', '90003560'),
+(3, 11121112, 5, 5, '2025-09-16 14:26:41', '90003560', '2025-09-16 21:25:29', '90003560'),
+(3, 11121113, 5, 5, '2025-09-16 14:26:41', '90003560', '2025-09-16 21:25:29', '90003560'),
+(3, 11121114, 5, 5, '2025-09-16 14:26:41', '90003560', '2025-09-16 21:25:29', '90003560'),
+(3, 11121115, 5, 5, '2025-09-16 14:26:41', '90003560', '2025-09-16 21:25:29', '90003560'),
+(3, 11121116, 5, 8, '2025-09-16 14:26:41', '90003560', '2025-09-16 21:25:29', '90003560'),
+(4, 11121112, 2, 2, '2025-09-16 21:34:13', '90003560', '0000-00-00 00:00:00', ''),
+(4, 11121113, 3, 3, '2025-09-16 21:34:13', '90003560', '0000-00-00 00:00:00', ''),
+(4, 11121114, 2, 2, '2025-09-16 21:34:13', '90003560', '0000-00-00 00:00:00', ''),
+(4, 11121115, 4, 4, '2025-09-16 21:34:13', '90003560', '0000-00-00 00:00:00', ''),
+(4, 11121116, 5, 5, '2025-09-16 21:34:13', '90003560', '0000-00-00 00:00:00', ''),
+(5, 11121112, 1, 1, '2025-09-16 22:27:19', '90003560', '2025-09-16 22:28:21', '90003560'),
+(5, 11121113, 1, 1, '2025-09-16 22:27:19', '90003560', '2025-09-16 22:28:21', '90003560'),
+(5, 11121114, 1, 2, '2025-09-16 22:27:19', '90003560', '2025-09-16 22:28:21', '90003560'),
+(5, 11121115, 1, 1, '2025-09-16 22:27:19', '90003560', '2025-09-16 22:28:21', '90003560'),
+(5, 11121116, 1, 1, '2025-09-16 22:27:19', '90003560', '2025-09-16 22:28:21', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_datasrgm_h`
+--
+
+CREATE TABLE `table_datasrgm_h` (
+  `srgmid` int(11) NOT NULL,
+  `tglfrom` date NOT NULL,
+  `tglto` date NOT NULL,
+  `totalranc` int(11) NOT NULL,
+  `totalreal` int(11) NOT NULL,
+  `catatanranc` text NOT NULL,
+  `catatanreal` text NOT NULL,
+  `rancangan` varchar(1) NOT NULL,
+  `realisasi` varchar(1) NOT NULL,
+  `tglreal` date NOT NULL,
+  `statsx` varchar(4) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL,
+  `changedon` datetime NOT NULL,
+  `changedby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datasrgm_h`
+--
+
+INSERT INTO `table_datasrgm_h` (`srgmid`, `tglfrom`, `tglto`, `totalranc`, `totalreal`, `catatanranc`, `catatanreal`, `rancangan`, `realisasi`, `tglreal`, `statsx`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(2, '2025-09-16', '2025-09-16', 118, 138, '<p>Pembagian seragam merah &amp; kuning</p>', '<p>Sudah terealisasikan</p>', 'X', 'X', '2025-09-16', 'CLSD', '2025-09-16 13:49:49', '90003560', '2025-09-16 21:18:20', '90003560'),
+(3, '2025-09-17', '2025-09-20', 25, 28, '<p>Susulan pembagian seragam</p>', '<p>OK</p>', 'X', 'X', '2025-09-16', 'CLSD', '2025-09-16 14:26:41', '90003560', '2025-09-16 21:25:29', '90003560'),
+(4, '2025-09-16', '2025-09-16', 16, 0, '<p>Rancangan pembagian seragam</p>', '', 'X', '', '0000-00-00', 'NEW', '2025-09-16 21:34:13', '90003560', '0000-00-00 00:00:00', ''),
+(5, '2025-09-16', '2025-09-16', 5, 6, '<p>OK</p>', '<p>OK</p>', 'X', 'X', '2025-09-17', 'CLSD', '2025-09-16 22:27:19', '90003560', '2025-09-16 22:28:21', '90003560');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `table_datastats`
 --
 
@@ -771,7 +998,84 @@ INSERT INTO `table_datastats` (`idstats`, `stats`, `descriptions`) VALUES
 (1, 'CRTD', 'Created'),
 (2, 'REL', 'release'),
 (3, 'CLSD', 'Closed'),
+(4, 'NPGS', 'On Progress'),
+(5, 'ACPT', 'Accept'),
+(6, 'RJCT', 'Reject'),
 (99, 'DEL', 'Delete');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_datasurat`
+--
+
+CREATE TABLE `table_datasurat` (
+  `srtid` int(11) NOT NULL,
+  `descriptions` varchar(40) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL,
+  `changedon` datetime NOT NULL,
+  `changedby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datasurat`
+--
+
+INSERT INTO `table_datasurat` (`srtid`, `descriptions`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(1, 'Referensi Kerja', '2025-09-17 04:49:50', '90003560', '2025-09-17 04:49:50', '90003560'),
+(2, 'Surat Keterangan Jamsostek', '2025-09-17 04:53:27', '90003560', '2025-09-17 04:53:27', '90003560'),
+(3, 'Surat Keterangan Aktif Bekerja', '2025-09-17 04:55:38', '90003560', '2025-09-17 04:55:38', '90003560'),
+(4, 'Surat Keterangan Gaji', '2025-09-17 04:56:16', '90003560', '2025-09-17 04:56:16', '90003560'),
+(5, 'Surat Tugas', '2025-09-17 04:56:32', '90003560', '2025-09-17 04:56:32', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_datasurat_d`
+--
+
+CREATE TABLE `table_datasurat_d` (
+  `documenid` int(11) NOT NULL,
+  `suratid` int(11) NOT NULL,
+  `imgsurat` text NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datasurat_d`
+--
+
+INSERT INTO `table_datasurat_d` (`documenid`, `suratid`, `imgsurat`, `createdon`, `createdby`) VALUES
+(9, 5, '17092025233920^^surat-2.png', '2025-09-17 23:39:20', '90003560'),
+(10, 5, '17092025233920^^surat-1.jpg', '2025-09-17 23:39:20', '90003560');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_datasurat_h`
+--
+
+CREATE TABLE `table_datasurat_h` (
+  `suratid` int(11) NOT NULL,
+  `srtid` int(11) NOT NULL,
+  `kopheader` varchar(40) NOT NULL,
+  `terbit` date NOT NULL,
+  `pernr` int(11) NOT NULL,
+  `unitid` int(11) NOT NULL,
+  `createdon` datetime NOT NULL,
+  `createdby` varchar(8) NOT NULL,
+  `changedon` datetime NOT NULL,
+  `changedby` varchar(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `table_datasurat_h`
+--
+
+INSERT INTO `table_datasurat_h` (`suratid`, `srtid`, `kopheader`, `terbit`, `pernr`, `unitid`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(5, 1, '045/123/Disdik/IX/2025', '2025-09-17', 90004054, 11121112, '2025-09-17 23:39:20', '90003560', '2025-09-17 23:53:16', '90003560');
 
 -- --------------------------------------------------------
 
@@ -813,7 +1117,11 @@ CREATE TABLE `table_dataunit` (
 --
 
 INSERT INTO `table_dataunit` (`unitid`, `descriptions`, `costcentre`) VALUES
-(11121112, 'Teknik', 'S100S002');
+(11121112, 'Teknik', 'S100S002'),
+(11121113, 'IPC', 'S100S002'),
+(11121114, 'Ekstraksi', 'S100S002'),
+(11121115, 'GBBNS', 'S100S002'),
+(11121116, 'GBBS', 'S100S002');
 
 -- --------------------------------------------------------
 
@@ -856,6 +1164,13 @@ CREATE TABLE `table_datawlkp_d` (
   `changedby` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `table_datawlkp_d`
+--
+
+INSERT INTO `table_datawlkp_d` (`documenid`, `documenname`, `documenaddress`, `createdon`, `createdby`, `changedon`, `changedby`) VALUES
+(7, 'tes', '15092025095846^^04092025155852^^01092025151118^^Elegance in Earthy Tones.png', '2025-09-15 09:58:46', '90003560', '0000-00-00 00:00:00', '');
+
 -- --------------------------------------------------------
 
 --
@@ -880,7 +1195,7 @@ CREATE TABLE `table_datawlkp_h` (
 --
 
 INSERT INTO `table_datawlkp_h` (`wlkpid`, `wlkpdescriptions`, `wlkpheader`, `statsactive`, `createdon`, `createdby`, `changedon`, `changedby`, `deletedon`, `deletedby`) VALUES
-(1, 'WLKP (Wajib Lapor Ketenagakerjaan di Perusahaan) adalah kewajiban setiap perusahaan untuk melaporkan secara berkala informasi ketenagakerjaan kepada Dinas Ketenagakerjaan setempat. Informasi yang dilaporkan meliputi jumlah tenaga kerja, status hubungan kerja, jabatan, pendidikan, upah, serta data lainnya yang terkait dengan ketenagakerjaan di perusahaan. Pelaporan ini bertujuan untuk menyediakan data yang akurat bagi pemerintah dalam menyusun kebijakan ketenagakerjaan, serta sebagai bentuk transparansi dan pengawasan terhadap perlindungan tenaga kerja.\n\nWLKP biasanya dilakukan secara daring melalui sistem yang disediakan oleh Disnaker, seperti aplikasi wajib lapor online yang bisa diakses oleh perusahaan. Kewajiban ini diatur dalam Undang-Undang Nomor 7 Tahun 1981 tentang Wajib Lapor Ketenagakerjaan di Perusahaan, dan pelanggaran terhadap kewajiban ini dapat dikenakan sanksi administratif. Dengan melakukan WLKP, perusahaan turut berpartisipasi dalam upaya peningkatan kualitas dan perlindungan tenaga kerja di Indonesia.', 'Wajib Lapor Ketenagakerjaan di Perusahaan', 0, '2025-08-29 04:52:44', '90003560', '2025-09-02 09:11:42', '90003560', '2025-09-10 10:24:05', '90003560');
+(1, '<p>WLKP (Wajib Lapor Ketenagakerjaan di Perusahaan) adalah kewajiban setiap perusahaan untuk melaporkan secara berkala informasi ketenagakerjaan kepada Dinas Ketenagakerjaan setempat. Informasi yang dilaporkan meliputi jumlah tenaga kerja, status hubungan kerja, jabatan, pendidikan, upah, serta data lainnya yang terkait dengan ketenagakerjaan di perusahaan. Pelaporan ini bertujuan untuk menyediakan data yang akurat bagi pemerintah dalam menyusun kebijakan ketenagakerjaan, serta sebagai bentuk transparansi dan pengawasan terhadap perlindungan tenaga kerja. WLKP biasanya dilakukan secara daring melalui sistem yang disediakan oleh Disnaker, seperti aplikasi wajib lapor online yang bisa diakses oleh perusahaan. Kewajiban ini diatur dalam Undang-Undang Nomor 7 Tahun 1981 tentang Wajib Lapor Ketenagakerjaan di Perusahaan, dan pelanggaran terhadap kewajiban ini dapat dikenakan sanksi administratif. Dengan melakukan WLKP, perusahaan turut berpartisipasi dalam upaya peningkatan kualitas dan perlindungan tenaga kerja di Indonesia</p>', 'Wajib Lapor Ketenagakerjaan di Perusahaan', 0, '2025-08-29 04:52:44', '90003560', '2025-09-15 09:46:07', '90003560', '2025-09-10 10:24:05', '90003560');
 
 --
 -- Indexes for dumped tables
@@ -1007,6 +1322,24 @@ ALTER TABLE `table_datap2k3_sd`
   ADD PRIMARY KEY (`documenid`);
 
 --
+-- Indexes for table `table_dataparcel_d`
+--
+ALTER TABLE `table_dataparcel_d`
+  ADD PRIMARY KEY (`documenid`);
+
+--
+-- Indexes for table `table_dataparcel_dt`
+--
+ALTER TABLE `table_dataparcel_dt`
+  ADD PRIMARY KEY (`parcelid`,`unitid`);
+
+--
+-- Indexes for table `table_dataparcel_h`
+--
+ALTER TABLE `table_dataparcel_h`
+  ADD PRIMARY KEY (`parcelid`);
+
+--
 -- Indexes for table `table_datapkb`
 --
 ALTER TABLE `table_datapkb`
@@ -1067,10 +1400,46 @@ ALTER TABLE `table_datasp_v`
   ADD PRIMARY KEY (`idviolation`);
 
 --
+-- Indexes for table `table_datasrgm_d`
+--
+ALTER TABLE `table_datasrgm_d`
+  ADD PRIMARY KEY (`documenid`);
+
+--
+-- Indexes for table `table_datasrgm_dt`
+--
+ALTER TABLE `table_datasrgm_dt`
+  ADD PRIMARY KEY (`srgmid`,`unitid`);
+
+--
+-- Indexes for table `table_datasrgm_h`
+--
+ALTER TABLE `table_datasrgm_h`
+  ADD PRIMARY KEY (`srgmid`);
+
+--
 -- Indexes for table `table_datastats`
 --
 ALTER TABLE `table_datastats`
   ADD PRIMARY KEY (`idstats`);
+
+--
+-- Indexes for table `table_datasurat`
+--
+ALTER TABLE `table_datasurat`
+  ADD PRIMARY KEY (`srtid`);
+
+--
+-- Indexes for table `table_datasurat_d`
+--
+ALTER TABLE `table_datasurat_d`
+  ADD PRIMARY KEY (`documenid`);
+
+--
+-- Indexes for table `table_datasurat_h`
+--
+ALTER TABLE `table_datasurat_h`
+  ADD PRIMARY KEY (`suratid`);
 
 --
 -- Indexes for table `table_datatask`
@@ -1128,61 +1497,61 @@ ALTER TABLE `table_datacoc_h`
 -- AUTO_INCREMENT for table `table_datadirections`
 --
 ALTER TABLE `table_datadirections`
-  MODIFY `directionsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `directionsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `table_datafarkes_d`
 --
 ALTER TABLE `table_datafarkes_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `table_datafarkes_g`
 --
 ALTER TABLE `table_datafarkes_g`
-  MODIFY `imgid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `imgid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `table_datafarkes_h`
 --
 ALTER TABLE `table_datafarkes_h`
-  MODIFY `farkesid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `farkesid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_datafarkes_n`
 --
 ALTER TABLE `table_datafarkes_n`
-  MODIFY `newsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `newsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `table_datalks_d`
 --
 ALTER TABLE `table_datalks_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_datalks_g`
 --
 ALTER TABLE `table_datalks_g`
-  MODIFY `imgid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `imgid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `table_datalks_h`
 --
 ALTER TABLE `table_datalks_h`
-  MODIFY `lksid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `lksid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_datalks_n`
 --
 ALTER TABLE `table_datalks_n`
-  MODIFY `newsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `newsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `table_datanotice_d`
 --
 ALTER TABLE `table_datanotice_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `table_datanotice_h`
@@ -1194,7 +1563,7 @@ ALTER TABLE `table_datanotice_h`
 -- AUTO_INCREMENT for table `table_datap2k3_d`
 --
 ALTER TABLE `table_datap2k3_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_datap2k3_h`
@@ -1206,19 +1575,31 @@ ALTER TABLE `table_datap2k3_h`
 -- AUTO_INCREMENT for table `table_datap2k3_n`
 --
 ALTER TABLE `table_datap2k3_n`
-  MODIFY `newsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `newsid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `table_datap2k3_s`
 --
 ALTER TABLE `table_datap2k3_s`
-  MODIFY `p2k3id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `p2k3id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `table_datap2k3_sd`
 --
 ALTER TABLE `table_datap2k3_sd`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+
+--
+-- AUTO_INCREMENT for table `table_dataparcel_d`
+--
+ALTER TABLE `table_dataparcel_d`
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `table_dataparcel_h`
+--
+ALTER TABLE `table_dataparcel_h`
+  MODIFY `parcelid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `table_datapkb`
@@ -1230,7 +1611,7 @@ ALTER TABLE `table_datapkb`
 -- AUTO_INCREMENT for table `table_datapkwt_d`
 --
 ALTER TABLE `table_datapkwt_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `table_datapkwt_h`
@@ -1281,10 +1662,40 @@ ALTER TABLE `table_datasp_v`
   MODIFY `idviolation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `table_datasrgm_d`
+--
+ALTER TABLE `table_datasrgm_d`
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `table_datasrgm_h`
+--
+ALTER TABLE `table_datasrgm_h`
+  MODIFY `srgmid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `table_datastats`
 --
 ALTER TABLE `table_datastats`
   MODIFY `idstats` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+
+--
+-- AUTO_INCREMENT for table `table_datasurat`
+--
+ALTER TABLE `table_datasurat`
+  MODIFY `srtid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `table_datasurat_d`
+--
+ALTER TABLE `table_datasurat_d`
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `table_datasurat_h`
+--
+ALTER TABLE `table_datasurat_h`
+  MODIFY `suratid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `table_datatask`
@@ -1296,7 +1707,7 @@ ALTER TABLE `table_datatask`
 -- AUTO_INCREMENT for table `table_datawlkp_d`
 --
 ALTER TABLE `table_datawlkp_d`
-  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `documenid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `table_datawlkp_h`

@@ -781,8 +781,7 @@ if ($typess == 'document_coc') {
         mkdir($temp, 0777, true);
     }
 
-    include_once 'getvalue.php';
-    $noticeid       = getai('table_datasido_h');
+    $noticeid       = $_POST['noticeid'] ?? '';
     $header         = $_POST['header'] ?? '';
     $catatan        = $_POST['catatan'] ?? '';
 
@@ -813,21 +812,25 @@ if ($typess == 'document_coc') {
             }
         }
     }
-
-    if ($return) {
-        $query = mysqli_query($conn, "INSERT INTO table_datanotice_h (header,
-                                                        descriptions,
-                                                        createdon,
-                                                        createdby)
-                        VALUES('$header',
-                                '$catatan',
-                                '$createdon',
-                                '$createdby')");
-        if ($query) {
-            $msgs = "Data Tersimpan";
-            $iconmsgs = "success";
-            $return = true;
-        }
+    $query = mysqli_query($conn, "INSERT INTO table_datanotice_h (noticeid,
+                                                                header,
+                                                                descriptions,
+                                                                createdon,
+                                                                createdby)
+                                VALUES ('$noticeid',
+                                        '$header',
+                                        '$catatan',
+                                        '$createdon',
+                                        '$createdby')
+                                ON DUPLICATE KEY UPDATE
+                                header      = VALUES(header),
+                                descriptions= VALUES(descriptions),
+                                changedon   = '$changedon',
+                                changedby   = '$changedby'");
+    if ($query) {
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $return = true;
     }
     $data = [
         "iconmsgs" => $iconmsgs,
@@ -1041,9 +1044,9 @@ if ($typess == 'document_coc') {
     if (!file_exists($temp)) {
         mkdir($temp, 0777, true);
     }
-
-    include_once 'getvalue.php';
-    $suratid      = getai('table_datasurat_h');
+    // include_once 'getvalue.php';
+    // $suratid      = getai('table_datasurat_h');
+    $suratid      = $_POST['suratid'] ?? '';
     $jenis        = $_POST['jenis'] ?? '';
     $kop          = $_POST['kop'] ?? '';
     $terbit       = $_POST['terbit'] ?? '';
@@ -1070,13 +1073,22 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
                 $uploaded[] = $NewImageName;
             }
         }
     }
 
-    if ($return) {
+    $query = mysqli_query($conn, "SELECT suratid FROM table_datasurat_h WHERE suratid='$suratid'");
+    if (mysqli_num_rows($query) <> 0) {
+        $query = mysqli_query($conn, "UPDATE table_datasurat_h SET srtid='$jenis',
+                                                            kopheader='$kop',
+                                                            terbit='$terbit',
+                                                            pernr='$pernr',
+                                                            unitid='$unitid',
+                                                            changedon='$changedon',
+                                                            changedby='$changedby'
+                                        WHERE suratid='$suratid'");
+    } else {
         $query = mysqli_query($conn, "INSERT INTO table_datasurat_h (srtid,
                                                         kopheader,
                                                         terbit,
@@ -1091,18 +1103,19 @@ if ($typess == 'document_coc') {
                                 '$unitid',
                                 '$createdon',
                                 '$createdby')");
-        if ($query) {
-            $msgs = "Data Tersimpan";
-            $iconmsgs = "success";
-            $return = true;
-        }
     }
+    if ($query) {
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $return = true;
+    }
+
     $data = [
         "iconmsgs" => $iconmsgs,
         "link" => 'adm_surat_display',
         "msgs" => $msgs,
         "time" => $time,
-        "id" => $suratid,
+        "id" => $a,
         "return" => $return
     ];
 }

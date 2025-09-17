@@ -2118,6 +2118,7 @@ function submitmdsuratcreate() {
     processData: false,
     contentType: false,
     success: function(data) {
+      alert(data.id)
       if (data.return == 1) {
           msgs()
           setTimeout(() => {

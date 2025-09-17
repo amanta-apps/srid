@@ -24,15 +24,16 @@ if (isset($_GET['n'])) {
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
-            <div class="form-group row mb-1" hidden>
-                <label for="suratidmdsuratcreate" class="col-sm-2">surat Id</label>
-                <div class="col-sm-1">
-                    <input type="text" class="form-control form-control-sm" id="suratidmdsuratcreate" value="<?= $suratid ?>" readonly>
-                </div>
-            </div>
+
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Informasi</legend>
+                    <div class="form-group row mb-1">
+                        <label for="suratidmdsuratcreate" class="col-sm-2">surat Id</label>
+                        <div class="col-sm-1">
+                            <input type="text" class="form-control form-control-sm" id="suratidmdsuratcreate" value="<?= $suratid ?>" readonly>
+                        </div>
+                    </div>
                     <div class="form-group row mb-1">
                         <label for="jenissuratmdsuratcreate" class="col-sm-2">Jenis Surat</label>
                         <div class="col-sm-4">

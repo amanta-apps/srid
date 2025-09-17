@@ -1,10 +1,9 @@
 <?php
 $noticeid = Getkode('noticeid', 'table_datanotice_h');
-$header = $descriptions = $hidden = null;
+$header = $descriptions  = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
 if (isset($_GET['n'])) {
-    $hidden = 'hidden';
     $noticeid = base64_decode($_GET['n']);
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datanotice_h WHERE noticeid='$noticeid'"));
     $header = $r['header'];
@@ -17,25 +16,25 @@ if (isset($_GET['n'])) {
     <hr class="mb-5">
     <div class="row">
         <div class="col-sm-8">
-            <div class="form-group row mb-1" hidden>
-                <label for="noticeidmdnoticehead" class="col-sm-2">notice Id</label>
-                <div class="col-sm-1">
-                    <input type="text" class="form-control form-control-sm" id="noticeidmdnoticehead" value="<?= $noticeid ?>" readonly>
-                </div>
-            </div>
             <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
+                    <div class="form-group row mb-1">
+                        <label for="noticeidmdnoticehead" class="col-sm-2">Notice Id</label>
+                        <div class="col-sm-1">
+                            <input type="text" class="form-control form-control-sm" id="noticeidmdnoticehead" value="<?= $noticeid ?>" readonly>
+                        </div>
+                    </div>
                     <div class="form-group row mb-1">
                         <label for="headmdnoticehead" class="col-sm-2">Title</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control form-control-sm" id="headmdnoticehead" value="<?= $header ?>">
                         </div>
                     </div>
-                    <legend class="float-none w-auto px-2 fs-6">Title & Descriptions</legend>
+                    <legend class="float-none w-auto px-2 fs-6">Informasi</legend>
                     <div id="editornoticehead"><?= $descriptions ?></div>
                 </fieldset>
             </div>
-            <div class="form-group row mb-1" <?= $hidden ?>>
+            <div class="form-group row mb-1">
                 <fieldset class="border rounded p-2 mb-3">
                     <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
                     <input type="file" id="lampirannoticehead" name="lampirannoticehead[]" multiple class="form-control mb-2" accept=".pdf, image/*">
@@ -43,6 +42,36 @@ if (isset($_GET['n'])) {
                     <input type="text" class="form-control form-control-sm" id="descimgnoticehead" readonly hidden>
                 </fieldset>
             </div>
+            <?php
+            $query = mysqli_query($conn, "SELECT documenid,imgnotice,createdon,createdby FROM table_datanotice_d WHERE noticeid='$noticeid'");
+            if (mysqli_num_rows($query)) { ?>
+                <div class="form-group row mb-1">
+                    <fieldset class="border rounded p-2 mb-3">
+                        <legend class="float-none w-auto px-2 fs-6">Files</legend>
+                        <table class="table table-borderless w-75">
+                            <tbody>
+                                <?php
+                                while ($r = mysqli_fetch_array($query)) { ?>
+                                    <tr>
+                                        <td>
+                                            <a href="#" onclick="downloadlink(12,'<?= $r['imgnotice'] ?>',2)"><?= $r['imgnotice'] ?></a>
+                                        </td>
+                                        <td class="text-end opacity-50 fs-7"><?= Getdata('namekar', 'table_databuruh', 'pernr', $r['createdby']) . ', ' . beautydate2($r['createdon']) ?></td>
+                                        <td style="width: 10%;">
+                                            <img src="../assets/icon/trash10.png" class="zoom opacity-50" style="cursor: pointer;" title="delete" onclick="deleteimg('<?= $r['imgnotice'] ?>',12,'table_datanotice_d','<?= $r['documenid'] ?>')">
+                                            <img src="../assets/icon/download15.png" class="zoom opacity-50" style="cursor: pointer;" title="download" onclick="downloadlink(16,'<?= $r['imgnotice'] ?>',1)">
+                                        </td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
+            <?php
+            }
+            ?>
         </div>
         <div class="col-sm-4">
             <fieldset class="border rounded p-2 mb-3">

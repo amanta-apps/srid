@@ -1680,7 +1680,7 @@ $(document).ready( function () {
                 `;   
             }
         },
-        { data: "srtid" },
+        { data: "suratid" },
         { data: "kopheader" },
         { 
             data: "terbit",
