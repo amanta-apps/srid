@@ -431,3 +431,13 @@ function getai($table, $db = 'db_srid')
     $row = mysqli_fetch_assoc($result);
     return $row['AUTO_INCREMENT'] ?? null;
 }
+
+function datalog($logdesc)
+{
+    global $conn;
+    $desc  =  mysqli_real_escape_string($conn, $logdesc);
+    $createdon = date("Y-m-d H:i:s");
+    $pernr = $_SESSION["pernr"] ?? 'system';
+    mysqli_query($conn, "INSERT INTO table_datalog (logdesc,createdon,createdby)
+                        VALUES ('$desc','$createdon','$pernr')");
+}

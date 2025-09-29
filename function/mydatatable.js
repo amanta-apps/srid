@@ -1510,6 +1510,94 @@ $(document).ready( function () {
         ]
     });
 
+    // -----> PKl
+     $('#table_displaypkl').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+        url: "../function/serverside.php",
+        type: "POST",
+        data: { "table": "table_datapkl_h" }
+        },
+        columns: [
+        { 
+            data: null,
+            render: function(data, type, row) {
+                return `
+                    <a href="#" onclick="redirectlink('adm_pkl_create','${row.pklid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_head_pkl('${row.pklid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                `;
+            }
+        },
+        { data: "namaorg" },
+        { data: "instansi" },
+        { 
+            data: "tglfrom",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+                return `${day}.${month}.${year}`;
+            }
+        },
+        { 
+            data: "tglto",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+                return `${day}.${month}.${year}`;
+            }
+        },
+        { data: "unitdest" },
+        { data: "picunit" },
+        { data: "jenispkl" },
+        {
+            data: "catatan",
+            render: function(data, type, row) {
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
+            }
+        },
+        { 
+            data: "createdon",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
+        ],
+        pageLength: 10, 
+        dom: 'Bfrtip',
+        buttons: [
+         {
+            text: 'Tambah Data',
+            className: 'btn btn-sm btn-success',
+            action: function () {
+             redirectlink('adm_pkl_create')
+            }
+        },
+        // {
+        //     text: 'Laporan',
+        //     className: 'btn btn-sm btn-success',
+        //     action: function () {
+        //      redirectlink('adm_seragam_report')
+        //     }
+        // },
+        'pdf'
+        ]
+    });
+
        // -----> PARCEL
      $('#table_displayparcel').DataTable({
         processing: true,

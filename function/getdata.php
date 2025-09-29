@@ -18,8 +18,9 @@ $return = false;
 $p = $_SESSION['p'];
 $project = 'SRID';
 $data = array();
-
 $plant = $_SESSION['plant'];
+
+
 if (isset($_GET['p'])) {
     $page = base64_decode($_GET['p']);
     // echo $page;
@@ -219,7 +220,10 @@ if (isset($_GET['p'])) {
             $_SESSION['p'] = 'Master Data PKL';
             include "datapersonal/page_adm_pkl_display.php";
             break;
-
+        case 'adm_pkl_create':
+            $_SESSION['p'] = 'Master Data PKL';
+            include "datapersonal/page_adm_pkl_create.php";
+            break;
         // ---> Seragam
         case 'adm_seragam_display':
             $_SESSION['p'] = 'Master Data Seragam';
@@ -2005,6 +2009,66 @@ if (isset($_POST['prosesdelete_head_surat'])) {
         "iconmsgs" => $icon_msgs,
         "link" => "adm_surat_display",
         "id" => $suratid,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+
+// -----> PKL
+if (isset($_POST['prosesdelete_head_pkl'])) {
+    $pklid = $_POST['prosesdelete_head_pkl'];
+    try {
+        mysqli_begin_transaction($conn);
+
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgpkl FROM table_datapkl_d WHERE pklid='$pklid'");
+        if (mysqli_num_rows($query) == 0) {
+            throw new Exception("Error SELECT imgpkl: " . mysqli_error($conn));
+        }
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgpkl'];
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datapkl_d WHERE pklid='$pklid'")) {
+            throw new Exception("Gagal hapus detail: " . mysqli_error($conn));
+        }
+
+        if (!mysqli_query($conn, "DELETE FROM table_datapkl_h WHERE pklid='$pklid'")) {
+            throw new Exception("Gagal hapus header: " . mysqli_error($conn));
+        }
+
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=17");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        include_once 'getvalue.php';
+        datalog('OK');
+        $msgs = $e->getMessage();
+        mysqli_rollback($conn);
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "adm_pkl_display",
+        "id" => $pklid,
         "return" => $return,
     ];
     echo json_encode($data);

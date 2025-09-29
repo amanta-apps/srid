@@ -3,7 +3,7 @@ date_default_timezone_set('Asia/Jakarta');
 error_reporting(0);
 session_start();
 include 'koneksi.php';
-// include_once 'getvalue.php';
+include_once 'getvalue.php';
 $createdon = date("Y-m-d H:i:s");
 $createdby = $_SESSION['pernr'];
 $changedon = date("Y-m-d H:i:s");
@@ -16,47 +16,48 @@ $iconmsgs = 'error';
 $msgs = "Something Wrong";
 $NewImageName = '';
 $ImageName = '';
+try {
+    mysqli_begin_transaction($conn);
+    if ($typess == 'document_coc') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-if ($typess == 'document_coc') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=1");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
-
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
-
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $doc_id = $_POST['dokumenid'];
-    $docname = $_POST['docname'];
-    $sql = mysqli_query($conn, "SELECT documenaddress  
+        $doc_id = $_POST['dokumenid'];
+        $docname = $_POST['docname'];
+        $sql = mysqli_query($conn, "SELECT documenaddress  
                                     FROM table_datacoc_d 
                                     WHERE documenid='$doc_id'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $documenaddress = $r['documenaddress'];
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datacoc_d SET documenname='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $documenaddress = $r['documenaddress'];
+            $file = $dir . $documenaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datacoc_d SET documenname='$docname',
                                                                     documenaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE documenid ='$doc_id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datacoc_d (documenname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datacoc_d (documenname,
                                                                 documenaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -65,62 +66,62 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query === true) {
-        // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_coc_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_wlkp') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=2");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+        if ($query === true) {
+            // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_coc_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_wlkp') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $doc_id = $_POST['dokumenid'];
-    $docname = $_POST['docname'];
-    $sql = mysqli_query($conn, "SELECT documenaddress  
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=2");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $doc_id = $_POST['dokumenid'];
+        $docname = $_POST['docname'];
+        $sql = mysqli_query($conn, "SELECT documenaddress  
                                     FROM table_datawlkp_d 
                                     WHERE documenid='$doc_id'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $documenaddress = $r['documenaddress'];
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datawlkp_d SET documenname='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $documenaddress = $r['documenaddress'];
+            $file = $dir . $documenaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datawlkp_d SET documenname='$docname',
                                                                     documenaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE documenid ='$doc_id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datawlkp_d (documenname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datawlkp_d (documenname,
                                                                 documenaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -129,62 +130,62 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query === true) {
-        // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_wlkp_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_pkwt') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=3");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+        if ($query === true) {
+            // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_wlkp_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_pkwt') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $doc_id = $_POST['dokumenid'];
-    $docname = $_POST['docname'];
-    $sql = mysqli_query($conn, "SELECT documenaddress  
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=3");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $doc_id = $_POST['dokumenid'];
+        $docname = $_POST['docname'];
+        $sql = mysqli_query($conn, "SELECT documenaddress  
                                     FROM table_datapkwt_d 
                                     WHERE documenid='$doc_id'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $documenaddress = $r['documenaddress'];
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datapkwt_d SET documenname='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $documenaddress = $r['documenaddress'];
+            $file = $dir . $documenaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datapkwt_d SET documenname='$docname',
                                                                     documenaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE documenid ='$doc_id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datapkwt_d (documenname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datapkwt_d (documenname,
                                                                 documenaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -193,62 +194,62 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query === true) {
-        // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_pkwt_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_lks') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=4");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+        if ($query === true) {
+            // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_pkwt_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_lks') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $doc_id = $_POST['dokumenid'];
-    $docname = $_POST['docname'];
-    $sql = mysqli_query($conn, "SELECT documenaddress  
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=4");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $doc_id = $_POST['dokumenid'];
+        $docname = $_POST['docname'];
+        $sql = mysqli_query($conn, "SELECT documenaddress  
                                     FROM table_datalks_d 
                                     WHERE documenid='$doc_id'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $documenaddress = $r['documenaddress'];
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datalks_d SET documenname='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $documenaddress = $r['documenaddress'];
+            $file = $dir . $documenaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datalks_d SET documenname='$docname',
                                                                     documenaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE documenid ='$doc_id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datalks_d (documenname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datalks_d (documenname,
                                                                 documenaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -257,63 +258,63 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query === true) {
-        // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_lks_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_lks_img') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=5");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+        if ($query === true) {
+            // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_lks_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_lks_img') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $imgid = $_POST['imgid'];
-    $docname = $_POST['docname'];
-    $docaddr = $_POST['docaddr'];
-    $sql = mysqli_query($conn, "SELECT imgaddress  
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=5");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $imgid = $_POST['imgid'];
+        $docname = $_POST['docname'];
+        $docaddr = $_POST['docaddr'];
+        $sql = mysqli_query($conn, "SELECT imgaddress  
                                     FROM table_datalks_g 
                                     WHERE imgid='$imgid'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $imgaddress = $r['imgaddress'];
-        $file = $dir . $imgaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datalks_g SET imgthemes='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $imgaddress = $r['imgaddress'];
+            $file = $dir . $imgaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datalks_g SET imgthemes='$docname',
                                                                     imgaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE imgid ='$imgid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datalks_g (imgthemes,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datalks_g (imgthemes,
                                                                 imgaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -322,63 +323,63 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
 
-    if ($query === true) {
-        // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_lks_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_sp_draft') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=6");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
+        if ($query === true) {
+            // move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_lks_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_sp_draft') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=6");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    $spid           = ltrim($_POST['spid'], '#') ?? '';
-    $catatan        = $_POST['catatan'] ?? '';
-    $dokno          = $_POST['dokno'] ?? '';
-    $pernr          = $_POST['pernr'] ?? '';
-    $jadwal         = $_POST['jadwal'] ?? '';
-    $unit           = $_POST['unit'] ?? '';
-    $eksekutor      = $_POST['rekonoleh'] ?? '';
-    $bagian         = $_POST['bagian'] ?? '';
-    $pelanggaran    = $_POST['pelanggaran'] ?? '';
-    $sangsi         = $_POST['sangsi'] ?? '';
-    $tglpelanggaran = $_POST['tglpelanggaran'] ?? '';
-    $status         = $_POST['status'] ?? '';
-    $typess         = $_POST['typess'] ?? '';
+        $spid           = ltrim($_POST['spid'], '#') ?? '';
+        $catatan        = $_POST['catatan'] ?? '';
+        $dokno          = $_POST['dokno'] ?? '';
+        $pernr          = $_POST['pernr'] ?? '';
+        $jadwal         = $_POST['jadwal'] ?? '';
+        $unit           = $_POST['unit'] ?? '';
+        $eksekutor      = $_POST['rekonoleh'] ?? '';
+        $bagian         = $_POST['bagian'] ?? '';
+        $pelanggaran    = $_POST['pelanggaran'] ?? '';
+        $sangsi         = $_POST['sangsi'] ?? '';
+        $tglpelanggaran = $_POST['tglpelanggaran'] ?? '';
+        $status         = $_POST['status'] ?? '';
+        $typess         = $_POST['typess'] ?? '';
 
 
 
-    if (!empty($_FILES['lampiran']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampiran']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampiran']['tmp_name'][$key];
-            $error   = $_FILES['lampiran']['error'][$key];
-            $ImageName = $_FILES['lampiran']['name'];
-            $ImageType  = $_FILES['lampiran']['type'];
+        if (!empty($_FILES['lampiran']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiran']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiran']['tmp_name'][$key];
+                $error   = $_FILES['lampiran']['error'][$key];
+                $ImageName = $_FILES['lampiran']['name'];
+                $ImageType  = $_FILES['lampiran']['type'];
 
-            // if ($error === UPLOAD_ERR_OK) {
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+                // if ($error === UPLOAD_ERR_OK) {
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_datasp_d (spid,
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datasp_d (spid,
                                                                             documenname,
                                                                             createdby,
                                                                             createdon) 
@@ -386,14 +387,14 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
-                $uploaded[] = $NewImageName;
+                    $return = true;
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
 
-    if ($return) {
-        mysqli_query($conn, "INSERT INTO table_datasp_doc (nodocumen,
+        if ($return) {
+            mysqli_query($conn, "INSERT INTO table_datasp_doc (nodocumen,
                                                         tglpelanggaran,
                                                         pernr,
                                                         unitid,
@@ -417,58 +418,58 @@ if ($typess == 'document_coc') {
                                 '$status',
                                 '$createdon',
                                 '$createdby')");
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_sp_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $spid,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_farkes') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=7");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_sp_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $spid,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_farkes') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=7");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $doc_id = $_POST['dokumenid'];
-    $docname = $_POST['docname'];
-    $sql = mysqli_query($conn, "SELECT documenaddress  
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $doc_id = $_POST['dokumenid'];
+        $docname = $_POST['docname'];
+        $sql = mysqli_query($conn, "SELECT documenaddress  
                                     FROM table_datafarkes_d 
                                     WHERE documenid='$doc_id'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $documenaddress = $r['documenaddress'];
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datafarkes_d SET documenname='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $documenaddress = $r['documenaddress'];
+            $file = $dir . $documenaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datafarkes_d SET documenname='$docname',
                                                                     documenaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE documenid ='$doc_id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datafarkes_d (documenname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datafarkes_d (documenname,
                                                                 documenaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -477,62 +478,62 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query === true) {
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_farkes_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_farkes_img') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=8");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+        if ($query === true) {
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_farkes_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_farkes_img') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $imgid = $_POST['imgid'];
-    $docname = $_POST['docname'];
-    $docaddr = $_POST['docaddr'];
-    $sql = mysqli_query($conn, "SELECT imgaddress  
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=8");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $imgid = $_POST['imgid'];
+        $docname = $_POST['docname'];
+        $docaddr = $_POST['docaddr'];
+        $sql = mysqli_query($conn, "SELECT imgaddress  
                                     FROM table_datafarkes_g 
                                     WHERE imgid='$imgid'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $imgaddress = $r['imgaddress'];
-        $file = $dir . $imgaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datafarkes_g SET imgthemes='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $imgaddress = $r['imgaddress'];
+            $file = $dir . $imgaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datafarkes_g SET imgthemes='$docname',
                                                                     imgaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE imgid ='$imgid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datafarkes_g (imgthemes,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datafarkes_g (imgthemes,
                                                                 imgaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -541,61 +542,61 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query === true) {
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_farkes_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_p2k3') {
-    if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-        $fileupload      = $_FILES['fileupload']['tmp_name'];
-        $ImageName       = $_FILES['fileupload']['name'];
-        $ImageType       = $_FILES['fileupload']['type'];
-
-        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=9");
-        if (mysqli_num_rows($sql) <> 0) {
-            $r = mysqli_fetch_array($sql);
-            $dir = $r['drtext'];
         }
-        $temp = $dir;
-        if (!file_exists($temp))
-            mkdir($temp, 0777, true);
 
-        $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-        $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+        if ($query === true) {
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_farkes_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_p2k3') {
+        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
+            $fileupload      = $_FILES['fileupload']['tmp_name'];
+            $ImageName       = $_FILES['fileupload']['name'];
+            $ImageType       = $_FILES['fileupload']['type'];
 
-        move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-    }
-    $doc_id = $_POST['dokumenid'];
-    $docname = $_POST['docname'];
-    $sql = mysqli_query($conn, "SELECT documenaddress  
+            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=9");
+            if (mysqli_num_rows($sql) <> 0) {
+                $r = mysqli_fetch_array($sql);
+                $dir = $r['drtext'];
+            }
+            $temp = $dir;
+            if (!file_exists($temp))
+                mkdir($temp, 0777, true);
+
+            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
+
+            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
+        }
+        $doc_id = $_POST['dokumenid'];
+        $docname = $_POST['docname'];
+        $sql = mysqli_query($conn, "SELECT documenaddress  
                                     FROM table_datap2k3_d 
                                     WHERE documenid='$doc_id'");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $documenaddress = $r['documenaddress'];
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $query = mysqli_query($conn, "UPDATE table_datap2k3_d SET documenname='$docname',
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $documenaddress = $r['documenaddress'];
+            $file = $dir . $documenaddress;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+            $query = mysqli_query($conn, "UPDATE table_datap2k3_d SET documenname='$docname',
                                                                     documenaddress='$NewImageName',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
                                                                 WHERE documenid ='$doc_id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datap2k3_d (documenname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_d (documenname,
                                                                 documenaddress,
                                                                 createdOn,
                                                                 createdBy)
@@ -604,55 +605,55 @@ if ($typess == 'document_coc') {
                                         '$NewImageName',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
 
-    if ($query === true) {
-        $msgs = "Data Tersimpan";
-        $iconmsgs = "success";
-        $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_p2k3_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "imagename" => $NewImageName,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_sidak_p2k3') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=10");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
-    include_once 'getvalue.php';
-    $id = getai('table_datap2k3_s');
-    $p2k3id       = $_POST['p2k3id'] ?? '';
-    $catatan      = $_POST['catatan'] ?? '';
-    $tgl          = $_POST['tgl'] ?? '';
-    $pernr        = $_POST['pernr'] ?? '';
-    $unitid       = $_POST['unitid'] ?? '';
+        if ($query === true) {
+            $msgs = "Data Tersimpan";
+            $iconmsgs = "success";
+            $return = true;
+        }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_p2k3_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "imagename" => $NewImageName,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_sidak_p2k3') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=10");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
+        include_once 'getvalue.php';
+        $id = getai('table_datap2k3_s');
+        $p2k3id       = $_POST['p2k3id'] ?? '';
+        $catatan      = $_POST['catatan'] ?? '';
+        $tgl          = $_POST['tgl'] ?? '';
+        $pernr        = $_POST['pernr'] ?? '';
+        $unitid       = $_POST['unitid'] ?? '';
 
 
 
-    if (!empty($_FILES['lampiransidak']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampiransidak']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampiransidak']['tmp_name'][$key];
-            $error   = $_FILES['lampiransidak']['error'][$key];
-            $ImageName = $_FILES['lampiransidak']['name'];
-            $ImageType  = $_FILES['lampiransidak']['type'];
+        if (!empty($_FILES['lampiransidak']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiransidak']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiransidak']['tmp_name'][$key];
+                $error   = $_FILES['lampiransidak']['error'][$key];
+                $ImageName = $_FILES['lampiransidak']['name'];
+                $ImageType  = $_FILES['lampiransidak']['type'];
 
-            // if ($error === UPLOAD_ERR_OK) {
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+                // if ($error === UPLOAD_ERR_OK) {
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_datap2k3_sd (p2k3id,
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datap2k3_sd (p2k3id,
                                                                             imgsidak,
                                                                             createdby,
                                                                             createdon) 
@@ -660,14 +661,14 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
-                $uploaded[] = $NewImageName;
+                    $return = true;
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
 
-    if ($return) {
-        $query = mysqli_query($conn, "INSERT INTO table_datap2k3_s (tglsidak,
+        if ($return) {
+            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_s (tglsidak,
                                                         pernr,
                                                         unitid,
                                                         catatan,
@@ -679,55 +680,57 @@ if ($typess == 'document_coc') {
                                 '$catatan',
                                 '$createdon',
                                 '$createdby')");
-        if ($query) {
-            $msgs = "Data Tersimpan";
-            $iconmsgs = "success";
-            $return = true;
+            if ($query) {
+                $msgs = "Data Tersimpan";
+                $iconmsgs = "success";
+                $return = true;
+            }
         }
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_p2k3_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "id" => $p2k3id,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_sido') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=11");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
+        $data = [
+            "iconmsgs" => $iconmsgs,
+            "link" => 'md_p2k3_display',
+            "msgs" => $msgs,
+            "time" => $time,
+            "id" => $p2k3id,
+            "return" => $return
+        ];
+    } elseif ($typess == 'document_sido') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=11");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    include_once 'getvalue.php';
-    $id = getai('table_datasido_e');
-    $sidoid         = $_POST['sidoid'] ?? '';
-    $tglfrom        = $_POST['tglfrom'] ?? '';
-    $tglto          = $_POST['tglto'] ?? '';
-    $catatan        = $_POST['catatan'] ?? '';
-    $jeniskegiatan  = $_POST['jeniskegiatan'] ?? '';
-    $namakegiatan   = $_POST['namakegiatan'] ?? '';
+        include_once 'getvalue.php';
+        $id = getai('table_datasido_e');
+        $sidoid         = $_POST['sidoid'] ?? '';
+        $tglfrom        = $_POST['tglfrom'] ?? '';
+        $tglto          = $_POST['tglto'] ?? '';
+        $catatan        = $_POST['catatan'] ?? '';
+        $jeniskegiatan  = $_POST['jeniskegiatan'] ?? '';
+        $namakegiatan   = $_POST['namakegiatan'] ?? '';
 
 
 
-    if (!empty($_FILES['lampiransido']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampiransido']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampiransido']['tmp_name'][$key];
-            $error   = $_FILES['lampiransido']['error'][$key];
-            $ImageName = $_FILES['lampiransido']['name'];
-            $ImageType  = $_FILES['lampiransido']['type'];
+        if (!empty($_FILES['lampiransido']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiransido']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiransido']['tmp_name'][$key];
+                $error   = $_FILES['lampiransido']['error'][$key];
+                $ImageName = $_FILES['lampiransido']['name'];
+                $ImageType  = $_FILES['lampiransido']['type'];
 
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_datasido_sd (sidoid,
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datasido_sd (sidoid,
                                                                             imgsido,
                                                                             createdby,
                                                                             createdon) 
@@ -735,13 +738,14 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
-                $uploaded[] = $NewImageName;
+                    if (!$query) {
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
 
-    if ($return) {
         $query = mysqli_query($conn, "INSERT INTO table_datasido_e (taskid,
                                                         eventname,
                                                         tgleventfrom,
@@ -756,50 +760,45 @@ if ($typess == 'document_coc') {
                                 '$catatan',
                                 '$createdon',
                                 '$createdby')");
-        if ($query) {
-            $msgs = "Data Tersimpan";
-            $iconmsgs = "success";
-            $return = true;
+        if (!$query) {
         }
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'md_sido_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "id" => $sidoid,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_notice') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=12");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $link = 'md_sido_display';
+        $id = $sidoid;
+        $return = true;
+    } elseif ($typess == 'document_notice') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=12");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    $noticeid       = $_POST['noticeid'] ?? '';
-    $header         = $_POST['header'] ?? '';
-    $catatan        = $_POST['catatan'] ?? '';
+        $noticeid       = $_POST['noticeid'] ?? '';
+        $header         = $_POST['header'] ?? '';
+        $catatan        = $_POST['catatan'] ?? '';
 
 
 
-    if (!empty($_FILES['lampirannoticehead']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampirannoticehead']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampirannoticehead']['tmp_name'][$key];
-            $error   = $_FILES['lampirannoticehead']['error'][$key];
-            $ImageName = $_FILES['lampirannoticehead']['name'];
-            $ImageType  = $_FILES['lampirannoticehead']['type'];
+        if (!empty($_FILES['lampirannoticehead']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampirannoticehead']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampirannoticehead']['tmp_name'][$key];
+                $error   = $_FILES['lampirannoticehead']['error'][$key];
+                $ImageName = $_FILES['lampirannoticehead']['name'];
+                $ImageType  = $_FILES['lampirannoticehead']['type'];
 
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_datanotice_d (noticeid,
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datanotice_d (noticeid,
                                                                             imgnotice,
                                                                             createdby,
                                                                             createdon) 
@@ -807,12 +806,14 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
-                $uploaded[] = $NewImageName;
+                    if (!$query) {
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
-    $query = mysqli_query($conn, "INSERT INTO table_datanotice_h (noticeid,
+        $query = mysqli_query($conn, "INSERT INTO table_datanotice_h (noticeid,
                                                                 header,
                                                                 descriptions,
                                                                 createdon,
@@ -827,56 +828,53 @@ if ($typess == 'document_coc') {
                                 descriptions= VALUES(descriptions),
                                 changedon   = '$changedon',
                                 changedby   = '$changedby'");
-    if ($query) {
+        if (!$query) {
+            throw new Exception("Error Insert & Update DATA Header: " . mysqli_error($conn));
+        }
         $msgs = "Data Tersimpan";
         $iconmsgs = "success";
         $return = true;
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'adm_notice_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "id" => $noticeid,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_seragam') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=13");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
+        $link = 'adm_notice_display';
+        $id = $noticeid;
+    } elseif ($typess == 'document_seragam') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=13");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    include_once 'getvalue.php';
-    $srgmid         = getai('table_datasrgm_h');
-    $s_unitid       = $_POST['unitid'] ?? '';
-    $s_qty          = $_POST['qty'] ?? '';
-    $tglfrom          = $_POST['tglfrom'] ?? '';
-    $tglto          = $_POST['tglto'] ?? '';
-    $total          = $_POST['total'] ?? '';
-    $stats          = $_POST['status'] ?? '';
-    $catatan        = $_POST['catatan'] ?? '';
-    $unitid         = explode(",", $s_unitid);
-    $qty            = explode(",", $s_qty);
-    $lenght         = count($unitid);
+        include_once 'getvalue.php';
+        $srgmid         = getai('table_datasrgm_h');
+        $s_unitid       = $_POST['unitid'] ?? '';
+        $s_qty          = $_POST['qty'] ?? '';
+        $tglfrom          = $_POST['tglfrom'] ?? '';
+        $tglto          = $_POST['tglto'] ?? '';
+        $total          = $_POST['total'] ?? '';
+        $stats          = $_POST['status'] ?? '';
+        $catatan        = $_POST['catatan'] ?? '';
+        $unitid         = explode(",", $s_unitid);
+        $qty            = explode(",", $s_qty);
+        $lenght         = count($unitid);
 
-    if (!empty($_FILES['lampiranseragamranc']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampiranseragamranc']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampiranseragamranc']['tmp_name'][$key];
-            $error   = $_FILES['lampiranseragamranc']['error'][$key];
-            $ImageName = $_FILES['lampiranseragamranc']['name'];
-            $ImageType  = $_FILES['lampiranseragamranc']['type'];
+        if (!empty($_FILES['lampiranseragamranc']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiranseragamranc']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiranseragamranc']['tmp_name'][$key];
+                $error   = $_FILES['lampiranseragamranc']['error'][$key];
+                $ImageName = $_FILES['lampiranseragamranc']['name'];
+                $ImageType  = $_FILES['lampiranseragamranc']['type'];
 
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_datasrgm_d (srgmid,
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datasrgm_d (srgmid,
                                                                             imgseragam,
                                                                             createdby,
                                                                             createdon) 
@@ -884,16 +882,18 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
-                $uploaded[] = $NewImageName;
+                    if (!$query) {
+                        throw new Exception("Error Simpan table_datasrgm_d: " . mysqli_error($conn));
+                    }
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
 
-    if ($return) {
-        $z = 0;
-        for ($i = 0; $i < $lenght; $i++) {
-            $query = mysqli_query($conn, "INSERT INTO table_datasrgm_dt (   srgmid,
+        if ($return) {
+            $z = 0;
+            for ($i = 0; $i < $lenght; $i++) {
+                $query = mysqli_query($conn, "INSERT INTO table_datasrgm_dt (   srgmid,
                                                                             unitid,
                                                                             rancqty,
                                                                             realqty,
@@ -905,9 +905,9 @@ if ($typess == 'document_coc') {
                                 '$qty[$i]',
                                 '$createdon',
                                 '$createdby')");
-        }
+            }
 
-        $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (tglfrom,
+            $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (tglfrom,
                                                         tglto,
                                                         totalranc,
                                                         catatanranc,
@@ -923,57 +923,54 @@ if ($typess == 'document_coc') {
                                 '$stats',
                                 '$createdon',
                                 '$createdby')");
-        if ($query) {
+            if (!$query) {
+                throw new Exception("Error Insert & Update DATA: " . mysqli_error($conn));
+            }
             $msgs = "Data Tersimpan";
             $iconmsgs = "success";
             $return = true;
+            $link = 'adm_seragam_display';
+            $id = $srgmid;
         }
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'adm_seragam_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "id" => $total,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_parcel') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=15");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
+    } elseif ($typess == 'document_parcel') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=15");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    include_once 'getvalue.php';
-    $parcelid         = getai('table_dataparcel_h');
-    $s_unitid       = $_POST['unitid'] ?? '';
-    $s_qty          = $_POST['qty'] ?? '';
-    $tglfrom          = $_POST['tglfrom'] ?? '';
-    $tglto          = $_POST['tglto'] ?? '';
-    $total          = $_POST['total'] ?? '';
-    $stats          = $_POST['status'] ?? '';
-    $catatan        = $_POST['catatan'] ?? '';
-    $unitid         = explode(",", $s_unitid);
-    $qty            = explode(",", $s_qty);
-    $lenght         = count($unitid);
+        include_once 'getvalue.php';
+        $parcelid         = getai('table_dataparcel_h');
+        $s_unitid       = $_POST['unitid'] ?? '';
+        $s_qty          = $_POST['qty'] ?? '';
+        $tglfrom          = $_POST['tglfrom'] ?? '';
+        $tglto          = $_POST['tglto'] ?? '';
+        $total          = $_POST['total'] ?? '';
+        $stats          = $_POST['status'] ?? '';
+        $catatan        = $_POST['catatan'] ?? '';
+        $unitid         = explode(",", $s_unitid);
+        $qty            = explode(",", $s_qty);
+        $lenght         = count($unitid);
 
-    if (!empty($_FILES['lampiranparcelranc']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampiranparcelranc']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampiranparcelranc']['tmp_name'][$key];
-            $error   = $_FILES['lampiranparcelranc']['error'][$key];
-            $ImageName = $_FILES['lampiranparcelranc']['name'];
-            $ImageType  = $_FILES['lampiranparcelranc']['type'];
+        if (!empty($_FILES['lampiranparcelranc']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiranparcelranc']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiranparcelranc']['tmp_name'][$key];
+                $error   = $_FILES['lampiranparcelranc']['error'][$key];
+                $ImageName = $_FILES['lampiranparcelranc']['name'];
+                $ImageType  = $_FILES['lampiranparcelranc']['type'];
 
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_dataparcel_d (parcelid,
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_dataparcel_d (parcelid,
                                                                             imgparcel,
                                                                             createdby,
                                                                             createdon) 
@@ -981,16 +978,18 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $return = true;
-                $uploaded[] = $NewImageName;
+                    if (!$query) {
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
 
-    if ($return) {
-        $z = 0;
-        for ($i = 0; $i < $lenght; $i++) {
-            $query = mysqli_query($conn, "INSERT INTO table_dataparcel_dt ( parcelid,
+        if ($return) {
+            $z = 0;
+            for ($i = 0; $i < $lenght; $i++) {
+                $query = mysqli_query($conn, "INSERT INTO table_dataparcel_dt ( parcelid,
                                                                             unitid,
                                                                             rancqty,
                                                                             realqty,
@@ -1002,9 +1001,9 @@ if ($typess == 'document_coc') {
                                 '$qty[$i]',
                                 '$createdon',
                                 '$createdby')");
-        }
+            }
 
-        $query = mysqli_query($conn, "INSERT INTO table_dataparcel_h (tglfrom,
+            $query = mysqli_query($conn, "INSERT INTO table_dataparcel_h (tglfrom,
                                                         tglto,
                                                         totalranc,
                                                         catatanranc,
@@ -1020,52 +1019,48 @@ if ($typess == 'document_coc') {
                                 '$stats',
                                 '$createdon',
                                 '$createdby')");
-        if ($query) {
+            if (!$query) {
+                throw new Exception("Error Insert & Update DATA: " . mysqli_error($conn));
+            }
+            $link = 'adm_parcel_display';
+            $id = $parcelid;
             $msgs = "Data Tersimpan";
             $iconmsgs = "success";
             $return = true;
         }
-    }
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'adm_parcel_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "id" => $parcelid,
-        "return" => $return
-    ];
-} elseif ($typess == 'document_surat') {
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=16");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $temp = $dir;
-    if (!file_exists($temp)) {
-        mkdir($temp, 0777, true);
-    }
-    // include_once 'getvalue.php';
-    // $suratid      = getai('table_datasurat_h');
-    $suratid      = $_POST['suratid'] ?? '';
-    $jenis        = $_POST['jenis'] ?? '';
-    $kop          = $_POST['kop'] ?? '';
-    $terbit       = $_POST['terbit'] ?? '';
-    $pernr        = $_POST['pernr'] ?? '';
-    $unitid       = $_POST['unitid'] ?? '';
+    } elseif ($typess == 'document_surat') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=16");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    if (!empty($_FILES['lampiransuratcreate']['name'][0])) {
-        $uploadedFiles = [];
-        foreach ($_FILES['lampiransuratcreate']['name'] as $key => $name) {
-            $tmpName = $_FILES['lampiransuratcreate']['tmp_name'][$key];
-            $error   = $_FILES['lampiransuratcreate']['error'][$key];
-            $ImageName = $_FILES['lampiransuratcreate']['name'];
-            $ImageType  = $_FILES['lampiransuratcreate']['type'];
+        $suratid      = $_POST['suratid'] ?? '';
+        $jenis        = $_POST['jenis'] ?? '';
+        $kop          = $_POST['kop'] ?? '';
+        $terbit       = $_POST['terbit'] ?? '';
+        $pernr        = $_POST['pernr'] ?? '';
+        $unitid       = $_POST['unitid'] ?? '';
 
-            $NewImageName   = date('dmYHis')  . '^^' . $name;
-            $targetFile = $temp . $NewImageName;
+        if (!empty($_FILES['lampiransuratcreate']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiransuratcreate']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiransuratcreate']['tmp_name'][$key];
+                $error   = $_FILES['lampiransuratcreate']['error'][$key];
+                $ImageName = $_FILES['lampiransuratcreate']['name'];
+                $ImageType  = $_FILES['lampiransuratcreate']['type'];
 
-            if (move_uploaded_file($tmpName, $targetFile)) {
-                $query = mysqli_query($conn, "INSERT INTO table_datasurat_d (suratid,
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
+
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datasurat_d (suratid,
                                                                             imgsurat,
                                                                             createdby,
                                                                             createdon) 
@@ -1073,14 +1068,17 @@ if ($typess == 'document_coc') {
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                $uploaded[] = $NewImageName;
+                    if (!$query) {
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
+                    $uploaded[] = $NewImageName;
+                }
             }
         }
-    }
 
-    $query = mysqli_query($conn, "SELECT suratid FROM table_datasurat_h WHERE suratid='$suratid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datasurat_h SET srtid='$jenis',
+        $query = mysqli_query($conn, "SELECT suratid FROM table_datasurat_h WHERE suratid='$suratid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datasurat_h SET srtid='$jenis',
                                                             kopheader='$kop',
                                                             terbit='$terbit',
                                                             pernr='$pernr',
@@ -1088,8 +1086,8 @@ if ($typess == 'document_coc') {
                                                             changedon='$changedon',
                                                             changedby='$changedby'
                                         WHERE suratid='$suratid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datasurat_h (srtid,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datasurat_h (srtid,
                                                         kopheader,
                                                         terbit,
                                                         pernr,
@@ -1103,21 +1101,130 @@ if ($typess == 'document_coc') {
                                 '$unitid',
                                 '$createdon',
                                 '$createdby')");
-    }
-    if ($query) {
+        }
+        if (!$query) {
+            throw new Exception("Error Simpan & Update Header: " . mysqli_error($conn));
+        }
         $msgs = "Data Tersimpan";
         $iconmsgs = "success";
         $return = true;
-    }
+        $link = 'adm_surat_display';
+        $id = $suratid;
+    } elseif ($typess == 'document_pkl') {
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=17");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp)) {
+            mkdir($temp, 0777, true);
+        }
 
-    $data = [
-        "iconmsgs" => $iconmsgs,
-        "link" => 'adm_surat_display',
-        "msgs" => $msgs,
-        "time" => $time,
-        "id" => $a,
-        "return" => $return
-    ];
+        $pklid       = $_POST['pklid'] ?? '';
+        $pkltype     = $_POST['pkltype'] ?? '';
+        $nama        = $_POST['nama'] ?? '';
+        $instansi    = $_POST['instansi'] ?? '';
+        $tglfrom     = $_POST['tglfrom'] ?? '';
+        $tglto       = $_POST['tglto'] ?? '';
+        $unitid      = $_POST['unitid'] ?? '';
+        $pic         = $_POST['pic'] ?? '';
+        $status      = $_POST['status'] ?? '';
+        $catatan     = $_POST['catatan'] ?? '';
+
+        if (!empty($_FILES['lampiranpklcreate']['name'][0])) {
+            $uploadedFiles = [];
+            foreach ($_FILES['lampiranpklcreate']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampiranpklcreate']['tmp_name'][$key];
+                $error   = $_FILES['lampiranpklcreate']['error'][$key];
+                $ImageName = $_FILES['lampiranpklcreate']['name'];
+                $ImageType  = $_FILES['lampiranpklcreate']['type'];
+
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
+
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datapkl_d (pklid,
+                                                                            imgpkl,
+                                                                            createdby,
+                                                                            createdon) 
+                                                    VALUES ('$pklid',
+                                                            '$NewImageName',
+                                                            '$createdby',
+                                                            '$createdon')");
+                    if (!$query) {
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
+                    $uploaded[] = $NewImageName;
+                }
+            }
+        }
+
+        $query = mysqli_query($conn, "SELECT pklid FROM table_datapkl_h WHERE pklid='$pklid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datapkl_h SET namaorg='$nama',
+                                                            instansi='$instansi',
+                                                            tglfrom='$tglfrom',
+                                                            tglto='$tglto',
+                                                            unitdest='$unitid',
+                                                            picunit='$pic',
+                                                            jenispkl='$pkltype',
+                                                            catatan='$catatan',
+                                                            statsx='$status',
+                                                            changedon='$changedon',
+                                                            changedby='$changedby'
+                                        WHERE pklid='$pklid'");
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datapkl_h (pklid,
+                                                        namaorg,
+                                                        instansi,
+                                                        tglfrom,
+                                                        tglto,
+                                                        unitdest,
+                                                        picunit,
+                                                        jenispkl,
+                                                        catatan,
+                                                        statsx,
+                                                        createdon,
+                                                        createdby)
+                        VALUES( '$pklid',
+                                '$nama',
+                                '$instansi',
+                                '$tglfrom',
+                                '$tglto',
+                                '$unitid',
+                                '$pic',
+                                '$pkltype',
+                                '$catatan',
+                                '$status',
+                                '$createdon',
+                                '$createdby')");
+        }
+        if (!$query) {
+            throw new Exception("Error Insert & Update Header: " . mysqli_error($conn));
+        }
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $link = "adm_pkl_display";
+        $id = $pklid;
+        $return = true;
+    }
+    mysqli_commit($conn);
+} catch (Exception $e) {
+    mysqli_rollback($conn);
+    $msgs = $e->getMessage();
+    datalog($e->getMessage());
 }
+
+$data = [
+    "iconmsgs" => $iconmsgs,
+    "link" => $link,
+    "msgs" => $msgs,
+    "time" => $time,
+    "id" => $id,
+    "return" => $return
+];
 
 echo json_encode($data);

@@ -110,6 +110,7 @@ function msgs(iconmsgsukses='success',msgsukses='Tersimpan', time=3000) {
     showConfirmButton: false,
     focusConfirm: false,
     showCloseButton: false,
+    // timer: time
   })
   return
 }
@@ -2118,7 +2119,6 @@ function submitmdsuratcreate() {
     processData: false,
     contentType: false,
     success: function(data) {
-      alert(data.id)
       if (data.return == 1) {
           msgs()
           setTimeout(() => {
@@ -2147,6 +2147,92 @@ function delete_head_surat(suratid) {
         cache: false,
         data: {
           "prosesdelete_head_surat": suratid
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            msgs()
+            setTimeout(() => {
+            redirectlink(data.link)
+            }, data.time);
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
+}
+
+// ----------------->> PKL
+function submitmdpklcreate() {
+  let formData = new FormData();
+  const files = $("#lampiranpklcreate").prop("files");
+
+  const maxSize = 10 * 1024 * 1024;
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp","application/pdf"];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      msgs('info',"File " + file.name + " File bukan image atau pdf",3000)
+      return;
+    }
+    formData.append("lampiranpklcreate[]", files[i]);
+  }
+
+  formData.append("pklid", $("#pklidmdpklcreate").val());
+  formData.append("pkltype", $("#pkltypemdpklcreate").val());
+  formData.append("nama", $("#namamdpklcreate").val());
+  formData.append("instansi", $("#instansimdpklcreate").val());
+  formData.append("tglfrom", $("#tglfrommdpklcreate").val());
+  formData.append("tglto", $("#tgltomdpklcreate").val());
+  formData.append("unitid", $("#unitidmdpklcreate").val());
+  formData.append("pic", $("#picmdpklcreate").val());
+  formData.append("status", $("#statusmdpklcreate").val());
+  formData.append("catatan", editorInstance.getData());
+  formData.append("typess", "document_pkl");
+
+  $.ajax({
+    url: "../function/uploadimages.php",
+    dataType: "JSON",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      if (data.return == 1) {
+          msgs()
+          setTimeout(() => {
+          redirectlink(data.link)
+          }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,data.time)
+      }
+    },
+  });
+}
+function delete_head_pkl(pklid) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus data pkl tersebut?",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdelete_head_pkl": pklid
         },
         success: function (data) {
           if (data.return == 1) {

@@ -11,41 +11,47 @@ $start  = $_POST['start'];
 $length = $_POST['length'];
 $search = $_POST['search']['value'];
 
-// Ambil parameter custom
-$table  = $_POST['table']; // ?? 'table_datapkb'; // default ke users
-
-// Hitung total records
-$totalRecords = $conn->query("SELECT COUNT(*) as cnt FROM $table")->fetch_assoc()['cnt'];
-
-// Query data dengan filter
-$sql = "SELECT * FROM $table";
-if (!empty($search)) {
-    // cari di semua kolom (otomatis ambil nama kolom tabel)
-    $cols = [];
-    $resultCols = $conn->query("SHOW COLUMNS FROM $table");
-    while ($col = $resultCols->fetch_assoc()) {
-        $cols[] = $col['Field'] . " LIKE '%$search%'";
-    }
-    $sql .= " WHERE " . implode(" OR ", $cols);
-}
-
-$totalFiltered = $conn->query($sql)->num_rows;
-
-$sql .= " LIMIT $start, $length";
-$result = $conn->query($sql);
-
-// Ambil data
+$table  = $_POST['table'] ?? '';
 $data = [];
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+
+if ($table == "table_datapkl_h") {
+    $totalQuery = $conn->query("SELECT COUNT(*) as T FROM $table");
+    $totalData  = $totalQuery->fetch_assoc()['T'];
+
+    if (!empty($searchValue)) {
+        $searchValue = $conn->real_escape_string($searchValue);
+        $where = "WHERE namaorg LIKE '%$searchValue%' OR instansi LIKE '%$searchValue%'";
+    }
+
+    $filterQuery = $conn->query("SELECT COUNT(*) AS F FROM $table");
+    $totalFiltered = $filterQuery->fetch_assoc()['F'];
+
+    $result = $conn->query("SELECT * FROM $table $where LIMIT $start, $length");
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+}else{
+    $totalRecords = $conn->query("SELECT COUNT(*) as cnt FROM $table")->fetch_assoc()['cnt'];
+    $sql = "SELECT * FROM $table";
+    if (!empty($search)) {
+        $cols = [];
+        $resultCols = $conn->query("SHOW COLUMNS FROM $table");
+        while ($col = $resultCols->fetch_assoc()) {
+            $cols[] = $col['Field'] . " LIKE '%$search%'";
+        }
+        $sql .= " WHERE " . implode(" OR ", $cols);
+    }
+    $totalFiltered = $conn->query($sql)->num_rows;
+    $sql .= " LIMIT $start, $length";
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
 }
 
-// Response JSON
-$response = [
-    "draw" => intval($draw),
-    "recordsTotal" => intval($totalRecords),
-    "recordsFiltered" => intval($totalFiltered),
-    "data" => $data
-];
-
-echo json_encode($response);
+echo json_encode([
+        "draw" => intval($draw),
+        "recordsTotal" => intval($totalRecords),
+        "recordsFiltered" => intval($totalFiltered),
+        "data" => $data
+    ]);
