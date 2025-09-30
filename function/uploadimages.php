@@ -558,63 +558,83 @@ try {
             "return" => $return
         ];
     } elseif ($typess == 'document_p2k3') {
-        if (isset($_FILES['fileupload']['tmp_name']) && $_FILES['fileupload']['tmp_name'] <> '') {
-            $fileupload      = $_FILES['fileupload']['tmp_name'];
-            $ImageName       = $_FILES['fileupload']['name'];
-            $ImageType       = $_FILES['fileupload']['type'];
-
-            $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=9");
-            if (mysqli_num_rows($sql) <> 0) {
-                $r = mysqli_fetch_array($sql);
-                $dir = $r['drtext'];
-            }
-            $temp = $dir;
-            if (!file_exists($temp))
-                mkdir($temp, 0777, true);
-
-            $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
-            $NewImageName   = date('dmYHis')  . '^^' . $ImageName;
-
-            move_uploaded_file($_FILES["fileupload"]["tmp_name"], $temp . $NewImageName);
-        }
-        $doc_id = $_POST['dokumenid'];
-        $docname = $_POST['docname'];
-        $sql = mysqli_query($conn, "SELECT documenaddress  
-                                    FROM table_datap2k3_d 
-                                    WHERE documenid='$doc_id'");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
-            $documenaddress = $r['documenaddress'];
-            $file = $dir . $documenaddress;
-            if (file_exists($file)) {
-                unlink($file);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $temp = $dir;
+        if (!file_exists($temp))
+            mkdir($temp, 0777, true);
+
+        $p2k3id     = $_POST['p2k3id'] ?? '';
+        $docname    = $_POST['docname'] ?? '';
+        $catatan    = $_POST['catatan'] ?? '';
+
+        if (!empty($_FILES['lampirandokumenp2k3']['name'][0])) {
+            foreach ($_FILES['lampirandokumenp2k3']['name'] as $key => $name) {
+                $tmpName = $_FILES['lampirandokumenp2k3']['tmp_name'][$key];
+                $error   = $_FILES['lampirandokumenp2k3']['error'][$key];
+                $ImageName = $_FILES['lampirandokumenp2k3']['name'];
+                $ImageType  = $_FILES['lampirandokumenp2k3']['type'];
+
+                $NewImageName   = date('dmYHis')  . '^^' . $name;
+                $targetFile = $temp . $NewImageName;
+
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $query = mysqli_query($conn, "INSERT INTO table_datap2k3_dt (p2k3id,
+                                                                            imgp2k3,
+                                                                            createdby,
+                                                                            createdon) 
+                                                    VALUES ('$p2k3id',
+                                                            '$NewImageName',
+                                                            '$createdby',
+                                                            '$createdon')");
+                    if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
+                }
             }
+        }
+
+        $sql = mysqli_query($conn, "SELECT catatan  
+                                    FROM table_datap2k3_d 
+                                    WHERE p2k3id='$p2k3id'");
+        if (mysqli_num_rows($sql) <> 0) {
             $query = mysqli_query($conn, "UPDATE table_datap2k3_d SET documenname='$docname',
-                                                                    documenaddress='$NewImageName',
+                                                                    catatan='$catatan',
                                                                     changedon='$changedon',
                                                                     changedby='$changedby'
-                                                                WHERE documenid ='$doc_id'");
+                                                                WHERE p2k3id ='$p2k3id'");
         } else {
-            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_d (documenname,
-                                                                documenaddress,
+            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_d ( p2k3id,
+                                                                documenname,
+                                                                catatan,
                                                                 createdOn,
                                                                 createdBy)
 
-                                VALUES('$docname',
-                                        '$NewImageName',
+                                VALUES( '$p2k3id',
+                                        '$docname',
+                                        '$catatan',
                                         '$createdon',
                                         '$createdby')");
         }
-
-        if ($query === true) {
-            $msgs = "Data Tersimpan";
-            $iconmsgs = "success";
-            $return = true;
+        if (!$query) {
+            throw new Exception("Error Insert & Update Documen: " . mysqli_error($conn));
         }
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $return = true;
+        $link = "md_p2k3_display";
         $data = [
             "iconmsgs" => $iconmsgs,
-            "link" => 'md_p2k3_display',
+            "link" => $link,
             "msgs" => $msgs,
             "time" => $time,
             "imagename" => $NewImageName,
@@ -625,30 +645,28 @@ try {
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
+
         $temp = $dir;
         if (!file_exists($temp)) {
             mkdir($temp, 0777, true);
         }
-        include_once 'getvalue.php';
-        $id = getai('table_datap2k3_s');
+
         $p2k3id       = $_POST['p2k3id'] ?? '';
         $catatan      = $_POST['catatan'] ?? '';
         $tgl          = $_POST['tgl'] ?? '';
         $pernr        = $_POST['pernr'] ?? '';
         $unitid       = $_POST['unitid'] ?? '';
 
-
-
         if (!empty($_FILES['lampiransidak']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampiransidak']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampiransidak']['tmp_name'][$key];
                 $error   = $_FILES['lampiransidak']['error'][$key];
                 $ImageName = $_FILES['lampiransidak']['name'];
                 $ImageType  = $_FILES['lampiransidak']['type'];
 
-                // if ($error === UPLOAD_ERR_OK) {
                 $NewImageName   = date('dmYHis')  . '^^' . $name;
                 $targetFile = $temp . $NewImageName;
 
@@ -657,38 +675,55 @@ try {
                                                                             imgsidak,
                                                                             createdby,
                                                                             createdon) 
-                                                    VALUES ('$id',
+                                                    VALUES ('$p2k3id',
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
-                    $return = true;
-                    $uploaded[] = $NewImageName;
+                    if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
+                        throw new Exception("Error Simpan Document: " . mysqli_error($conn));
+                    }
                 }
             }
         }
 
-        if ($return) {
-            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_s (tglsidak,
+        $query = mysqli_query($conn, "SELECT p2k3id FROM table_datap2k3_s WHERE p2k3id ='$p2k3id'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datap2k3_s SET tglsidak='$tgl',
+                                                            pernr='$pernr',
+                                                            unitid='$unitid',
+                                                            catatan='$catatan',
+                                                            changedon='$changedon',
+                                                            changedby='$changedby'
+                                                WHERE p2k3id='$p2k3id'");
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_s ( p2k3id,
+                                                        tglsidak,
                                                         pernr,
                                                         unitid,
                                                         catatan,
                                                         createdon,
                                                         createdby)
-                        VALUES('$tgl',
+                        VALUES( '$p2k3id',
+                                '$tgl',
                                 '$pernr',
                                 '$unitid',
                                 '$catatan',
                                 '$createdon',
                                 '$createdby')");
-            if ($query) {
-                $msgs = "Data Tersimpan";
-                $iconmsgs = "success";
-                $return = true;
-            }
         }
+        if (!$query) {
+            throw new Exception("Error Insert & Update Header: " . mysqli_error($conn));
+        }
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $return = true;
+        $link = 'md_p2k3_display';
         $data = [
             "iconmsgs" => $iconmsgs,
-            "link" => 'md_p2k3_display',
+            "link" => $link,
             "msgs" => $msgs,
             "time" => $time,
             "id" => $p2k3id,
@@ -707,8 +742,6 @@ try {
             mkdir($temp, 0777, true);
         }
 
-        include_once 'getvalue.php';
-        $id = getai('table_datasido_e');
         $sidoid         = $_POST['sidoid'] ?? '';
         $tglfrom        = $_POST['tglfrom'] ?? '';
         $tglto          = $_POST['tglto'] ?? '';
@@ -719,7 +752,6 @@ try {
 
 
         if (!empty($_FILES['lampiransido']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampiransido']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampiransido']['tmp_name'][$key];
                 $error   = $_FILES['lampiransido']['error'][$key];
@@ -734,34 +766,50 @@ try {
                                                                             imgsido,
                                                                             createdby,
                                                                             createdon) 
-                                                    VALUES ('$id',
+                                                    VALUES ('$sidoid',
                                                             '$NewImageName',
                                                             '$createdby',
                                                             '$createdon')");
                     if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
                         throw new Exception("Error Simpan Document: " . mysqli_error($conn));
                     }
-                    $uploaded[] = $NewImageName;
                 }
             }
         }
 
-        $query = mysqli_query($conn, "INSERT INTO table_datasido_e (taskid,
+        $query = mysqli_query($conn, "SELECT sidoid FROM table_datasido_e WHERE sidoid ='$sidoid '");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datasido_e SET taskid='$jeniskegiatan',
+                                                            eventname='$namakegiatan',
+                                                            tgleventfrom='$tglfrom',
+                                                            tgleventto='$tglto',
+                                                            descriptions='$catatan',
+                                                            changedon='$changedon',
+                                                            changedby='$changedby'
+                                        WHERE sidoid='$sidoid'");
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datasido_e (taskid,
                                                         eventname,
                                                         tgleventfrom,
                                                         tgleventto,
                                                         descriptions,
                                                         createdon,
                                                         createdby)
-                        VALUES('$jeniskegiatan',
+                        VALUES( '$jeniskegiatan',
                                 '$namakegiatan',
                                 '$tglfrom',
                                 '$tglto',
                                 '$catatan',
                                 '$createdon',
                                 '$createdby')");
-        if (!$query) {
         }
+        if (!$query) {
+            throw new Exception("Error Simpan & Update Header: " . mysqli_error($conn));
+        }
+
         $msgs = "Data Tersimpan";
         $iconmsgs = "success";
         $link = 'md_sido_display';
@@ -787,7 +835,6 @@ try {
 
 
         if (!empty($_FILES['lampirannoticehead']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampirannoticehead']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampirannoticehead']['tmp_name'][$key];
                 $error   = $_FILES['lampirannoticehead']['error'][$key];
@@ -807,9 +854,11 @@ try {
                                                             '$createdby',
                                                             '$createdon')");
                     if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
                         throw new Exception("Error Simpan Document: " . mysqli_error($conn));
                     }
-                    $uploaded[] = $NewImageName;
                 }
             }
         }
@@ -849,8 +898,7 @@ try {
             mkdir($temp, 0777, true);
         }
 
-        include_once 'getvalue.php';
-        $srgmid         = getai('table_datasrgm_h');
+        $srgmid         = $_POST['srgmid'] ?? '';
         $s_unitid       = $_POST['unitid'] ?? '';
         $s_qty          = $_POST['qty'] ?? '';
         $tglfrom          = $_POST['tglfrom'] ?? '';
@@ -863,7 +911,6 @@ try {
         $lenght         = count($unitid);
 
         if (!empty($_FILES['lampiranseragamranc']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampiranseragamranc']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampiranseragamranc']['tmp_name'][$key];
                 $error   = $_FILES['lampiranseragamranc']['error'][$key];
@@ -883,17 +930,18 @@ try {
                                                             '$createdby',
                                                             '$createdon')");
                     if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
                         throw new Exception("Error Simpan table_datasrgm_d: " . mysqli_error($conn));
                     }
-                    $uploaded[] = $NewImageName;
                 }
             }
         }
 
-        if ($return) {
-            $z = 0;
-            for ($i = 0; $i < $lenght; $i++) {
-                $query = mysqli_query($conn, "INSERT INTO table_datasrgm_dt (   srgmid,
+        $z = 0;
+        for ($i = 0; $i < $lenght; $i++) {
+            $query = mysqli_query($conn, "INSERT INTO table_datasrgm_dt (   srgmid,
                                                                             unitid,
                                                                             rancqty,
                                                                             realqty,
@@ -905,9 +953,9 @@ try {
                                 '$qty[$i]',
                                 '$createdon',
                                 '$createdby')");
-            }
+        }
 
-            $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (tglfrom,
+        $query = mysqli_query($conn, "INSERT INTO table_datasrgm_h (tglfrom,
                                                         tglto,
                                                         totalranc,
                                                         catatanranc,
@@ -923,15 +971,14 @@ try {
                                 '$stats',
                                 '$createdon',
                                 '$createdby')");
-            if (!$query) {
-                throw new Exception("Error Insert & Update DATA: " . mysqli_error($conn));
-            }
-            $msgs = "Data Tersimpan";
-            $iconmsgs = "success";
-            $return = true;
-            $link = 'adm_seragam_display';
-            $id = $srgmid;
+        if (!$query) {
+            throw new Exception("Error Insert & Update DATA: " . mysqli_error($conn));
         }
+        $msgs = "Data Tersimpan";
+        $iconmsgs = "success";
+        $return = true;
+        $link = 'adm_seragam_display';
+        $id = $srgmid;
     } elseif ($typess == 'document_parcel') {
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=15");
         if (mysqli_num_rows($sql) <> 0) {
@@ -959,7 +1006,6 @@ try {
         $lenght         = count($unitid);
 
         if (!empty($_FILES['lampiranparcelranc']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampiranparcelranc']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampiranparcelranc']['tmp_name'][$key];
                 $error   = $_FILES['lampiranparcelranc']['error'][$key];
@@ -979,9 +1025,11 @@ try {
                                                             '$createdby',
                                                             '$createdon')");
                     if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
                         throw new Exception("Error Simpan Document: " . mysqli_error($conn));
                     }
-                    $uploaded[] = $NewImageName;
                 }
             }
         }
@@ -1049,7 +1097,6 @@ try {
         $unitid       = $_POST['unitid'] ?? '';
 
         if (!empty($_FILES['lampiransuratcreate']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampiransuratcreate']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampiransuratcreate']['tmp_name'][$key];
                 $error   = $_FILES['lampiransuratcreate']['error'][$key];
@@ -1069,9 +1116,11 @@ try {
                                                             '$createdby',
                                                             '$createdon')");
                     if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
                         throw new Exception("Error Simpan Document: " . mysqli_error($conn));
                     }
-                    $uploaded[] = $NewImageName;
                 }
             }
         }
@@ -1135,7 +1184,6 @@ try {
         $catatan     = $_POST['catatan'] ?? '';
 
         if (!empty($_FILES['lampiranpklcreate']['name'][0])) {
-            $uploadedFiles = [];
             foreach ($_FILES['lampiranpklcreate']['name'] as $key => $name) {
                 $tmpName = $_FILES['lampiranpklcreate']['tmp_name'][$key];
                 $error   = $_FILES['lampiranpklcreate']['error'][$key];
@@ -1155,9 +1203,11 @@ try {
                                                             '$createdby',
                                                             '$createdon')");
                     if (!$query) {
+                        if (file_exists($targetFile)) {
+                            unlink($targetFile);
+                        }
                         throw new Exception("Error Simpan Document: " . mysqli_error($conn));
                     }
-                    $uploaded[] = $NewImageName;
                 }
             }
         }

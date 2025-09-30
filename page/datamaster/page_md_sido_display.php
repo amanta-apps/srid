@@ -16,8 +16,8 @@
                     <tr>
                         <th style="width: 10%;">#</th>
                         <th>No Revisi</th>
-                        <th>Deskripsi</th>
                         <th>Header Text</th>
+                        <th>Deskripsi</th>
                         <th>Created On</th>
                     </tr>
                 </thead>
@@ -29,10 +29,8 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Task</th>
                             <th>Event</th>
-                            <th>Tgl From</th>
-                            <th>Tgl To</th>
+                            <th>Tgl</th>
                             <th>Desc</th>
                             <th>Created On</th>
                         </tr>

@@ -1395,30 +1395,48 @@ function delete_head_p2k3(p2k3id) {
   })
 }
 function submitdocmdp2k3() {
-  const fileupload = $("#docaddrmdp2k3").prop("files")[0];
-    let formData = new FormData();
-    formData.append("fileupload", fileupload);
-    formData.append("dokumenid", $("#dokumenmdp2k3").val());
-    formData.append("docname", $("#docnamemdp2k3").val());
-    formData.append("typess", "document_p2k3");
-      $.ajax({
-        type: "POST",
-        url: "../function/uploadimages.php",
-        dataType: "JSON",
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.return == 1) {
-            msgs()
-            setTimeout(() => {
-            redirectlink(data.link)
-            }, data.time);
-          }else{
-            msgs(data.iconmsgs,data.msgs,data.time)
-          }
-        },
+  let formData = new FormData();
+  const files = $("#lampirandokumenp2k3").prop("files");
+
+  const maxSize = 10 * 1024 * 1024;
+  const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
+      return;
+    }
+    formData.append("lampirandokumenp2k3[]", files[i]);
+  }
+
+  formData.append("p2k3id", $("#p2k3idmdp2k3").val());
+  formData.append("docname", $("#docnamemdp2k3").val());
+  formData.append("catatan", editorInstance.getData());
+  formData.append("typess", "document_p2k3");
+
+  $.ajax({
+    url: "../function/uploadimages.php",
+    dataType: "JSON",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      if (data.return == 1) {
+          msgs()
+          setTimeout(() => {
+          redirectlink(data.link)
+          }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,data.time)
+      }
+    },
   });
 }
 function delete_doc_p2k3(docid) {
@@ -1735,8 +1753,6 @@ function delete_doc_sido(sidoid) {
   })
 }
 
-
-
 // ---------------- >> PENGUMUMAN
 function submitmdnoticehead() {
   let formData = new FormData();
@@ -1783,6 +1799,38 @@ function submitmdnoticehead() {
       }
     },
   });
+}
+function delete_head_notice(noticeid) {
+  Swal.fire({
+  icon: "question",
+  text: "Hapus data pengumuman tersebut?",
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: "Ya",
+  denyButtonText: `Tidak`
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({ 
+        url: "../function/getdata.php",
+        dataType: "JSON",
+        type: "POST",
+        cache: false,
+        data: {
+          "prosesdelete_head_notice": noticeid
+        },
+        success: function (data) {
+          if (data.return == 1) {
+            msgs()
+            setTimeout(() => {
+            redirectlink(data.link)
+            }, data.time);
+          }else{
+            msgs(data.iconmsgs,data.msgs,3000)
+          }
+        },
+      });
+    }
+  })
 }
 
 // ---------------- >> SERAGAM

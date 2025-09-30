@@ -21,9 +21,8 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;">#</th>
-                        <th>P2K3 ID</th>
-                        <th>Deskripsi</th>
                         <th>Header Text</th>
+                        <th>Deskripsi</th>
                         <th>Created On</th>
                     </tr>
                 </thead>
@@ -35,9 +34,8 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Nomor</th>
                             <th>Nama Dokumen</th>
-                            <th>Link Dokumen</th>
+                            <th>Deskripsi</th>
                             <th>Created On</th>
                         </tr>
                     </thead>
@@ -50,7 +48,7 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>News ID</th>
+                            <!-- <th>News ID</th> -->
                             <th>Editor</th>
                             <th>Nama Kegiatan</th>
                             <th>Descriptions</th>
@@ -65,7 +63,6 @@
                     <thead>
                         <tr>
                             <th style="width: 5%;">#</th>
-                            <th style="width: 5%;">Id</th>
                             <th>Tgl</th>
                             <th>pernr</th>
                             <th>Unit Id</th>

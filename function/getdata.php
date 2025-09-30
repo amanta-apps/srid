@@ -441,17 +441,20 @@ if (isset($_POST['prosessubmitmdpkb'])) {
     $descriptions = $_POST['prosessubmitmdpkb'][3];
     $return = false;
     $stasx = 1;
-    $query = mysqli_query($conn, "SELECT norevisi FROM table_datapkb WHERE norevisi='$norevisi'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datapkb 
+
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT norevisi FROM table_datapkb WHERE norevisi='$norevisi'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datapkb 
                                         SET descriptions='$header',
                                             link='$link',
                                             text_descriptions='$descriptions',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE norevisi='$norevisi'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datapkb (descriptions,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datapkb (descriptions,
                                                             link,
                                                             text_descriptions,
                                                             statsactive,
@@ -463,18 +466,26 @@ if (isset($_POST['prosessubmitmdpkb'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
+        if (!$query) {
+            throw new Exception("Gagal update header: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_pkb_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_pkb_display",
+        "link" => $link,
         "norevisi" => $norevisi,
         "return" => $return,
     ];
@@ -489,12 +500,13 @@ if (isset($_POST['prosesdelete_head_pkb'])) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_pkb_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_pkb_display",
+        "link" => $link,
         "norevisi" => $norevisi,
         "return" => $return,
     ];
@@ -1500,16 +1512,18 @@ if (isset($_POST['prosessubmitmdp2k3'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT p2k3id FROM table_datap2k3_h WHERE p2k3id='$p2k3id'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datap2k3_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT p2k3id FROM table_datap2k3_h WHERE p2k3id='$p2k3id'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datap2k3_h 
                                         SET p2k3descriptions='$descriptions',
                                             p2k3header='$header',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE p2k3id='$p2k3id'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datap2k3_h (p2k3descriptions,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_h (p2k3descriptions,
                                                                     p2k3header,
                                                                     statsactive,
                                                                     createdon,
@@ -1519,18 +1533,26 @@ if (isset($_POST['prosessubmitmdp2k3'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
+        if (!$query) {
+            throw new Exception("Gagal insert or Update header: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_p2k3_display",
+        "link" => $link,
         "id" => $p2k3id,
         "return" => $return,
     ];
@@ -1538,19 +1560,19 @@ if (isset($_POST['prosessubmitmdp2k3'])) {
 }
 if (isset($_POST['prosesdelete_head_p2k3'])) {
     $p2k3id = $_POST['prosesdelete_head_p2k3'];
-    $stasx = 0;
     $query = mysqli_query($conn, "DELETE FROM table_datap2k3_h
                                     WHERE p2k3id='$p2k3id'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_p2k3_display",
+        "link" => $link,
         "id" => $p2k3id,
         "return" => $return,
     ];
@@ -1563,18 +1585,19 @@ if (isset($_POST['prosessubmitmdnewsp2k3'])) {
     $title = $_POST['prosessubmitmdnewsp2k3'][3];
     $return = false;
     $stasx = 1;
-
-    $query = mysqli_query($conn, "SELECT newsid FROM table_datap2k3_n WHERE newsid='$newsid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datap2k3_n 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT newsid FROM table_datap2k3_n WHERE newsid='$newsid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datap2k3_n 
                                         SET newseditor='$editor',
                                             newscontent='$kontent',
                                             newstitle='$title',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE newsid='$newsid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datap2k3_n (newseditor,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datap2k3_n (newseditor,
                                                                     newscontent,
                                                                     newstitle,
                                                                     statsactive,
@@ -1586,18 +1609,26 @@ if (isset($_POST['prosessubmitmdnewsp2k3'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
+        if (!$query) {
+            throw new Exception("Gagal insert or update header: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_p2k3_display",
+        "link" => $link,
         "id" => $newsid,
         "return" => $return,
     ];
@@ -1605,58 +1636,75 @@ if (isset($_POST['prosessubmitmdnewsp2k3'])) {
 }
 if (isset($_POST['prosesdelete_news_p2k3'])) {
     $newsid = $_POST['prosesdelete_news_p2k3'];
-    $stasx = 0;
     $query = mysqli_query($conn, "DELETE FROM table_datap2k3_n
                                     WHERE newsid='$newsid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_p2k3_display",
+        "link" => $link,
         "newsid" => $newsid,
         "return" => $return,
     ];
     echo json_encode($data);
 }
 if (isset($_POST['prosesdelete_doc_p2k3'])) {
-    $docid = $_POST['prosesdelete_doc_p2k3'];
-    $query = mysqli_query($conn, "SELECT documenaddress
-                                     FROM table_datap2k3_d 
-                                     WHERE documenid='$docid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $r = mysqli_fetch_array($query);
-        $documenaddress = $r['documenaddress'];
+    $p2k3id = $_POST['prosesdelete_doc_p2k3'];
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgp2k3 FROM table_datap2k3_dt WHERE p2k3id='$p2k3id'");
+        // if (mysqli_num_rows($query) == 0) {
+        //     throw new Exception("Error SELECT Image: " . mysqli_error($conn));
+        // }
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgp2k3'];
+        }
 
+        if (!mysqli_query($conn, "DELETE FROM table_datap2k3_dt WHERE p2k3id='$p2k3id'")) {
+            throw new Exception("Gagal hapus all documen: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datap2k3_d WHERE p2k3id='$p2k3id'")) {
+            throw new Exception("Gagal hapus documen: " . mysqli_error($conn));
+        }
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=9");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
-        }
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-            $msgs =  "File terhapus.";
         } else {
-            $msgs = "File tidak ditemukan.";
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
-    }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datap2k3_d WHERE documenid='$docid'");
-    if ($query) {
         $return = true;
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_p2k3_display",
+        "link" => $link,
         "id" => $docid,
         "return" => $return,
     ];
@@ -1664,28 +1712,46 @@ if (isset($_POST['prosesdelete_doc_p2k3'])) {
 }
 if (isset($_POST['prosesdelete_sidak_p2k3'])) {
     $p2k3id = $_POST['prosesdelete_sidak_p2k3'];
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
-                                    WHERE directionsid=10");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $query = mysqli_query($conn, "SELECT imgsidak FROM table_datap2k3_sd WHERE p2k3id=$p2k3id");
-    if (mysqli_num_rows($query) <> 0) {
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgsidak FROM table_datap2k3_sd WHERE p2k3id='$p2k3id'");
         while ($r = mysqli_fetch_array($query)) {
-            $documenaddress = $r['imgsidak'];
-            $file = $dir . $documenaddress;
+            $imgaddress[] = $r['imgsidak'];
+        }
+
+        if (!mysqli_query($conn, "DELETE FROM table_datap2k3_sd WHERE p2k3id='$p2k3id'")) {
+            throw new Exception("Gagal hapus all documen: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datap2k3_s WHERE p2k3id='$p2k3id'")) {
+            throw new Exception("Gagal hapus documen: " . mysqli_error($conn));
+        }
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=10");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
             if (file_exists($file)) {
-                unlink($file);
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
             }
         }
-        mysqli_query($conn, "DELETE FROM table_datap2k3_sd WHERE p2k3id='$p2k3id'");
-    }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datap2k3_s WHERE p2k3id='$p2k3id'");
-    if ($query) {
         $return = true;
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
@@ -1703,18 +1769,22 @@ if (isset($_POST['prosessubmitmdsido'])) {
     $sidoid = $_POST['prosessubmitmdsido'][0];
     $header = $_POST['prosessubmitmdsido'][1];
     $descriptions = $_POST['prosessubmitmdsido'][2];
-    $return = false;
 
-    $query = mysqli_query($conn, "SELECT sidoid FROM table_datasido_h WHERE sidoid='$sidoid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datasido_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT sidoid FROM table_datasido_h WHERE sidoid='$sidoid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datasido_h 
                                         SET sidodescriptions='$descriptions',
                                             sidoheader='$header',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE sidoid='$sidoid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datasido_h (sidodescriptions,
+            if (!$query) {
+                throw new Exception("Gagal update header: " . mysqli_error($conn));
+            }
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datasido_h (sidodescriptions,
                                                                     sidoheader,
                                                                     createdon,
                                                                     createdby)
@@ -1722,18 +1792,26 @@ if (isset($_POST['prosessubmitmdsido'])) {
                                         '$header',
                                         '$createdon',
                                         '$createdby')");
-    }
+            if (!$query) {
+                throw new Exception("Gagal insert header: " . mysqli_error($conn));
+            }
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_sido_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_sido_display",
+        "link" => $link,
         "id" => $sidoid,
         "return" => $return,
     ];
@@ -1741,19 +1819,19 @@ if (isset($_POST['prosessubmitmdsido'])) {
 }
 if (isset($_POST['prosesdelete_head_sido'])) {
     $sidoid = $_POST['prosesdelete_head_sido'];
-    $stasx = 0;
     $query = mysqli_query($conn, "DELETE FROM table_datasido_h 
                                     WHERE sidoid='$sidoid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_sido_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_sido_display",
+        "link" => $link,
         "id" => $sidoid,
         "return" => $return,
     ];
@@ -1761,35 +1839,116 @@ if (isset($_POST['prosesdelete_head_sido'])) {
 }
 if (isset($_POST['prosesdelete_doc_sido'])) {
     $sidoid = $_POST['prosesdelete_doc_sido'];
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+    try {
+        mysqli_begin_transaction($conn);
+
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=11");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $query = mysqli_query($conn, "SELECT imgsido FROM table_datasido_sd WHERE sidoid=$sidoid");
-    if (mysqli_num_rows($query) <> 0) {
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgsido FROM table_datasido_sd WHERE sidoid='$sidoid'");
+        if (mysqli_num_rows($query) == 0) {
+            throw new Exception("Error SELECT Image: " . mysqli_error($conn));
+        }
         while ($r = mysqli_fetch_array($query)) {
-            $documenaddress = $r['imgsido'];
-            $file = $dir . $documenaddress;
+            $imgaddress[] = $r['imgsido'];
+        }
+
+
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
             if (file_exists($file)) {
-                unlink($file);
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
             }
         }
-        mysqli_query($conn, "DELETE FROM table_datasido_sd WHERE sidoid='$sidoid'");
-    }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datasido_e WHERE sidoid='$sidoid'");
-    if ($query) {
+        if (!mysqli_query($conn, "DELETE FROM table_datasido_sd WHERE sidoid='$sidoid'")) {
+            throw new Exception("Gagal hapus document: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datasido_e WHERE sidoid='$sidoid'")) {
+            throw new Exception("Gagal hapus event: " . mysqli_error($conn));
+        }
+
         $return = true;
         $icon_msgs = "success";
+        $link = "md_sido_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_sido_display",
+        "link" => $link,
         "id" => $file,
+        "return" => $return,
+    ];
+    echo json_encode($data);
+}
+
+// -----> PENGUMUMAN
+if (isset($_POST['prosesdelete_head_notice'])) {
+    $noticeid = $_POST['prosesdelete_head_notice'];
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgnotice FROM table_datanotice_d WHERE noticeid='$noticeid'");
+        if (mysqli_num_rows($query) == 0) {
+            throw new Exception("Error SELECT Image: " . mysqli_error($conn));
+        }
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgnotice'];
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datanotice_d WHERE noticeid='$noticeid'")) {
+            throw new Exception("Gagal hapus detail: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datanotice_h WHERE noticeid='$noticeid'")) {
+            throw new Exception("Gagal hapus header: " . mysqli_error($conn));
+        }
+
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
+                                    WHERE directionsid=12");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
+        }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
+        $return = true;
+        $msgs = "Data Tersimpan";
+        $icon_msgs = "success";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
+        mysqli_rollback($conn);
+    }
+    $data = [
+        "time" => $time,
+        "msgs" => $msgs,
+        "iconmsgs" => $icon_msgs,
+        "link" => "adm_notice_display",
+        "id" => $noticeid,
         "return" => $return,
     ];
     echo json_encode($data);
@@ -1798,39 +1957,58 @@ if (isset($_POST['prosesdelete_doc_sido'])) {
 // -----> SERAGAM
 if (isset($_POST['prosesdelete_head_srgm'])) {
     $srgmid = $_POST['prosesdelete_head_srgm'];
-    $imgaddress = array();
-    $query = mysqli_query($conn, "SELECT imgseragam FROM table_datasrgm_d WHERE srgmid='$srgmid'");
-    while ($r = mysqli_fetch_array($query)) {
-        $imgaddress[] = $r['imgseragam'];
-    }
-    $query = mysqli_query($conn, "DELETE t1, t2, t3
-                                    FROM table_datasrgm_h AS t1
-                                    LEFT JOIN table_datasrgm_dt AS t2 ON t1.srgmid = t2.srgmid
-                                    LEFT JOIN table_datasrgm_d AS t3 ON t1.srgmid = t3.srgmid
-                                    WHERE t1.srgmid = '$srgmid'");
-    if ($query) {
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgseragam FROM table_datasrgm_d WHERE srgmid='$srgmid'");
+        if (mysqli_num_rows($query) == 0) {
+            throw new Exception("Error SELECT Image: " . mysqli_error($conn));
+        }
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgseragam'];
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datasrgm_d WHERE srgmid='$srgmid'")) {
+            throw new Exception("Gagal hapus rancangan: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datasrgm_h WHERE srgmid='$srgmid'")) {
+            throw new Exception("Gagal hapus header: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datasrgm_dt WHERE srgmid='$srgmid'")) {
+            throw new Exception("Gagal hapus reality: " . mysqli_error($conn));
+        }
+
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=13");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
         $lenght = count($imgaddress);
         for ($i = 0; $i < $lenght; $i++) {
             $file = $dir . $imgaddress[$i];
             if (file_exists($file)) {
-                unlink($file);
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
             }
         }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_seragam_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_seragam_display",
+        "link" => $link,
         "id" => $srgmid,
         "return" => $return,
     ];
@@ -1846,18 +2024,22 @@ if (isset($_POST['prosessubmitmdseragamreal'])) {
     $status = $_POST['prosessubmitmdseragamreal'][6];
     $return = false;
     $lenght = count($qty);
-
-    $query = mysqli_query($conn, "SELECT srgmid FROM table_datasrgm_h WHERE srgmid='$srgmid'");
-    if (mysqli_num_rows($query) <> 0) {
-        for ($i = 0; $i < $lenght; $i++) {
-            mysqli_query($conn, "UPDATE table_datasrgm_dt 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT srgmid FROM table_datasrgm_h WHERE srgmid='$srgmid'");
+        if (mysqli_num_rows($query) <> 0) {
+            for ($i = 0; $i < $lenght; $i++) {
+                $query = mysqli_query($conn, "UPDATE table_datasrgm_dt 
                                         SET realqty='$qty[$i]',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE srgmid='$srgmid' AND
                                             unitid='$unitid[$i]'");
-        }
-        $query = mysqli_query($conn, "UPDATE table_datasrgm_h 
+                if (!$query) {
+                    throw new Exception("Gagal update header: " . mysqli_error($conn));
+                }
+            }
+            $query = mysqli_query($conn, "UPDATE table_datasrgm_h 
                                         SET catatanreal='$catatan',
                                             realisasi='X',
                                             tglreal='$tgl',
@@ -1866,18 +2048,28 @@ if (isset($_POST['prosessubmitmdseragamreal'])) {
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE srgmid='$srgmid'");
-    }
+            if (!$query) {
+                throw new Exception("Gagal update seragam: " . mysqli_error($conn));
+            }
+        } else {
+            throw new Exception("Gagal select header: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "adm_seragam_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "adm_seragam_display",
+        "link" => $link,
         "id" => $srgmid,
         "return" => $return,
     ];
@@ -1887,40 +2079,58 @@ if (isset($_POST['prosessubmitmdseragamreal'])) {
 // -----> PARSEL
 if (isset($_POST['prosesdelete_head_parcel'])) {
     $parcelid = $_POST['prosesdelete_head_parcel'];
-    $imgaddress = array();
-    $query = mysqli_query($conn, "SELECT imgparcel FROM table_dataparcel_d WHERE parcelid='$parcelid'");
-    while ($r = mysqli_fetch_array($query)) {
-        $imgaddress[] = $r['imgparcel'];
-    }
-    $query = mysqli_query($conn, "DELETE t1, t2, t3
-                                    FROM table_dataparcel_h AS t1
-                                    LEFT JOIN table_dataparcel_dt AS t2 ON t1.parcelid = t2.parcelid
-                                    LEFT JOIN table_dataparcel_d AS t3 ON t1.parcelid = t3.parcelid
-                                    WHERE t1.parcelid = '$parcelid'");
-    if ($query) {
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgparcel FROM table_dataparcel_d WHERE parcelid='$parcelid'");
+        if (mysqli_num_rows($query) == 0) {
+            throw new Exception("Error SELECT Image: " . mysqli_error($conn));
+        }
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgparcel'];
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_dataparcel_d WHERE parcelid='$parcelid'")) {
+            throw new Exception("Gagal hapus rancangan: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_dataparcel_h WHERE parcelid='$parcelid'")) {
+            throw new Exception("Gagal hapus header: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_dataparcel_dt WHERE parcelid='$parcelid'")) {
+            throw new Exception("Gagal hapus reality: " . mysqli_error($conn));
+        }
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=15");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
         $lenght = count($imgaddress);
         for ($i = 0; $i < $lenght; $i++) {
             $file = $dir . $imgaddress[$i];
             if (file_exists($file)) {
-                unlink($file);
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
             }
         }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_parcel_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_parcel_display",
-        "id" => $srgmid,
+        "link" => $link,
+        "id" => $parcelid,
         "return" => $return,
     ];
     echo json_encode($data);
@@ -1935,18 +2145,22 @@ if (isset($_POST['prosessubmitmdparcelreal'])) {
     $status = $_POST['prosessubmitmdparcelreal'][6];
     $return = false;
     $lenght = count($qty);
-
-    $query = mysqli_query($conn, "SELECT parcelid FROM table_dataparcel_h WHERE parcelid='$parcelid'");
-    if (mysqli_num_rows($query) <> 0) {
-        for ($i = 0; $i < $lenght; $i++) {
-            mysqli_query($conn, "UPDATE table_dataparcel_dt 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT parcelid FROM table_dataparcel_h WHERE parcelid='$parcelid'");
+        if (mysqli_num_rows($query) <> 0) {
+            for ($i = 0; $i < $lenght; $i++) {
+                $query = mysqli_query($conn, "UPDATE table_dataparcel_dt 
                                         SET realqty='$qty[$i]',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE parcelid='$parcelid' AND
                                             unitid='$unitid[$i]'");
-        }
-        $query = mysqli_query($conn, "UPDATE table_dataparcel_h 
+                if (!$query) {
+                    throw new Exception("Gagal update image: " . mysqli_error($conn));
+                }
+            }
+            $query = mysqli_query($conn, "UPDATE table_dataparcel_h 
                                         SET catatanreal='$catatan',
                                             realisasi='X',
                                             tglreal='$tgl',
@@ -1955,18 +2169,28 @@ if (isset($_POST['prosessubmitmdparcelreal'])) {
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE parcelid='$parcelid'");
-    }
+            if (!$query) {
+                throw new Exception("Gagal update header: " . mysqli_error($conn));
+            }
+        } else {
+            throw new Exception("Gagal select header: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "adm_parcel_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "adm_parcel_display",
+        "link" => $link,
         "id" => $parcelid,
         "return" => $return,
     ];
@@ -1976,38 +2200,55 @@ if (isset($_POST['prosessubmitmdparcelreal'])) {
 // -----> SURAT
 if (isset($_POST['prosesdelete_head_surat'])) {
     $suratid = $_POST['prosesdelete_head_surat'];
-    $imgaddress = array();
-    $query = mysqli_query($conn, "SELECT imgsurat FROM table_datasurat_d WHERE suratid='$suratid'");
-    while ($r = mysqli_fetch_array($query)) {
-        $imgaddress[] = $r['imgsurat'];
-    }
-    $query = mysqli_query($conn, "DELETE t1, t2
-                                    FROM table_datasurat_h AS t1
-                                    LEFT JOIN table_datasurat_d AS t2 ON t1.suratid = t2.suratid
-                                    WHERE t1.suratid = '$suratid'");
-    if ($query) {
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgsurat FROM table_datasurat_d WHERE suratid='$suratid'");
+        if (mysqli_num_rows($query) == 0) {
+            throw new Exception("Error SELECT Image: " . mysqli_error($conn));
+        }
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgsurat'];
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datasurat_d WHERE suratid='$suratid'")) {
+            throw new Exception("Gagal hapus rancangan: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datasurat_h WHERE suratid='$suratid'")) {
+            throw new Exception("Gagal hapus header: " . mysqli_error($conn));
+        }
+
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=16");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
+        } else {
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
         $lenght = count($imgaddress);
         for ($i = 0; $i < $lenght; $i++) {
             $file = $dir . $imgaddress[$i];
             if (file_exists($file)) {
-                unlink($file);
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
             }
         }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "adm_surat_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "adm_surat_display",
+        "link" => $link,
         "id" => $suratid,
         "return" => $return,
     ];
@@ -2019,7 +2260,6 @@ if (isset($_POST['prosesdelete_head_pkl'])) {
     $pklid = $_POST['prosesdelete_head_pkl'];
     try {
         mysqli_begin_transaction($conn);
-
         $imgaddress = array();
         $query = mysqli_query($conn, "SELECT imgpkl FROM table_datapkl_d WHERE pklid='$pklid'");
         if (mysqli_num_rows($query) == 0) {
@@ -2031,7 +2271,6 @@ if (isset($_POST['prosesdelete_head_pkl'])) {
         if (!mysqli_query($conn, "DELETE FROM table_datapkl_d WHERE pklid='$pklid'")) {
             throw new Exception("Gagal hapus detail: " . mysqli_error($conn));
         }
-
         if (!mysqli_query($conn, "DELETE FROM table_datapkl_h WHERE pklid='$pklid'")) {
             throw new Exception("Gagal hapus header: " . mysqli_error($conn));
         }
@@ -2056,18 +2295,18 @@ if (isset($_POST['prosesdelete_head_pkl'])) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "adm_pkl_display";
         mysqli_commit($conn);
     } catch (Exception $e) {
-        include_once 'getvalue.php';
-        datalog('OK');
-        $msgs = $e->getMessage();
         mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "adm_pkl_display",
+        "link" => $link,
         "id" => $pklid,
         "return" => $return,
     ];

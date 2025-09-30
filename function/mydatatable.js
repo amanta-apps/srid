@@ -776,7 +776,7 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "farkesid" },
+        // { data: "farkesid" },
         { data: "farkesheader" },
         {
             data: "farkesdescriptions",
@@ -996,7 +996,7 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "p2k3id" },
+         { data: "p2k3header" },
         {
             data: "p2k3descriptions",
             render: function(data, type, row) {
@@ -1005,7 +1005,6 @@ $(document).ready( function () {
             return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
         },
-        { data: "p2k3header" },
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -1045,12 +1044,11 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
-                    <a href="#" onclick="redirectlink('md_p2k3_doc_create','${row.documenid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
-                    <a href="#" onclick="delete_doc_p2k3('${row.documenid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                    <a href="#" onclick="redirectlink('md_p2k3_doc_create','${row.p2k3id}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_doc_p2k3('${row.p2k3id9}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }
         },
-        { data: "documenid" },
         {
             data: "documenname",
             render: function(data, type, row) {
@@ -1058,12 +1056,12 @@ $(document).ready( function () {
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
-        { 
-            data: "documenaddress",
+        {
+            data: "catatan",
             render: function(data, type, row) {
-                return `
-                    <a href="#" onclick="downloadlink(4,'${row.documenaddress}')" title="Download">${row.documenaddress}</a>
-                `;
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
         },
         { 
@@ -1110,7 +1108,7 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "newsid" },
+        // { data: "newsid" },
         { data: "newseditor" },
         {
             data: "newstitle",
@@ -1154,12 +1152,23 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
+                    <a href="#" onclick="redirectlink('md_p2k3_sidak_create','${row.p2k3id}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
                     <a href="#" onclick="delete_sidak_p2k3('${row.p2k3id}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }
         },
-        { data: "p2k3id" },
-        { data: "tglsidak" },
+        { 
+            data: "tglsidak",
+            render: function(data, type, row) {
+                if (!data) return "";
+                let d = new Date(data);
+                let day   = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year  = d.getFullYear();
+
+                return `${day}.${month}.${year}`;
+            }
+        },
         { data: "pernr" },
         { data: "unitid" },
         {
@@ -1213,6 +1222,7 @@ $(document).ready( function () {
             }
         },
         { data: "sidoid" },
+        { data: "sidoheader" },
         {
             data: "sidodescriptions",
             render: function(data, type, row) {
@@ -1220,8 +1230,7 @@ $(document).ready( function () {
             var plainText = data.replace(/<[^>]*>/g, '');
             return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
-        }, 
-        { data: "sidoheader" },
+        },  
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -1261,14 +1270,30 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
+                    <a href="#" onclick="redirectlink('md_sido_doc_create','${row.sidoid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
                     <a href="#" onclick="delete_doc_sido('${row.sidoid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }
         },
-        { data: "taskid" },
         { data: "eventname" },
-        { data: "tgleventfrom" },
-        { data: "tgleventto" },
+        { 
+            data: "tgleventto",
+            render: function(data, type, row) {
+                function formatDate(dateStr) {
+                    if (!dateStr) return "";
+                    let d = new Date(dateStr);
+                    let day   = ("0" + d.getDate()).slice(-2);
+                    let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                    let year  = d.getFullYear();
+                    return `${day}.${month}.${year}`;
+                }
+
+                let from = formatDate(row.tgleventfrom);
+                let to   = formatDate(data);
+                return from && to ? `${from} - ${to}` : "";
+            }
+        },
+
         {
             data: "descriptions",
             render: function(data, type, row) {

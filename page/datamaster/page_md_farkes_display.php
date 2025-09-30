@@ -21,9 +21,9 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;">#</th>
-                        <th>Farkes ID</th>
-                        <th>Deskripsi</th>
+                        <!-- <th>Farkes ID</th> -->
                         <th>Header Text</th>
+                        <th>Deskripsi</th>
                         <th>Created On</th>
                     </tr>
                 </thead>
