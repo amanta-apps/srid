@@ -32,9 +32,8 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Nomor</th>
                             <th>Nama Dokumen</th>
-                            <th>Link Dokumen</th>
+                            <th>Catatan</th>
                             <th>Created On</th>
                         </tr>
                     </thead>

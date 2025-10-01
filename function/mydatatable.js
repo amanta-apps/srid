@@ -133,15 +133,9 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
-                    <a href="#" onclick="redirectlink('md_coc_doc_create','${row.documenid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
-                    <a href="#" onclick="delete_doc_coc('${row.documenid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                    <a href="#" onclick="redirectlink('md_coc_doc_create','${row.cocid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_doc_coc('${row.cocid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
-            }
-        },
-            {
-            targets: 0, // kolom pertama untuk nomor urut
-            render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
             }
         },
         {
@@ -151,14 +145,14 @@ $(document).ready( function () {
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
-        { 
-            data: "documenaddress",
+         {
+            data: "catatan",
             render: function(data, type, row) {
-                return `
-                    <a href="#" onclick="downloadlink(1,'${row.documenaddress}')" title="Download">${row.documenaddress}</a>
-                `;
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
-        },
+        }, 
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -259,7 +253,7 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "wlkpid" },
+        // { data: "wlkpid" },
         {
             data: "wlkpdescriptions",
             render: function(data, type, row) {
@@ -308,12 +302,12 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
-                    <a href="#" onclick="redirectlink('md_wlkp_doc_create','${row.documenid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
-                    <a href="#" onclick="delete_doc_wlkp('${row.documenid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                    <a href="#" onclick="redirectlink('md_wlkp_doc_create','${row.wlkpid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_doc_wlkp('${row.wlkpid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }
         },
-        { data: "documenid" },
+        // { data: "documenid" },
         {
             data: "documenname",
             render: function(data, type, row) {
@@ -321,14 +315,14 @@ $(document).ready( function () {
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
-        { 
-            data: "documenaddress",
+        {
+            data: "catatan",
             render: function(data, type, row) {
-                return `
-                    <a href="#" onclick="downloadlink(2,'${row.documenaddress}')" title="Download">${row.documenaddress}</a>
-                `;
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
-        },
+        }, 
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -375,7 +369,8 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "pkwtid" },
+        // { data: "pkwtid" },
+        { data: "pkwtheader" },
         {
             data: "pkwtdescriptions",
             render: function(data, type, row) {
@@ -384,7 +379,6 @@ $(document).ready( function () {
             return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
         },
-        { data: "pkwtheader" },
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -424,12 +418,12 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
-                    <a href="#" onclick="redirectlink('md_pkwt_doc_create','${row.documenid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
-                    <a href="#" onclick="delete_doc_pkwt('${row.documenid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                    <a href="#" onclick="redirectlink('md_pkwt_doc_create','${row.pkwtid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_doc_pkwt('${row.pkwtid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }
         },
-        { data: "documenid" },
+        // { data: "documenid" },
         {
             data: "documenname",
             render: function(data, type, row) {
@@ -437,14 +431,14 @@ $(document).ready( function () {
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
-        { 
-            data: "documenaddress",
+         {
+            data: "catatan",
             render: function(data, type, row) {
-                return `
-                    <a href="#" onclick="downloadlink(3,'${row.documenaddress}')" title="Download">${row.documenaddress}</a>
-                `;
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
-        },
+        }, 
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -491,7 +485,8 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "lksid" },
+        // { data: "lksid" },
+        { data: "lksheader" },
         {
             data: "lksdescriptions",
             render: function(data, type, row) {
@@ -500,7 +495,7 @@ $(document).ready( function () {
             return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
         },
-        { data: "lksheader" },
+        
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -540,12 +535,12 @@ $(document).ready( function () {
             data: null,
             render: function(data, type, row) {
                 return `
-                    <a href="#" onclick="redirectlink('md_lks_doc_create','${row.documenid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
-                    <a href="#" onclick="delete_doc_lks('${row.documenid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
+                    <a href="#" onclick="redirectlink('md_lks_doc_create','${row.lksid}')" title="Change"><img src="../assets/icon/pencil-white.png"></a> |
+                    <a href="#" onclick="delete_doc_lks('${row.lksid}')" title="Delete"><img src="../assets/icon/trash-white.png"></a>
                 `;
             }
         },
-        { data: "documenid" },
+        // { data: "documenid" },
         {
             data: "documenname",
             render: function(data, type, row) {
@@ -553,14 +548,14 @@ $(document).ready( function () {
                 return data.length > 10 ? data.substring(0, 20) + "..." : data;
             },
         },
-        { 
-            data: "documenaddress",
+        {
+            data: "catatan",
             render: function(data, type, row) {
-                return `
-                    <a href="#" onclick="downloadlink(4,'${row.documenaddress}')" title="Download">${row.documenaddress}</a>
-                `;
+            if (!data) return "";
+            var plainText = data.replace(/<[^>]*>/g, '');
+            return plainText.length > 20 ? plainText.substring(0, 20) + "..." : plainText;
             }
-        },
+        }, 
         { 
             data: "createdon",
             render: function(data, type, row) {
@@ -605,7 +600,7 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "newsid" },
+        // { data: "newsid" },
         { data: "newseditor" },
         {
             data: "newstitle",
@@ -654,7 +649,7 @@ $(document).ready( function () {
                 `;
             }
         },
-        { data: "imgid" },
+        // { data: "imgid" },
         { data: "imgthemes" },
         { 
             data: "imgaddress",

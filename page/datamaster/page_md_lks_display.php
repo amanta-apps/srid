@@ -21,10 +21,10 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;">#</th>
-                        <th>LKS ID</th>
-                        <th>Deskripsi</th>
+                        <!-- <th>LKS ID</th> -->
                         <th>Header Text</th>
-                        <th>Status</th>
+                        <th>Deskripsi</th>
+                        <th>Created On</th>
                     </tr>
                 </thead>
             </table>
@@ -35,9 +35,9 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Nomor</th>
+                            <!-- <th>Nomor</th> -->
                             <th>Nama Dokumen</th>
-                            <th>Link Dokumen</th>
+                            <th>Catatan</th>
                             <th>Created On</th>
                         </tr>
                     </thead>
@@ -50,7 +50,7 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>News ID</th>
+                            <!-- <th>News ID</th> -->
                             <th>Editor</th>
                             <th>Nama Kegiatan</th>
                             <th>Descriptions</th>
@@ -65,7 +65,7 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Image ID</th>
+                            <!-- <th>Image ID</th> -->
                             <th>Image Name</th>
                             <th>Link Address</th>
                             <th>Created On</th>

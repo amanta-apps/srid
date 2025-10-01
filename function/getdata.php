@@ -384,9 +384,7 @@ if (isset($_POST['prosesdownloadlink'])) {
 
     $r = mysqli_fetch_array($query = mysqli_query($conn, "SELECT * FROM table_datadirections 
                                     WHERE directionsid='$jenis'"));
-    // if ($query) {
     $return = true;
-    // }
     $linked = $r['drtext'] . $addr;
 
     $data = [
@@ -403,29 +401,37 @@ if (isset($_POST['prosesdeleteimg'])) {
     $dir = $_POST['prosesdeleteimg'][1];
     $table = $_POST['prosesdeleteimg'][2];
     $keys = $_POST['prosesdeleteimg'][3];
-
-    $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=$dir");
-    if (mysqli_num_rows($sql) <> 0) {
-        $r = mysqli_fetch_array($sql);
-        $dir = $r['drtext'];
-    }
-    $file = $dir . $imgaddress;
-    if (file_exists($file)) {
-        unlink($file);
-    }
-    $query = mysqli_query($conn, "DELETE FROM $table
+    try {
+        mysqli_begin_transaction($conn);
+        $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections WHERE directionsid=$dir");
+        if (mysqli_num_rows($sql) <> 0) {
+            $r = mysqli_fetch_array($sql);
+            $dir = $r['drtext'];
+        }
+        $file = $dir . $imgaddress;
+        if (file_exists($file)) {
+            if (!unlink($file)) {
+                throw new Exception("Gagal menghapus file: $file");
+            }
+        }
+        $query = mysqli_query($conn, "DELETE FROM $table
                                     WHERE documenid = '$keys'");
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = null;
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => null,
+        "link" => $link,
         "norevisi" => $id,
         "return" => $return,
     ];
@@ -520,16 +526,18 @@ if (isset($_POST['prosessubmitmdcoc'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT cocid FROM table_datacoc_h WHERE cocid='$norevisi'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datacoc_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT cocid FROM table_datacoc_h WHERE cocid='$norevisi'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datacoc_h 
                                         SET cocdescriptions='$descriptions',
                                             cochead='$header',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE cocid='$norevisi'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datacoc_h (cocdescriptions,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datacoc_h (cocdescriptions,
                                                                     cochead,
                                                                     statsactive,
                                                                     createdon,
@@ -539,18 +547,26 @@ if (isset($_POST['prosessubmitmdcoc'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
+        if (!$query) {
+            throw new Exception("Error Update or Insert: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_coc_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_coc_display",
+        "link" => $link,
         "norevisi" => $norevisi,
         "return" => $return,
     ];
@@ -558,19 +574,28 @@ if (isset($_POST['prosessubmitmdcoc'])) {
 }
 if (isset($_POST['prosesdelete_head_coc'])) {
     $norevisi = $_POST['prosesdelete_head_coc'];
-    $stasx = 0;
-    $query = mysqli_query($conn, "DELETE FROM table_datacoc_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "DELETE FROM table_datacoc_h 
                                     WHERE cocid='$norevisi'");
-    if ($query) {
+        if (!$query) {
+            throw new Exception("Error delete: " . mysqli_error($conn));
+        }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_coc_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_coc_display",
+        "link" => $link,
         "norevisi" => $norevisi,
         "return" => $return,
     ];
@@ -589,9 +614,11 @@ if (isset($_POST['prosessubmitmdcocevent'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT calenderid FROM table_datacoc_e WHERE calenderid='$calenderid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datacoc_e 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT calenderid FROM table_datacoc_e WHERE calenderid='$calenderid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datacoc_e 
                                         SET eventname='$eventname',
                                             eventstart='$mulai',
                                             eventfinish='$selesai',
@@ -602,8 +629,8 @@ if (isset($_POST['prosessubmitmdcocevent'])) {
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE calenderid='$calenderid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datacoc_e (eventname,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datacoc_e (eventname,
                                                                     eventstart,
                                                                     eventfinish,
                                                                     eventfacilitor,
@@ -621,18 +648,25 @@ if (isset($_POST['prosessubmitmdcocevent'])) {
                                         '$lokasi',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query) {
+        }
+        if (!$query) {
+            throw new Exception("Error Update or Insert: " . mysqli_error($conn));
+        }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_coc_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_coc_display",
+        "link" => $link,
         "norevisi" => $norevisi,
         "return" => $return,
     ];
@@ -641,12 +675,20 @@ if (isset($_POST['prosessubmitmdcocevent'])) {
 if (isset($_POST['prosesdelete_event_coc'])) {
     $calenderid = $_POST['prosesdelete_event_coc'];
     $stasx = 0;
-    $query = mysqli_query($conn, "DELETE FROM table_datacoc_e
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "DELETE FROM table_datacoc_e
                                     WHERE calenderid='$calenderid'");
-    if ($query) {
+        if (!$query) {
+            throw new Exception("Error delete: " . mysqli_error($conn));
+        }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
@@ -659,39 +701,54 @@ if (isset($_POST['prosesdelete_event_coc'])) {
     echo json_encode($data);
 }
 if (isset($_POST['prosesdelete_doc_coc'])) {
-    $docid = $_POST['prosesdelete_doc_coc'];
-    $query = mysqli_query($conn, "SELECT documenaddress
-                                     FROM table_datacoc_d 
-                                     WHERE documenid='$docid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $r = mysqli_fetch_array($query);
-        $documenaddress = $r['documenaddress'];
+    $cocid = $_POST['prosesdelete_doc_coc'];
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgcoc FROM table_datacoc_dt WHERE cocid='$cocid'");
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgcoc'];
+        }
 
+        if (!mysqli_query($conn, "DELETE FROM table_datacoc_dt WHERE cocid='$cocid'")) {
+            throw new Exception("Gagal hapus all documen: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datacoc_d WHERE cocid='$cocid'")) {
+            throw new Exception("Gagal hapus documen: " . mysqli_error($conn));
+        }
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=1");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
-        }
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-            $msgs =  "File terhapus.";
         } else {
-            $msgs = "File tidak ditemukan.";
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
-    }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datacoc_d WHERE documenid='$docid'");
-    if ($query) {
         $return = true;
         $icon_msgs = "success";
+        $link = "md_coc_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
+
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_coc_display",
+        "link" => $link,
         "id" => $documenid,
         "return" => $return,
     ];
@@ -706,16 +763,18 @@ if (isset($_POST['prosessubmitmdwlkp'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT wlkpid FROM table_datawlkp_h WHERE wlkpid='$wlkpid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datawlkp_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT wlkpid FROM table_datawlkp_h WHERE wlkpid='$wlkpid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datawlkp_h 
                                         SET wlkpdescriptions='$descriptions',
                                             wlkpheader='$header',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE wlkpid='$wlkpid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datawlkp_h (wlkpdescriptions,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datawlkp_h (wlkpdescriptions,
                                                                     wlkpheader,
                                                                     statsactive,
                                                                     createdon,
@@ -725,18 +784,26 @@ if (isset($_POST['prosessubmitmdwlkp'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
+        if (!$query) {
+            throw new Exception("Gagal insert or Update header: " . mysqli_error($conn));
+        }
 
-    if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_p2k3_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_wlkp_display",
+        "link" => $link,
         "norevisi" => $norevisi,
         "return" => $return,
     ];
@@ -751,52 +818,67 @@ if (isset($_POST['prosesdelete_head_wlkp'])) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_wlkp_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_wlkp_display",
+        "link" => $link,
         "wlkpid" => $wlkpid,
         "return" => $return,
     ];
     echo json_encode($data);
 }
 if (isset($_POST['prosesdelete_doc_wlkp'])) {
-    $docid = $_POST['prosesdelete_doc_wlkp'];
-    $query = mysqli_query($conn, "SELECT documenaddress
-                                     FROM table_datawlkp_d 
-                                     WHERE documenid='$docid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $r = mysqli_fetch_array($query);
-        $documenaddress = $r['documenaddress'];
+    $wlkp = $_POST['prosesdelete_doc_wlkp'];
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgcoc FROM table_datawlkp_dt WHERE wlkpid='$wlkpid'");
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgcoc'];
+        }
 
+        if (!mysqli_query($conn, "DELETE FROM table_datawlkp_dt WHERE wlkpid='$wlkpid'")) {
+            throw new Exception("Gagal hapus all documen: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datawlkp_d WHERE wlkpid='$wlkpid'")) {
+            throw new Exception("Gagal hapus documen: " . mysqli_error($conn));
+        }
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=2");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
-        }
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-            $msgs =  "File terhapus.";
         } else {
-            $msgs = "File tidak ditemukan.";
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
-    }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datawlkp_d WHERE documenid='$docid'");
-    if ($query) {
         $return = true;
         $icon_msgs = "success";
+        $link = "md_wlkp_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_wlkp_display",
-        "id" => $documenid,
+        "link" => $link,
+        "id" => $wlkpid,
         "return" => $return,
     ];
     echo json_encode($data);
@@ -810,16 +892,18 @@ if (isset($_POST['prosessubmitmdpkwt'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT pkwtid FROM table_datapkwt_h WHERE pkwtid='$pkwtid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datapkwt_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT pkwtid FROM table_datapkwt_h WHERE pkwtid='$pkwtid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datapkwt_h 
                                         SET pkwtdescriptions='$descriptions',
                                             pkwtheader='$header',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE pkwtid='$pkwtid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datapkwt_h (pkwtdescriptions,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datapkwt_h (pkwtdescriptions,
                                                                     pkwtheader,
                                                                     statsactive,
                                                                     createdon,
@@ -829,18 +913,25 @@ if (isset($_POST['prosessubmitmdpkwt'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
-
-    if ($query) {
+        }
+        if (!$query) {
+            throw new Exception("Gagal insert or Update header: " . mysqli_error($conn));
+        }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_pkwt_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_pkwt_display",
+        "link" => $link,
         "pkwtid" => $pkwtid,
         "return" => $return,
     ];
@@ -855,51 +946,66 @@ if (isset($_POST['prosesdelete_head_pkwt'])) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_pkwt_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_pkwt_display",
+        "link" => $link,
         "pkwtid" => $pkwtid,
         "return" => $return,
     ];
     echo json_encode($data);
 }
 if (isset($_POST['prosesdelete_doc_pkwt'])) {
-    $docid = $_POST['prosesdelete_doc_pkwt'];
-    $query = mysqli_query($conn, "SELECT documenaddress
-                                     FROM table_datapkwt_d 
-                                     WHERE documenid='$docid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $r = mysqli_fetch_array($query);
-        $documenaddress = $r['documenaddress'];
+    $pkwtid = $_POST['prosesdelete_doc_pkwt'];
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imgpkwt FROM table_datapkwt_dt WHERE pkwtid='$pkwtid'");
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imgpkwt'];
+        }
 
+        if (!mysqli_query($conn, "DELETE FROM table_datapkwt_dt WHERE pkwtid='$pkwtid'")) {
+            throw new Exception("Gagal hapus all documen: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datapkwt_d WHERE pkwtid='$pkwtid'")) {
+            throw new Exception("Gagal hapus documen: " . mysqli_error($conn));
+        }
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=3");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
-        }
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-            $msgs =  "File terhapus.";
         } else {
-            $msgs = "File tidak ditemukan.";
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
-    }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datapkwt_d WHERE documenid='$docid'");
-    if ($query) {
         $return = true;
         $icon_msgs = "success";
+        $link = "md_pkwt_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_pkwt_display",
+        "link" => $link,
         "id" => $docid,
         "return" => $return,
     ];
@@ -914,16 +1020,18 @@ if (isset($_POST['prosessubmitmdlks'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT lksid FROM table_datalks_h WHERE lksid='$lksid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datalks_h 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT lksid FROM table_datalks_h WHERE lksid='$lksid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datalks_h 
                                         SET lksdescriptions='$descriptions',
                                             lksheader='$header',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE lksid='$lksid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datalks_h (lksdescriptions,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datalks_h (lksdescriptions,
                                                                     lksheader,
                                                                     statsactive,
                                                                     createdon,
@@ -933,18 +1041,26 @@ if (isset($_POST['prosessubmitmdlks'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
 
-    if ($query) {
+        if (!$query) {
+            throw new Exception("Gagal insert or Update header: " . mysqli_error($conn));
+        }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_lks_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_lks_display",
+        "link" => $link,
         "pkwtid" => $pkwtid,
         "return" => $return,
     ];
@@ -952,19 +1068,19 @@ if (isset($_POST['prosessubmitmdlks'])) {
 }
 if (isset($_POST['prosesdelete_head_lks'])) {
     $lksid = $_POST['prosesdelete_head_lks'];
-    $stasx = 0;
     $query = mysqli_query($conn, "DELETE FROM table_datalks_h
                                     WHERE lksid='$lksid'");
     if ($query) {
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_lks_display";
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_lks_display",
+        "link" => $link,
         "lksid" => $lksid,
         "return" => $return,
     ];
@@ -978,17 +1094,19 @@ if (isset($_POST['prosessubmitmdnewslks'])) {
     $return = false;
     $stasx = 1;
 
-    $query = mysqli_query($conn, "SELECT newsid FROM table_datalks_n WHERE newsid='$newsid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $query = mysqli_query($conn, "UPDATE table_datalks_n 
+    try {
+        mysqli_begin_transaction($conn);
+        $query = mysqli_query($conn, "SELECT newsid FROM table_datalks_n WHERE newsid='$newsid'");
+        if (mysqli_num_rows($query) <> 0) {
+            $query = mysqli_query($conn, "UPDATE table_datalks_n 
                                         SET newseditor='$editor',
                                             newscontent='$kontent',
                                             newstitle='$title',
                                             changedon='$changedon',
                                             changedby='$changedby'
                                         WHERE newsid='$newsid'");
-    } else {
-        $query = mysqli_query($conn, "INSERT INTO table_datalks_n (newseditor,
+        } else {
+            $query = mysqli_query($conn, "INSERT INTO table_datalks_n (newseditor,
                                                                     newstitle,
                                                                     newscontent,
                                                                     statsactive,
@@ -1000,18 +1118,26 @@ if (isset($_POST['prosessubmitmdnewslks'])) {
                                         '$stasx',
                                         '$createdon',
                                         '$createdby')");
-    }
+        }
 
-    if ($query) {
+        if (!$query) {
+            throw new Exception("Gagal insert or Update header: " . mysqli_error($conn));
+        }
         $return = true;
         $msgs = "Data Tersimpan";
         $icon_msgs = "success";
+        $link = "md_lks_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_lks_display",
+        "link" => $link,
         "pkwtid" => $pkwtid,
         "return" => $return,
     ];
@@ -1038,39 +1164,54 @@ if (isset($_POST['prosesdelete_news_lks'])) {
     echo json_encode($data);
 }
 if (isset($_POST['prosesdelete_doc_lks'])) {
-    $docid = $_POST['prosesdelete_doc_lks'];
-    $query = mysqli_query($conn, "SELECT documenaddress
-                                     FROM table_datalks_d 
-                                     WHERE documenid='$docid'");
-    if (mysqli_num_rows($query) <> 0) {
-        $r = mysqli_fetch_array($query);
-        $documenaddress = $r['documenaddress'];
+    $lksid = $_POST['prosesdelete_doc_lks'];
 
+    try {
+        mysqli_begin_transaction($conn);
+        $imgaddress = array();
+        $query = mysqli_query($conn, "SELECT imglks FROM table_datalks_dt WHERE lksid='$lksid'");
+        while ($r = mysqli_fetch_array($query)) {
+            $imgaddress[] = $r['imglks'];
+        }
+
+        if (!mysqli_query($conn, "DELETE FROM table_datalks_dt WHERE lksid='$lksid'")) {
+            throw new Exception("Gagal hapus all documen: " . mysqli_error($conn));
+        }
+        if (!mysqli_query($conn, "DELETE FROM table_datalks_d WHERE lksid='$lksid'")) {
+            throw new Exception("Gagal hapus documen: " . mysqli_error($conn));
+        }
         $sql = mysqli_query($conn, "SELECT drtext FROM table_datadirections 
                                     WHERE directionsid=4");
         if (mysqli_num_rows($sql) <> 0) {
             $r = mysqli_fetch_array($sql);
             $dir = $r['drtext'];
-        }
-        $file = $dir . $documenaddress;
-        if (file_exists($file)) {
-            unlink($file);
-            $msgs =  "File terhapus.";
         } else {
-            $msgs = "File tidak ditemukan.";
+            throw new Exception("Error Direction: " . mysqli_error($conn));
         }
-    }
+        $lenght = count($imgaddress);
+        for ($i = 0; $i < $lenght; $i++) {
+            $file = $dir . $imgaddress[$i];
+            if (file_exists($file)) {
+                if (!unlink($file)) {
+                    throw new Exception("Gagal menghapus file: $file");
+                }
+            }
+        }
 
-    $query = mysqli_query($conn, "DELETE FROM table_datalks_d WHERE documenid='$docid'");
-    if ($query) {
         $return = true;
         $icon_msgs = "success";
+        $link = "md_lks_display";
+        mysqli_commit($conn);
+    } catch (Exception $e) {
+        mysqli_rollback($conn);
+        datalog($e->getMessage());
+        $msgs = $e->getMessage();
     }
     $data = [
         "time" => $time,
         "msgs" => $msgs,
         "iconmsgs" => $icon_msgs,
-        "link" => "md_lks_display",
+        "link" => $link,
         "id" => $docid,
         "return" => $return,
     ];
@@ -1078,6 +1219,11 @@ if (isset($_POST['prosesdelete_doc_lks'])) {
 }
 if (isset($_POST['prosesdelete_img_lks'])) {
     $imgid = $_POST['prosesdelete_img_lks'];
+
+    // Sampai sini
+
+
+
     $query = mysqli_query($conn, "SELECT imgaddress
                                      FROM table_datalks_g 
                                      WHERE imgid='$imgid'");

@@ -15,9 +15,9 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;">#</th>
-                        <th>PKWT ID</th>
-                        <th>Deskripsi</th>
+                        <!-- <th>PKWT ID</th> -->
                         <th>Header Text</th>
+                        <th>Deskripsi</th>
                         <th>Created On</th>
                     </tr>
                 </thead>
@@ -29,9 +29,9 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Dokumen ID</th>
+                            <!-- <th>Dokumen ID</th> -->
                             <th>Nama Dokumen</th>
-                            <th>Link Dokumen</th>
+                            <th>Catatan</th>
                             <th>Created On</th>
                         </tr>
                     </thead>

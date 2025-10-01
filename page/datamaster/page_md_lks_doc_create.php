@@ -1,57 +1,78 @@
 <?php
-$documentid = Getkode('documenid', 'table_datalks_d');
-$documenname = $docaddr  = null;
+$lksid = Getkode('lksid', 'table_datalks_d');
+$documenname = $catatan  = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
-$imgsrc = '../assets/galery/noimg.png';
 if (isset($_GET['n'])) {
-    $documentid = base64_decode($_GET['n']);
-    $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datalks_d WHERE documenid='$documentid'"));
+    $lksid = base64_decode($_GET['n']);
+    $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datalks_d WHERE lksid='$lksid'"));
     $documenname = $r['documenname'];
-    $docaddr = $r['documenaddress'];
+    $catatan = $r['catatan'];
     $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
-    $dir = Getdata('drtext', 'table_datadirections', 'directionsid', 4);
-    $imgsrc = $dir . $docaddr;
 } ?>
 <div class="container">
     <h3 class="fw-bold">Dokumen</h3>
     <hr class="mb-5">
     <div class="row mb-0">
         <div class="col-sm-8">
-            <div class="form-group row mb-1">
-                <label for="dokumenmdlks" class="col-sm-3">Dokumen ID</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm" id="dokumenmdlks" value="<?= $documentid ?>" readonly>
-                </div>
-            </div>
-            <div class="form-group row mb-1">
-                <label for="docnamemdlks" class="col-sm-3">Document Name</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control form-control-sm" id="docnamemdlks" value="<?= $documenname ?>">
-                </div>
-            </div>
-            <div class="form-group row mb-1">
-                <label for="docaddrmdlks" class="col-sm-3">Link</label>
-                <div class="col-sm-8">
-                    <div class="input-group">
-                        <input type="file" class="form-control" id="docaddrmdlks" onchange="previewFile()">
-                        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Informasi</legend>
+                <div class="form-group row mb-1">
+                    <label for="lksidmdlks" class="col-sm-3" hidden>LKS ID</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" id="lksidmdlks" value="<?= $lksid ?>" readonly>
                     </div>
                 </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label for="filenamemdlks" class="col-sm-3">File Name</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control form-control-sm" id="filenamemdlks" value="<?= $docaddr ?>" readonly>
+                <div class="form-group row mb-1">
+                    <label for="docnamemdlks" class="col-sm-3">Document Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" id="docnamemdlks" value="<?= $documenname ?>">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3">Preview</label>
-                <div class="col-sm-9">
-                    <img src="<?= $imgsrc ?>" width="100" id="previewimglks">
+            </fieldset>
+            <!-- <div class="form-group row mb-1"> -->
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Catatan tambahan</legend>
+                <div id="editordokumenlks"><?= $catatan ?></div>
+            </fieldset>
+            <!-- </div> -->
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
+                <input type="file" id="lampirandokumenlks" name="lampirandokumenlks[]" multiple class="form-control mb-2" accept=".pdf, image/*">
+                <ul id="filelistdokumenlks" class="fileList mt-2"></ul>
+                <input type="text" class="form-control form-control-sm" id="descimgdokumenlks" readonly hidden>
+            </fieldset>
+            <?php
+            $query = mysqli_query($conn, "SELECT documenid,imglks,createdon,createdby FROM table_datalks_dt WHERE lksid='$lksid'");
+            if (mysqli_num_rows($query)) { ?>
+                <div class="form-group row mb-1">
+                    <fieldset class="border rounded p-2 mb-3">
+                        <legend class="float-none w-auto px-2 fs-6">Files</legend>
+                        <table class="table table-borderless w-75">
+                            <tbody>
+                                <?php
+                                while ($r = mysqli_fetch_array($query)) { ?>
+                                    <tr>
+                                        <td>
+                                            <a href="#" onclick="downloadlink(4,'<?= $r['imglks'] ?>',2)"><?= $r['imglks'] ?></a>
+                                        </td>
+                                        <td class="text-end opacity-50 fs-7"><?= Getdata('namekar', 'table_databuruh', 'pernr', $r['createdby']) . ', ' . beautydate2($r['createdon']) ?></td>
+                                        <td style="width: 10%;">
+                                            <img src="../assets/icon/trash10.png" class="zoom opacity-50" style="cursor: pointer;" title="delete" onclick="deleteimg('<?= $r['imglks'] ?>',4,'table_datalks_dt','<?= $r['documenid'] ?>')">
+                                            <img src="../assets/icon/download15.png" class="zoom opacity-50" style="cursor: pointer;" title="download" onclick="downloadlink(4,'<?= $r['imglks'] ?>',1)">
+                                        </td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </fieldset>
                 </div>
-            </div>
+            <?php
+            }
+            ?>
         </div>
         <div class="col-sm-4">
             <fieldset class="border rounded p-2 mb-3">
@@ -82,23 +103,38 @@ if (isset($_GET['n'])) {
     </div>
 </div>
 <script>
-    document.getElementById("docaddrmdlks").addEventListener("change", function() {
-        if (this.files.length > 0) {
-            let filename = this.files[0].name;
-            document.getElementById("filenamemdlks").value = filename;
+    let editorInstance;
+    ClassicEditor
+        .create(document.getElementById('editordokumenlks'), {
+            placeholder: 'Tulis sesuatu di sini...' // <-- kasih placeholder
+        })
+        .then(editor => {
+            editorInstance = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    document.getElementById("lampirandokumenlks").addEventListener("change", function() {
+        let files = this.files;
+        let fileNames = [];
+        let fileList = document.getElementById("filelistdokumenlks");
+        fileList.innerHTML = ""; // reset list 
+
+        for (let file of files) {
+            fileNames.push(file.name);
+
+            // buat <a> link preview
+            let li = document.createElement("li");
+            let a = document.createElement("a");
+            a.textContent = file.name;
+            a.href = URL.createObjectURL(file);
+            a.target = "_blank"; // biar buka di tab baru
+            li.appendChild(a);
+
+            fileList.appendChild(li);
         }
+
+        // gabungkan semua nama file ke input text
+        document.getElementById("descimgdokumenlks").value = fileNames.join(", ");
     });
-
-    function previewFile() {
-        const file = document.getElementById('docaddrmdlks').files[0];
-        const preview = document.getElementById('previewimglks');
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-    }
 </script>

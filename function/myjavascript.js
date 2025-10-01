@@ -329,31 +329,49 @@ function delete_head_coc(norevisi) {
   })
 }
 function submitdocmdcoc() {
-    const fileupload = $("#docaddrmdcoc").prop("files")[0];
-    let formData = new FormData();
-    formData.append("fileupload", fileupload);
-    formData.append("dokumenid", $("#dokumenmdcoc").val());
+  let formData = new FormData();
+    const files = $("#lampirandokumencoc").prop("files");
+
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > maxSize) {
+        msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
+        return;
+      }
+      formData.append("lampirandokumencoc[]", files[i]);
+    }
+
+    formData.append("cocid", $("#cocidmdcoc").val());
     formData.append("docname", $("#docnamemdcoc").val());
+    formData.append("catatan", editorInstance.getData());
     formData.append("typess", "document_coc");
-      $.ajax({
-        type: "POST",
-        url: "../function/uploadimages.php",
-        dataType: "JSON",
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.return == 1) {
+
+    $.ajax({
+      url: "../function/uploadimages.php",
+      dataType: "JSON",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(data) {
+        if (data.return == 1) {
             msgs()
             setTimeout(() => {
             redirectlink(data.link)
             }, data.time);
-          }else{
-            msgs(data.iconmsgs,data.msgs,data.time)
-          }
-        },
-      });
+        }else{
+          msgs(data.iconmsgs,data.msgs,data.time)
+        }
+      },
+    });
 }
 function delete_doc_coc(docid) {
   Swal.fire({
@@ -518,31 +536,49 @@ function delete_head_wlkp(wlkpid) {
   })
 }
 function submitdocmdwlkp() {
-  const fileupload = $("#docaddrmdwlkp").prop("files")[0];
-    let formData = new FormData();
-    formData.append("fileupload", fileupload);
-    formData.append("dokumenid", $("#dokumenmdwlkp").val());
-    formData.append("docname", $("#docnamemdwlkp").val());
-    formData.append("typess", "document_wlkp");
-      $.ajax({
-        type: "POST",
-        url: "../function/uploadimages.php",
-        dataType: "JSON",
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.return == 1) {
-            msgs()
-            setTimeout(() => {
-            redirectlink(data.link)
-            }, data.time);
-          }else{
-            msgs(data.iconmsgs,data.msgs,data.time)
-          }
-        },
-      });
+  let formData = new FormData();
+  const files = $("#lampirandokumenwlkp").prop("files");
+
+  const maxSize = 10 * 1024 * 1024;
+  const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (file.size > maxSize) {
+      msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
+      return;
+    }
+    formData.append("lampirandokumenwlkp[]", files[i]);
+  }
+
+  formData.append("wlkpid", $("#wlkpidmdwlkp").val());
+  formData.append("docname", $("#docnamemdwlkp").val());
+  formData.append("catatan", editorInstance.getData());
+  formData.append("typess", "document_wlkp");
+
+  $.ajax({
+    url: "../function/uploadimages.php",
+    dataType: "JSON",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      if (data.return == 1) {
+          msgs()
+          setTimeout(() => {
+          redirectlink(data.link)
+          }, data.time);
+      }else{
+        msgs(data.iconmsgs,data.msgs,data.time)
+      }
+    },
+  });
 }
 function delete_doc_wlkp(wlkpid) {
   Swal.fire({
@@ -638,31 +674,49 @@ function delete_head_pkwt(pkwtid) {
   })
 }
 function submitdocmdpkwt() {
-  const fileupload = $("#docaddrmdpkwt").prop("files")[0];
-    let formData = new FormData();
-    formData.append("fileupload", fileupload);
-    formData.append("dokumenid", $("#dokumenmdpkwt").val());
+  let formData = new FormData();
+    const files = $("#lampirandokumenpkwt").prop("files");
+
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > maxSize) {
+        msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
+        return;
+      }
+      formData.append("lampirandokumenpkwt[]", files[i]);
+    }
+
+    formData.append("pkwtid", $("#pkwtidmdpkwt").val());
     formData.append("docname", $("#docnamemdpkwt").val());
+    formData.append("catatan", editorInstance.getData());
     formData.append("typess", "document_pkwt");
-      $.ajax({
-        type: "POST",
-        url: "../function/uploadimages.php",
-        dataType: "JSON",
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.return == 1) {
+
+    $.ajax({
+      url: "../function/uploadimages.php",
+      dataType: "JSON",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(data) {
+        if (data.return == 1) {
             msgs()
             setTimeout(() => {
             redirectlink(data.link)
             }, data.time);
-          }else{
-            msgs(data.iconmsgs,data.msgs,data.time)
-          }
-        },
-      });
+        }else{
+          msgs(data.iconmsgs,data.msgs,data.time)
+        }
+      },
+    });
 }
 function delete_doc_pkwt(docid) {
   Swal.fire({
@@ -758,31 +812,49 @@ function delete_head_lks(lksid) {
   })
 }
 function submitdocmdlks() {
-  const fileupload = $("#docaddrmdlks").prop("files")[0];
-    let formData = new FormData();
-    formData.append("fileupload", fileupload);
-    formData.append("dokumenid", $("#dokumenmdlks").val());
+  let formData = new FormData();
+    const files = $("#lampirandokumenlks").prop("files");
+
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > maxSize) {
+        msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
+        return;
+      }
+      formData.append("lampirandokumenlks[]", files[i]);
+    }
+
+    formData.append("lksid", $("#lksidmdlks").val());
     formData.append("docname", $("#docnamemdlks").val());
+    formData.append("catatan", editorInstance.getData());
     formData.append("typess", "document_lks");
-      $.ajax({
-        type: "POST",
-        url: "../function/uploadimages.php",
-        dataType: "JSON",
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.return == 1) {
+
+    $.ajax({
+      url: "../function/uploadimages.php",
+      dataType: "JSON",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(data) {
+        if (data.return == 1) {
             msgs()
             setTimeout(() => {
             redirectlink(data.link)
             }, data.time);
-          }else{
-            msgs(data.iconmsgs,data.msgs,data.time)
-          }
-        },
-  });
+        }else{
+          msgs(data.iconmsgs,data.msgs,data.time)
+        }
+      },
+    });
 }
 function submitmdnewslks() {
   var newsid = $('#newsidmdnewslks').val()
@@ -846,32 +918,50 @@ function delete_news_lks(newsid) {
   })
 }
 function submitmdimglks() {
-  const fileupload = $("#docaddrmdimglks").prop("files")[0];
-    let formData = new FormData();
-    formData.append("fileupload", fileupload);
-    formData.append("imgid", $("#imgidmdimglks").val());
-    formData.append("docname", $("#imgnamemdimglks").val());
-    formData.append("docaddr", $("#docaddrmdimglks").val());
+
+  let formData = new FormData();
+    const files = $("#lampirandokumenimg").prop("files");
+
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.size > maxSize) {
+        msgs('info',"File " + file.name + " terlalu besar! Maksimal 10MB.",3000)
+        return;
+      }
+
+      if (!allowedTypes.includes(file.type)) {
+        msgs('info',"File " + file.name + " File bukan image/PDF.",3000)
+        return;
+      }
+      formData.append("lampirandokumenimg[]", files[i]);
+    }
+
+    formData.append("imgid", $("#imgidmdimg").val());
+    formData.append("docname", $("#docnamemdimg").val());
+    formData.append("catatan", editorInstance.getData());
     formData.append("typess", "document_lks_img");
-      $.ajax({
-        type: "POST",
-        url: "../function/uploadimages.php",
-        dataType: "JSON",
-        data: formData,
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-          if (data.return == 1) {
+
+    $.ajax({
+      url: "../function/uploadimages.php",
+      dataType: "JSON",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function(data) {
+        if (data.return == 1) {
             msgs()
             setTimeout(() => {
             redirectlink(data.link)
             }, data.time);
-          }else{
-            msgs(data.iconmsgs,data.msgs,data.time)
-          }
-        },
-  });
+        }else{
+          msgs(data.iconmsgs,data.msgs,data.time)
+        }
+      },
+    });
 }
 function delete_doc_lks(docid) {
   Swal.fire({

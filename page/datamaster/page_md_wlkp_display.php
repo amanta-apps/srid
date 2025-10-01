@@ -15,7 +15,7 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;">#</th>
-                        <th>WLKP ID</th>
+                        <!-- <th>WLKP ID</th> -->
                         <th>Deskripsi</th>
                         <th>Header Text</th>
                         <th>Created On</th>
@@ -29,9 +29,9 @@
                     <thead>
                         <tr>
                             <th style="width: 10%;">#</th>
-                            <th>Dokumen ID</th>
+                            <!-- <th>Dokumen ID</th> -->
                             <th>Nama Dokumen</th>
-                            <th>Link Dokumen</th>
+                            <th>Catatan</th>
                             <th>Created On</th>
                         </tr>
                     </thead>

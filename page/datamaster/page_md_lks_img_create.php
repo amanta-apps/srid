@@ -1,57 +1,78 @@
 <?php
 $imgid = Getkode('imgid', 'table_datalks_g');
-$cocdescription = $descriptions = $cochead = null;
+$imgthemes = $catatan = null;
 $createdon = date('d.m.Y');
 $createdby = $_SESSION['pernr'];
-$imgsrc = '../assets/galery/noimg.png';
 if (isset($_GET['n'])) {
     $imgid = base64_decode($_GET['n']);
     $r = mysqli_fetch_array(mysqli_query($conn, "SELECT * FROM table_datalks_g WHERE imgid='$imgid'"));
     $imgthemes = $r['imgthemes'];
-    $imgaddress = $r['imgaddress'];
+    $catatan = $r['catatan'];
     $createdon = beautydate1($r['createdon']);
     $createdby = $r['createdby'];
-    $dir = Getdata('drtext', 'table_datadirections', 'directionsid', 5);
-    $imgsrc = $dir . $docaddr;
 } ?>
 <div class="container">
     <h3 class="fw-bold">Galery</h3>
     <hr class="mb-5">
     <div class="row mb-0">
         <div class="col-sm-8">
-            <div class="form-group row mb-1">
-                <label for="imgidmdimglks" class="col-sm-3">Image ID</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm" id="imgidmdimglks" value="<?= $imgid ?>" readonly>
-                </div>
-            </div>
-            <div class="form-group row mb-1">
-                <label for="imgnamemdimglks" class="col-sm-3">Image Name</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control form-control-sm" id="imgnamemdimglks" value="<?= $imgthemes ?>">
-                </div>
-            </div>
-            <div class="form-group row mb-1">
-                <label for="docaddrmdimglks" class="col-sm-3">Link</label>
-                <div class="col-sm-8">
-                    <div class="input-group">
-                        <input type="file" class="form-control" id="docaddrmdimglks" onchange="previewFile()">
-                        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Informasi</legend>
+                <div class="form-group row mb-1">
+                    <label for="imgidmdimg" class="col-sm-3" hidden>LKS ID</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" id="imgidmdimg" value="<?= $lksid ?>" readonly>
                     </div>
                 </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label for="filenamemdimglks" class="col-sm-3">File Name</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control form-control-sm" id="filenamemdimglks" value="<?= $imgaddress ?>" readonly>
+                <div class="form-group row mb-1">
+                    <label for="docnamemdimg" class="col-sm-3">Document Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control form-control-sm" id="docnamemdimg" value="<?= $documenname ?>">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-3">Preview</label>
-                <div class="col-sm-9">
-                    <img src="<?= $imgsrc ?>" width="100" id="previewimgimglks">
+            </fieldset>
+            <!-- <div class="form-group row mb-1"> -->
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Catatan tambahan</legend>
+                <div id="editordokumenimg"><?= $catatan ?></div>
+            </fieldset>
+            <!-- </div> -->
+            <fieldset class="border rounded p-2 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Lampiran</legend>
+                <input type="file" id="lampirandokumenimg" name="lampirandokumenimg[]" multiple class="form-control mb-2" accept=".pdf, image/*">
+                <ul id="filelistdokumenimg" class="fileList mt-2"></ul>
+                <input type="text" class="form-control form-control-sm" id="descimgdokumenimg" readonly hidden>
+            </fieldset>
+            <?php
+            $query = mysqli_query($conn, "SELECT documenid,imgimg,createdon,createdby FROM table_datalks_dt WHERE imgid='$imgid'");
+            if (mysqli_num_rows($query)) { ?>
+                <div class="form-group row mb-1">
+                    <fieldset class="border rounded p-2 mb-3">
+                        <legend class="float-none w-auto px-2 fs-6">Files</legend>
+                        <table class="table table-borderless">
+                            <tbody>
+                                <?php
+                                while ($r = mysqli_fetch_array($query)) { ?>
+                                    <tr>
+                                        <td>
+                                            <a href="#" onclick="downloadlink(5,'<?= $r['imgimg'] ?>',2)"><?= $r['imgimg'] ?></a>
+                                        </td>
+                                        <td class="text-end opacity-50 fs-7"><?= Getdata('namekar', 'table_databuruh', 'pernr', $r['createdby']) . ', ' . beautydate2($r['createdon']) ?></td>
+                                        <td style="width: 10%;">
+                                            <img src="../assets/icon/trash10.png" class="zoom opacity-50" style="cursor: pointer;" title="delete" onclick="deleteimg('<?= $r['imgimg'] ?>',5,'table_datalks_gt','<?= $r['documenid'] ?>')">
+                                            <img src="../assets/icon/download15.png" class="zoom opacity-50" style="cursor: pointer;" title="download" onclick="downloadlink(5,'<?= $r['imgimg'] ?>',1)">
+                                        </td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </fieldset>
                 </div>
-            </div>
+            <?php
+            }
+            ?>
         </div>
         <div class="col-sm-4">
             <fieldset class="border rounded p-2 mb-3">
@@ -82,23 +103,38 @@ if (isset($_GET['n'])) {
     </div>
 </div>
 <script>
-    document.getElementById("docaddrmdimglks").addEventListener("change", function() {
-        if (this.files.length > 0) {
-            let filename = this.files[0].name;
-            document.getElementById("filenamemdimglks").value = filename;
+    let editorInstance;
+    ClassicEditor
+        .create(document.getElementById('editordokumenimg'), {
+            placeholder: 'Tulis sesuatu di sini...' // <-- kasih placeholder
+        })
+        .then(editor => {
+            editorInstance = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    document.getElementById("lampirandokumenimg").addEventListener("change", function() {
+        let files = this.files;
+        let fileNames = [];
+        let fileList = document.getElementById("filelistdokumenimg");
+        fileList.innerHTML = ""; // reset list 
+
+        for (let file of files) {
+            fileNames.push(file.name);
+
+            // buat <a> link preview
+            let li = document.createElement("li");
+            let a = document.createElement("a");
+            a.textContent = file.name;
+            a.href = URL.createObjectURL(file);
+            a.target = "_blank"; // biar buka di tab baru
+            li.appendChild(a);
+
+            fileList.appendChild(li);
         }
+
+        // gabungkan semua nama file ke input text
+        document.getElementById("descimgdokumenimg").value = fileNames.join(", ");
     });
-
-    function previewFile() {
-        const file = document.getElementById('docaddrmdimglks').files[0];
-        const preview = document.getElementById('previewimgimglks');
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-    }
 </script>
